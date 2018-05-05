@@ -19,6 +19,7 @@ class BorrowerFactory {
         let borrower = new Borrower(user, book);
         borrower.setDate_return(borrowerRaw.date_return);
         borrower.setDate_borrow(borrowerRaw.date_borrow);
+        borrower.setStatus(borrowerRaw.status);
         return borrower;
     }
 
@@ -37,6 +38,7 @@ class BorrowerFactory {
         let borrower = new Borrower(user, book);
         borrower.setId(borrowerRaw.id);
         borrower.setDate_borrow(borrowerRaw.date_borrow);
+        borrower.setStatus(borrowerRaw.status);
         borrower.setDate_return(borrowerRaw.date_return);
         return borrower;
 

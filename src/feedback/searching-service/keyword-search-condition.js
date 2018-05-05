@@ -11,7 +11,7 @@ class KeywordSearchCondition {
     /**
      *
      * @param  sqlQuery
-     * @return {Book[]}
+     * @return {Feedback[]}
      */
     describe(sqlQuery) {
         let keyword = this.keyword;

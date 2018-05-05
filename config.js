@@ -10,7 +10,8 @@ module.exports = {
         require('./src/borrower'),
         require('./src/curriculum'),
         require('./src/topic'),
-        require('./src/feedback')
+        require('./src/feedback'),
+        require('./src/service')
     ],
 
     database : {

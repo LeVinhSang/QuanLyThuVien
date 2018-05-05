@@ -2,21 +2,21 @@ class AdvanceSearchCondition {
 
     /**
      *
-     * @param {string} user_name
-     * @param {string} name
+     * @param {string} name_user
+     * @param {string} title
      */
-    constructor(user_name, name) {
-        this.name = name;
-        this.user_name = user_name;
+    constructor(name_user, title) {
+        this.title = title;
+        this.name_user = name_user;
     }
 
     /**
      *
      * @param  sqlQuery
-     * @return {Book[]}
+     * @return {Borrower[]}
      */
     describe(sqlQuery) {
-        return sqlQuery.where({deleted_at: null, 'borrowers.user_name': this.user_name, 'books.name': this.name});
+        return sqlQuery.where({deleted_at: null, 'borrowers.name_user': this.name_user, 'books.title': this.title});
     }
 }
 

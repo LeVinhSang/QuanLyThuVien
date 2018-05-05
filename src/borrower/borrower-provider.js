@@ -1,29 +1,16 @@
-const connection       = require('../../../database');
-const BorrowerFactory      = require('../borrower-factory');
+class BorrowerProvider {
 
-class Searcher {
-
-    /**
-     *
-     * @param {connection} connection
-     * @param {BorrowerFactory} factory
-     */
     constructor(connection, factory) {
         this.connection = connection;
         this.factory = factory;
     }
 
-    /**
-     *
-     * @param  condition
-     * @return {Borrower[]}
-     */
-    search(condition) {
+    provide() {
         let factory = this.factory;
-        let sqlQuery = this.connection('borrowers')
+        return this.connection('borrowers')
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow',
                 'borrowers.date_return',
-                'users.user_name', 'users.email', 'users.avatar',
+                'users.user_name', 'users.email',
                 'books.id', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',
                 'publishers.name', 'publishers.phone', 'publishers.address')
@@ -35,11 +22,12 @@ class Searcher {
             })
             .leftJoin('publishers', function () {
                 this.on('publisher_id', '=', 'publishers.id')
-            });
-
-        condition.describe(sqlQuery);
-        return sqlQuery.then( results => results.map(element => factory.makeFromDB(element)));
+            })
+            .where( function () {
+                this.where('borrowers.date_return', '<', new Date())
+            }).where({'borrowers.deleted_at': null})
+            .then( results => results.map(element => factory.makeFromDB(element)));
     }
 }
 
-module.exports = Searcher;
+module.exports = BorrowerProvider;

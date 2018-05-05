@@ -2,11 +2,11 @@ class AdvanceSearchCondition {
 
     /**
      *
-     * @param {string} author
+     * @param {string} title
      * @param {string} publisher
      */
-    constructor(author, publisher) {
-        this.author = author;
+    constructor(title, publisher) {
+        this.title = title;
         this.publisher = publisher;
     }
 
@@ -16,7 +16,7 @@ class AdvanceSearchCondition {
      * @return {Book[]}
      */
     describe(sqlQuery) {
-        return sqlQuery.where({deleted_at: null, 'publishers.name': this.publisher, author: this.author});
+        return sqlQuery.where({deleted_at: null, 'publishers.name': this.publisher, title: this.title});
     }
 }
 

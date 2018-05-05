@@ -13,7 +13,7 @@ class AdvanceSearchCondition {
     /**
      *
      * @param  sqlQuery
-     * @return {Book[]}
+     * @return {Curriculum[]}
      */
     describe(sqlQuery) {
         return sqlQuery.where( {name: this.name, author: this.author});

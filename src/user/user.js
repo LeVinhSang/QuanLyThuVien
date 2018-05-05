@@ -58,22 +58,6 @@ class User {
         return this.status;
     }
 
-    /**
-     *
-     * @param {int} code_confirm
-     */
-    setCode(code_confirm) {
-        this.code_confirm = code_confirm;
-    }
-
-    getCode() {
-        return this.code_confirm;
-    }
-
-    /**
-     *
-     * @param {string} role
-     */
     setRole(role) {
         this.role = role;
     }
@@ -85,6 +69,23 @@ class User {
     getRole() {
         return this.role;
     }
+
+    /**
+     *
+     * @param {string} avatar
+     */
+    setAvatar(avatar) {
+        this.avatar = avatar;
+    }
+
+    /**
+     *
+     * @returns {string|*}
+     */
+    getAvatar() {
+        return this.avatar;
+    }
+
 }
 
 module.exports = User;

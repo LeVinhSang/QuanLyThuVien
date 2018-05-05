@@ -2,8 +2,9 @@ class BorrowerController {
 
     create(req, res, next) {
         let repo = req.app.get('borrower.repo');
-        repo.add(req.borrower).then( () => {
-            res.send('success');
+        repo.add(req.borrower).then( borrower => {
+            req.borrower.setId(borrower[0]);
+            res.send(req.borrower);
         }).catch(next)
     }
 
@@ -22,10 +23,24 @@ class BorrowerController {
         }).catch(next)
     }
 
+    confirm(req, res, next) {
+        let repo = req.app.get('borrower.repo');
+        repo.confirm(req.params.id).then( () => {
+            res.send('success');
+        }).catch(next)
+    }
+
     search(req, res, next) {
         let service = req.app.get('borrower.searcher');
         service.search(req.condition).then( borrowers => {
             res.json(borrowers);
+        }).catch(next);
+    }
+
+    sendMail(req, res, next) {
+        let sendMail = req.app.get('email.service');
+        sendMail.send().then( () => {
+            res.send('success');
         }).catch(next);
     }
 }

@@ -10,6 +10,11 @@ class UserProvider {
         this.factory = factory;
     }
 
+    /**
+     *
+     * @param {string} user_name
+     * @returns {Promise<*>}
+     */
     async provide(user_name) {
         let factory = this.factory;
         let user = await this.connection('users').select()

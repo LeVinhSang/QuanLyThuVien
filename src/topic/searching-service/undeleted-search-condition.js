@@ -3,7 +3,7 @@ class UndeletedSearchCondition {
     /**
      *
      * @param sqlQuery
-     * @return {Book[]}
+     * @return {Topic[]}
      */
     describe(sqlQuery) {
         return sqlQuery.where({'topics.deleted_at': null});

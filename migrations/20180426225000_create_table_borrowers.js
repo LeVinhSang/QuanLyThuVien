@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
         table.integer('book_id').notNull();
         table.date('date_borrow');
         table.date('date_return');
+        table.string('status');
         table.date('deleted_at');
     });
 };

@@ -74,6 +74,22 @@ class Borrower {
         return this.date_return;
     }
 
+    /**
+     *
+     * @param {string} status
+     */
+    setStatus(status) {
+        this.status = status;
+    }
+
+    /**
+     *
+     * @returns {string|*}
+     */
+    getStatus() {
+        return this.status;
+    }
+
 }
 
 module.exports = Borrower;

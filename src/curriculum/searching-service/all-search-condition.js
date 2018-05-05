@@ -3,7 +3,7 @@ class AllSearchCondition {
     /**
      *
      * @param sqlQuery
-     * @return {Book[]}
+     * @return {Curriculum[]}
      */
     describe(sqlQuery) {
         return sqlQuery;

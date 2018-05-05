@@ -12,6 +12,11 @@ class BookProvider {
         this.factory = factory;
     }
 
+    /**
+     *
+     * @param {int} id
+     * @returns {Promise<*>}
+     */
     async provide(id) {
         let factory = this.factory;
         let book = await this.connection('books')

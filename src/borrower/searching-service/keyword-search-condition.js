@@ -11,13 +11,13 @@ class KeywordSearchCondition {
     /**
      *
      * @param  sqlQuery
-     * @return {Book[]}
+     * @return {Borrower[]}
      */
     describe(sqlQuery) {
         let keyword = this.keyword;
         return sqlQuery.where( function () {
-            this.where('borrowers.user_name', 'like', '%' + keyword + '%')
-                .orWhere('books.name', 'like', '%' + keyword + '%')
+            this.where('borrowers.name_user', 'like', '%' + keyword + '%')
+                .orWhere('books.title', 'like', '%' + keyword + '%')
         }).where({'borrowers.deleted_at': null});
     }
 }

@@ -1,3 +1,5 @@
+const status = require('./status');
+
 class BorrowerRepository {
 
     /**
@@ -18,6 +20,7 @@ class BorrowerRepository {
             name_user: borrower.getUser().getUser_name(),
             book_id: borrower.getBook().getId(),
             date_borrow: new Date(),
+            status: status.PENDING,
             date_return: borrower.getDate_return()
         });
     }
@@ -44,6 +47,12 @@ class BorrowerRepository {
     async delete(id) {
         return await this.connection('borrowers').update({
             deleted_at: new Date()
+        }).where({id : id});
+    }
+
+    async confirm(id) {
+        return await this.connection('borrowers').update({
+            status: status.CONFIRM
         }).where({id : id});
     }
 }
