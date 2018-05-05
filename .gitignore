@@ -2,5 +2,3 @@ node_modules
 .idea
 .env
 package-lock.json
-client/node_modules
-client/package-lock.json
