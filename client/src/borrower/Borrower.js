@@ -15,9 +15,23 @@ export default class Borrowers extends Component {
         };
     }
 
+    //todo edit key color red :))
     componentDidMount() {
+        let self = this;
+        fetch('/borrowers', {
+            method: 'GET'
+        }).then(function(response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            self.setState({borrowers: data});
+        }).catch(err => {
+            console.log('caught it!', err);
+        });
         store.subscribe( () => {
-            console.log(store.getState());
             this.setState({borrowers: store.getState()});
         });
     }
@@ -74,7 +88,7 @@ export default class Borrowers extends Component {
                             <td>{borrower.book.title} </td>
                             <td>{borrower.user.email}</td>
                             <td>{borrower.date_borrow}</td>
-                            <td>{borrower.dateReturn}</td>
+                            <td>{borrower.date_return}</td>
                             <td><a>Edit</a>|<a>Delete</a></td>
                         </tr>
                     )}

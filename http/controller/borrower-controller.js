@@ -33,7 +33,7 @@ class BorrowerController {
     search(req, res, next) {
         let service = req.app.get('borrower.searcher');
         service.search(req.condition).then( borrowers => {
-            res.json(borrowers);
+            res.send(borrowers);
         }).catch(next);
     }
 

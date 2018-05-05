@@ -7,6 +7,7 @@ export function addBorrower(borrower) {
         id: borrower.id,
         user: borrower.user,
         book: borrower.book,
-        dateReturn: borrower.date_return
+        date_return: borrower.date_return,
+        date_borrow: borrower.date_borrow
     }
 }

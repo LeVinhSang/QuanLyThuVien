@@ -1,9 +1,5 @@
 import {ADD_BORROWER} from "./actions";
 
-export function getBorrower() {
-    
-}
-
 export function addToReducer(state = [], action) {
     if(action.type === ADD_BORROWER) {
         return [...state,
@@ -11,7 +7,8 @@ export function addToReducer(state = [], action) {
                     id: action.id,
                     user: action.user,
                     book: action.book,
-                    dateReturn: action.dateReturn
+                    date_return: action.date_return,
+                    date_borrow: action.date_borrow
                 }];
     }
 
