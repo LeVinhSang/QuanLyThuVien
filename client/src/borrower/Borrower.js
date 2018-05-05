@@ -26,7 +26,6 @@ export default class Borrowers extends Component {
             }
             return response.json();
         }).then(data => {
-            console.log(data);
             self.setState({borrowers: data});
         }).catch(err => {
             console.log('caught it!', err);

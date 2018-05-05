@@ -24,7 +24,7 @@ class Searcher {
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow',
                 'borrowers.date_return',
                 'users.user_name', 'users.email', 'users.avatar',
-                'books.id', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
+                'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',
                 'publishers.name', 'publishers.phone', 'publishers.address')
             .leftJoin('books', function () {
