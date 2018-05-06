@@ -8,30 +8,17 @@ export default class Borrowers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            borrowers: store.getState(),
+            borrowers:[],
             name_user: '',
             book_id: '',
             date_return: ''
         };
     }
 
-    //todo edit key color red :))
-    componentDidMount() {
-        let self = this;
-        fetch('/borrowers', {
-            method: 'GET'
-        }).then(function(response) {
-            if (response.status >= 400) {
-                throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then(data => {
-            self.setState({borrowers: data});
-        }).catch(err => {
-            console.log('caught it!', err);
-        });
-        store.subscribe( () => {
-            this.setState({borrowers: store.getState()});
+    async componentDidMount() {
+        this.setState({borrowers: await store.getState()});
+        store.subscribe( async () => {
+            this.setState({borrowers: await store.getState()});
         });
     }
 
