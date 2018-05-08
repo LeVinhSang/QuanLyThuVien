@@ -1,9 +1,8 @@
-const bcrypt = require('bcrypt');
+
 
 function test() {
-    bcrypt.hash('sang', 10).then( hash => {
-        console.log(hash);
-    });
+    let date = new Date().toISOString().substr(0, 10);
+    console.log(date);
 }
 
 test();

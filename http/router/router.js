@@ -28,6 +28,11 @@ router.get('/books', (req, res, next) => {
     next();
 }, bookController.search);
 
+router.get('/books/react', (req, res, next) => {
+    req.condition = new bookSearch.bookUndeleted();
+    next();
+}, bookController.searchForReact);
+
 router.get('/search-basic', (req, res, next) => {
     req.condition = new bookSearch.bookKeyword(req.query.keyword);
     next();
@@ -65,6 +70,7 @@ router.get('/borrowers', (req, res, next) => {
     next();
 }, borrowerController.search);
 
+
 router.get('/search-outDate', (req, res, next) => {
     req.condition = new borrowerSearch.borrowerOutDate();
     next();
@@ -82,9 +88,9 @@ router.get('/search-advance', (req, res, next) => {
 
 router.get('/borrower/send-mail', check.dataBorrower, borrowerController.sendMail);
 router.post('/borrower', request.borrower, borrowerController.create);
-router.put('/borrower/:id', request.borrower, borrowerController.update);
+router.put('/borrower', request.borrower, borrowerController.update);
 router.put('/borrower/confirm/:id', request.borrower, borrowerController.confirm);
-router.delete('/borrower/:id', borrowerController.remove);
+router.delete('/borrower', borrowerController.remove);
 
 /*--------------------------------------------------Curriculums---------------------------------------------*/
 

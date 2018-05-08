@@ -11,14 +11,14 @@ class BorrowerController {
     update(req, res, next) {
         let repo = req.app.get('borrower.repo');
         repo.edit(req.borrower).then( () => {
-            res.send('success');
+            res.send(req.borrower);
         }).catch(next)
     }
 
 
     remove(req, res, next) {
         let repo = req.app.get('borrower.repo');
-        repo.delete(req.params.id).then( () => {
+        repo.delete(req.body.id).then( () => {
             res.send('success');
         }).catch(next)
     }

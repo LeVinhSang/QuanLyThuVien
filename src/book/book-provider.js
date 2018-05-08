@@ -17,17 +17,22 @@ class BookProvider {
      * @param {int} id
      * @returns {Promise<*>}
      */
-    async provide(id) {
+    provide(id) {
         let factory = this.factory;
-        let book = await this.connection('books')
-            .select('books.id', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
+        let book = this.connection('books')
+            .select('books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
             'books.genre',
             'publishers.name', 'publishers.phone', 'publishers.address')
             .leftJoin('publishers', function () {
                 this.on('publisher_id', '=', 'publishers.id')
-            }).where({'books.id': id})
+            }).where({'books.id_book': id})
             .where('amount', '>', 0)
-            .then( results => factory.makeFromDB(results[0]));
+            .then( results => {
+                if(results.length === 0 ){
+                    return new Book('');
+                }
+                return factory.makeFromDB(results[0])
+            });
         return book;
     }
 

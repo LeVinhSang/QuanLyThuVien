@@ -18,10 +18,10 @@ class Book {
 
     /**
      *
-     * @param {int} id
+     * @param {int} id_book
      */
-    setId(id) {
-        this.id = id;
+    setId(id_book) {
+        this.id_book = id_book;
     }
 
     /**
@@ -29,7 +29,7 @@ class Book {
      * @returns {int|*}
      */
     getId() {
-        return this.id;
+        return this.id_book;
     }
 
     /**
@@ -110,6 +110,13 @@ class Book {
      */
     getImages() {
         return this.images;
+    }
+
+    toJson() {
+        return {
+            value : this.getId(),
+            label : this.getTitle(),
+        }
     }
 
 }

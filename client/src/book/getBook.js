@@ -1,6 +1,6 @@
-export default async function getBook() {
+export default function getBook() {
     let books;
-    books = await fetch('/books/react', {
+    books = fetch('/books/react', {
         method: 'GET'
     }).then(function(response) {
         if (response.status >= 400) {

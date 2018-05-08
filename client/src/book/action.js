@@ -1,4 +1,5 @@
 export const ADD_BOOK = 'ADD_BOOK';
+export const ADD_BOOK_FOR_BORROWER = 'ADD_BOOK_FOR_BORROWER';
 export const EDIT_BOOK = 'EDIT_BOOK';
 
 export function addBook(book) {

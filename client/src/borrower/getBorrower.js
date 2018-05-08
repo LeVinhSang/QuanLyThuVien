@@ -1,6 +1,6 @@
-export default async function getBorrower() {
+export default function getBorrower() {
     let borrowers;
-    borrowers = await fetch('/borrowers', {
+    borrowers = fetch('/borrowers', {
         method: 'GET'
     }).then(function(response) {
         if (response.status >= 400) {
@@ -8,7 +8,8 @@ export default async function getBorrower() {
         }
         return response.json();
     }).then(data => data).catch(err => {
-        console.log('caught it!', err);
+        console.log(err);
     });
+
     return borrowers;
 }

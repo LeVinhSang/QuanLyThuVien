@@ -27,6 +27,13 @@ class BookController {
             res.json(books);
         }).catch(next);
     }
+
+    searchForReact(req, res, next) {
+        let service = req.app.get('book.searcher');
+        service.search(req.condition).then( books => {
+            res.json(books.map(book => book.toJson()));
+        }).catch(next);
+    }
 }
 
 module.exports = BookController;

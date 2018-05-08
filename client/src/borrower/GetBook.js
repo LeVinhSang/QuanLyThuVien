@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import storeBook from "../book/store";
+import getBook from "../book/getBook";
 
 export default class GetBook extends Component {
     constructor(props) {
@@ -19,11 +19,17 @@ export default class GetBook extends Component {
 
     }
 
-    async componentDidMount() {
-        this.setState({options: await storeBook.getState()});
+    componentDidMount() {
+        let self = this;
+        getBook().then(data => {
+            self.setState({
+                options: data
+            })
+        });
     }
 
     handleOnChange (value) {
+
         const { multi } = this.state;
         if (multi) {
             this.setState({ multiValue: value });
@@ -35,6 +41,7 @@ export default class GetBook extends Component {
     render () {
         const { multi, multiValue, options, value } = this.state;
         return (
+
             <div className="section">
                 <Select.Creatable
                     multi={multi}
@@ -52,7 +59,7 @@ export default class GetBook extends Component {
                             checked={multi}
                             onChange={() => this.setState({ multi: true })}
                         />
-                        <span className="checkbox-label">Multiselect</span>
+                        <span className="checkbox-label">Multi Select</span>
                         </label>
                     </div>
                     <label className="checkbox">

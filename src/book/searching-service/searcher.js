@@ -21,7 +21,7 @@ class Searcher {
     search(condition) {
         let factory = this.factory;
         let sqlQuery = this.connection('books')
-            .select('books.id', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
+            .select('books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',
                 'publishers.name', 'publishers.phone', 'publishers.address')
             .leftJoin('publishers', function () {

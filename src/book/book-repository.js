@@ -37,7 +37,7 @@ class BookRepository {
             genre: book.getGenre(),
             amount: book.getAmount(),
             images: book.getImages()
-        }).where({id: book.getId()});
+        }).where({id_book: book.getId()});
     }
 
     /**
@@ -48,7 +48,7 @@ class BookRepository {
     async delete(id) {
         return await this.connection('books').update({
             deleted_at: new Date()
-        }).where({id: id})
+        }).where({id_book: id})
     }
 }
 

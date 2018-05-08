@@ -20,6 +20,7 @@ class BorrowerFactory {
         borrower.setDate_return(borrowerRaw.date_return);
         borrower.setDate_borrow(borrowerRaw.date_borrow);
         borrower.setStatus(borrowerRaw.status);
+        borrower.setId(borrowerRaw.id);
         return borrower;
     }
 
@@ -34,12 +35,11 @@ class BorrowerFactory {
         let bookFactory = app.get('book.factory');
         let user = userFactory.makeFromDB(borrowerRaw);
         let book = bookFactory.makeFromDB(borrowerRaw);
-        book.setId(borrowerRaw.book_id);
         let borrower = new Borrower(user, book);
         borrower.setId(borrowerRaw.id);
-        borrower.setDate_borrow(borrowerRaw.date_borrow);
+        borrower.setDate_borrow(borrowerRaw.date_borrow.toISOString().substr(0, 10));
         borrower.setStatus(borrowerRaw.status);
-        borrower.setDate_return(borrowerRaw.date_return);
+        borrower.setDate_return(borrowerRaw.date_return.toISOString().substr(0, 10));
         return borrower;
 
     }

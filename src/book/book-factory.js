@@ -14,7 +14,7 @@ class BookFactory {
     async makeFromRequest(bookRaw) {
         let publisherProvider = this.app.get('publisher.provide');
         let book = new Book(bookRaw.title);
-        book.setId(bookRaw.id);
+        book.setId(bookRaw.id_book);
         book.setAmount(bookRaw.amount);
         book.setAuthor(bookRaw.author);
         book.setGenre(bookRaw.genre);
@@ -39,7 +39,7 @@ class BookFactory {
         let publisher = factory.makeFromDB(bookRaw);
         publisher.setId(bookRaw.publisher_id);
         book.setPublisher(publisher);
-        book.setId(bookRaw.id);
+        book.setId(bookRaw.id_book);
         return book;
 
     }

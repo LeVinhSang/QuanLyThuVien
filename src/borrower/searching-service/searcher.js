@@ -24,11 +24,11 @@ class Searcher {
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow',
                 'borrowers.date_return',
                 'users.user_name', 'users.email', 'users.avatar',
-                'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
+                'books.id_book','books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',
                 'publishers.name', 'publishers.phone', 'publishers.address')
             .leftJoin('books', function () {
-                this.on('borrowers.book_id', '=', 'books.id')
+                this.on('borrowers.book_id', '=', 'books.id_book')
             })
             .leftJoin('users', function () {
                 this.on('users.user_name', '=', 'borrowers.name_user')
@@ -38,7 +38,7 @@ class Searcher {
             });
 
         condition.describe(sqlQuery);
-        return sqlQuery.then( results => results.map(element => factory.makeFromDB(element)));
+        return sqlQuery.then(results => results.map( element => factory.makeFromDB(element)));
     }
 }
 

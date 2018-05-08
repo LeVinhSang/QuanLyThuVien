@@ -26,9 +26,10 @@ class Borrower {
         return this.book;
     }
 
+
     /**
      *
-     * @param {int} id
+     * @returns {Book|*}
      */
     setId(id) {
         this.id = id;
