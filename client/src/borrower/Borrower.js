@@ -1,276 +1,309 @@
 import React, {Component} from 'react';
-import store from "./store";
-import {addBorrower, checkedBorrower, deleteBorrower, editBorrower} from "./actions";
-import {Table, Form, Button} from 'react-bootstrap';
-import {Container, Input} from "reactstrap";
-import Modal from 'react-modal';
-import GetBook from "./GetBook";
-import getBorrower from "./getBorrower";
-import getBook from "../book/getBook";
-import PropTypes from "prop-types";
-import Select from 'react-select';
+import {addBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/actions";
+import {connect} from 'react-redux';
+import { Modal, Button, Input, Icon, Form, Radio } from 'antd';
 
+const mapDispatchToProps = dispatch => {
+    return {
+        addBorrower: (name, id_book, date_return) => {
+            dispatch(addBorrower(name, id_book, date_return));
+        },
 
-export default class Borrower extends Component {
+        loadBorrower: () => {
+            dispatch(loadBorrower());
+        },
+
+        editChecked: (id, checked) => {
+            dispatch(editChecked(id, checked));
+        },
+
+        editBorrower: (name, id_book, date_return, id) => {
+            dispatch(editBorrower(name, id_book, date_return, id));
+        }
+    }
+};
+
+const mapStateToProps = state => {
+    return {
+        borrowers: state
+    }
+};
+
+class Borrower extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            borrowers: store.getState(),
-            name_user: '',
-            book_id: '',
+            visible: false,
+            visibleEdit: false,
+            name: '',
+            id_book: '',
             date_return: '',
-            id: '',
-            multi: true,
-            multiValue: [],
-            books: [],
-            value: undefined,
-            propTypes: {
-                hint: PropTypes.string,
-                label: PropTypes.string
-            }
+            formLayout: 'horizontal',
         };
-
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-        this.logChange = this.logChange.bind(this); // We capture the value and change state as user changes the value here.
-        this.handleEdit = this.handleEdit.bind(this); // Function where we submit data
-    }
-
-    openModal(member, key) {
-        this.setState({
-            modalIsOpen: true,
-            name_user: member.user.user_name,
-            book_id: member.book.id_book,
-            date_return: member.date_return,
-            id: member.id,
-            key: key
-        });
-    }
-
-    closeModal() {
-        this.setState({
-            modalIsOpen: false
-        });
-    }
+    };
 
 
     componentWillMount() {
-        Modal.setAppElement('body');
+        this.props.loadBorrower();
     }
 
-    componentDidMount() {
+    /*----------------------------------------------Modal----------------------------------------------*/
 
-        let self = this;
-        getBook().then(data => {
-            self.setState({
-                books: data
-            })
-        });
-
-        getBorrower().then(data => {
-            data.map(data => store.dispatch(addBorrower(data, false)))
-        });
-
-        store.subscribe( () => {
-            this.setState({borrowers: store.getState()});
-        });
-    }
-
-    /*-----------------Chang value input------------------*/
-    logChange(e) {
+    showModal = () => {
         this.setState({
-            [e.target.name]: e.target.value //setting value edited by the admin in state.
+            visible: true,
         });
-    }
+    };
 
-    /*---------------------Edit Borrower--------------------*/
-    handleEdit(e) {
+    showModalEdit = (member) => {
+        this.setState({
+            visibleEdit: true,
+            name: member.user.user_name,
+            book_id: member.book.id,
+            date_return: member.date_return
+        });
+    };
+
+    handleOkEdit = (e) => {
         e.preventDefault();
-        let self = this;
-        let data = {
-            name_user: this.state.name_user,
-            book_id: this.state.book_id,
-            date_return: this.state.date_return,
-            checked: this.state.checked,
-            id: this.state.id
-        };
-        fetch("/borrower", {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then( (response) => {
-            if (response.status >= 400) {
-                throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then( data => {
-            store.dispatch(editBorrower(data, self.state.key, false));
-            self.closeModal();
-        }).catch( (err) => {
-            console.log(err)
+        this.props.editBorrower(this.state.name, this.state.id_book, this.state.date_return, e.currentTarget.getAttribute('data-id-borrower'));
+
+        this.setState({
+            visibleEdit: false,
         });
-    }
+    };
 
+    handleCancelEdit = () => {
+        this.setState({
+            visibleEdit: false,
+        });
+    };
 
-    handleCheckBox(e) {
-        store.dispatch(checkedBorrower(e.currentTarget.getAttribute('id'), e.currentTarget.checked));
-    }
-
-    /*-----------Add Borrower--------------*/
-    addBorrowerSubmit(e) {
+    handleOk = (e) => {
         e.preventDefault();
-        let data = {
-            name_user: this.state.name_user,
-            book_id: this.state.book_id,
-            date_return: this.state.date_return
-        };
+        this.props.addBorrower(this.state.name, this.state.id_book, this.state.date_return);
 
-        fetch('/borrower', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then( (response) => {
-            if (response.status >= 400) {
-                throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then( data => store.dispatch(addBorrower(data, false))).catch( (err) => {
-            console.log(err)
+        this.setState({
+            visible: false,
         });
-    }
+    };
 
-    /*-----------Select-------------*/
-    handleOnChange (value) {
-        const { multi } = this.state;
-        if (multi) {
-            this.setState({ multiValue: value });
-        } else {
-            this.setState({ value });
-        }
-    }
-
-
-
-    handleDelete() {
-        this.state.borrowers.map( borrower => {
-            if(borrower.checked === true) {
-
-                fetch('/borrower', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({id: borrower.id})
-                }).catch( (err) => {
-                    console.log(err)
-                });
-            }
+    handleCancel = () => {
+        this.setState({
+            visible: false,
         });
+    };
 
-        store.dispatch(deleteBorrower(this.state.borrowers));
+    emitEmpty = () => {
+        this.nameInput.focus();
+        this.setState({ name: '' });
+    };
+
+    emitBookEmpty = () => {
+        this.IDBookInput.focus();
+        this.setState({ id_book: '' });
+    };
+
+    emitDateReturnEmpty = () => {
+        this.DateReturnInput.focus();
+        this.setState({ date_return: '' });
+    };
+
+    /*----------------------input in Modal----------------*/
+
+    onChangeUserName = (e) => {
+        this.setState({ name: e.target.value });
+    };
+
+    onChangeBookID = (e) => {
+        this.setState({ id_book: e.target.value });
+    };
+
+    onChangeDateReturn = (e) => {
+        this.setState({ date_return: e.target.value });
+    };
+
+    checkedClick(e) {
+        this.props.editChecked(e.currentTarget.getAttribute('data-id-borrower'), e.currentTarget.checked)
     }
+
+    handleFormLayoutChange = (e) => {
+        this.setState({ formLayout: e.target.value });
+    };
+
+    /*----------------------------------------End Modal------------------------------------------*/
 
 
     render() {
-        const { multi, multiValue, books, value } = this.state;
+
+        const { name, id_book , date_return} = this.state;
+        const suffix = name ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
+        const suffixBook = id_book ? <Icon type="close-circle" onClick={this.emitBookEmpty} /> : null;
+        const suffixDate = date_return ? <Icon type="close-circle" onClick={this.emitDateReturnEmpty} /> : null;
+
+        const { formLayout } = this.state;
+        const formItemLayout = formLayout === 'horizontal' ? {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 14 },
+        } : null;
 
         return (
-            <Container>
-                <Table striped bordered condensed hover>
+            <div>
+                <div>
+                    <Button type="primary" onClick={this.showModal}>New Borrower</Button>
+                </div>
+                <Modal
+                    title="Create Borrower"
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                    <Form layout={formLayout}>
+                        <Form.Item
+                            label="Type Form"
+                            {...formItemLayout}
+                        >
+                            <Radio.Group defaultValue="horizontal" onChange={this.handleFormLayoutChange}>
+                                <Radio.Button value="horizontal">Horizontal</Radio.Button>
+                                <Radio.Button value="vertical">Vertical</Radio.Button>
+                                <Radio.Button value="inline">Inline</Radio.Button>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='text'
+                                placeholder="Enter your username"
+                                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffix}
+                                value={name}
+                                onChange={this.onChangeUserName.bind(this)}
+                                ref={node => this.nameInput = node}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='number'
+                                placeholder="Enter your book_id"
+                                prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffixBook}
+                                value={id_book}
+                                onChange={this.onChangeBookID.bind(this)}
+                                ref={node => this.IDBookInput = node}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='date'
+                                placeholder="Enter your book_id"
+                                prefix={<Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffixDate}
+                                value={date_return}
+                                onChange={this.onChangeDateReturn.bind(this)}
+                                ref={node => this.DateReturnInput = node}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
+                <Modal
+                    title="Edit Borrower"
+                    visible={this.state.visibleEdit}
+                    onOk={this.handleOkEdit}
+                    onCancel={this.handleCancelEdit}
+                >
+                    <Form layout={formLayout}>
+                        <Form.Item
+                            label="Type Form"
+                            {...formItemLayout}
+                        >
+                            <Radio.Group defaultValue="horizontal" onChange={this.handleFormLayoutChange}>
+                                <Radio.Button value="horizontal">Horizontal</Radio.Button>
+                                <Radio.Button value="vertical">Vertical</Radio.Button>
+                                <Radio.Button value="inline">Inline</Radio.Button>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='text'
+                                placeholder="Enter your username"
+                                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffix}
+                                value={name}
+                                onChange={this.onChangeUserName.bind(this)}
+                                ref={node => this.nameInput = node}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='number'
+                                placeholder="Enter your book_id"
+                                prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffixBook}
+                                value={id_book}
+                                onChange={this.onChangeBookID.bind(this)}
+                                ref={node => this.IDBookInput = node}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                        >
+                            <Input
+                                type='date'
+                                placeholder="Enter your book_id"
+                                prefix={<Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                suffix={suffixDate}
+                                value={date_return}
+                                onChange={this.onChangeDateReturn.bind(this)}
+                                ref={node => this.DateReturnInput = node}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
+                <table>
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Book</th>
                         <th>Email</th>
-                        <th>Date borrow</th>
-                        <th>Date return</th>
-                        <th><Button onClick={this.handleDelete.bind(this)}>Delete</Button></th>
+                        <th>Book</th>
+                        <th>Date Borrow</th>
+                        <th>Date Return</th>
+                        <th><button>Delete</button></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.borrowers.map( (borrower, index) =>
-                        <tr key={borrower.id}>
-                            <td>{borrower.user.user_name} </td>
-                            <td>{borrower.book.title} </td>
+                    {this.props.borrowers.map( (borrower, index) =>
+                        <tr key={index}>
+                            <td>{borrower.user.user_name}</td>
                             <td>{borrower.user.email}</td>
-                            <td>{borrower.date_borrow}</td>
+                            <td>{borrower.book.title}</td>
                             <td>{borrower.date_return}</td>
-                            <td><Button onClick={() => this.openModal(borrower, index)}>Edit</Button>
-                                | Delete <input idborrower={borrower.id} onChange={this.handleCheckBox.bind(this)} id={index} checked={borrower.checked} type='checkbox'/>
+                            <td>{borrower.date_borrow}</td>
+                            <td>
+                                <button onSubmit={this.showModalEdit(borrower).bind(this)}>Edit</button> |
+                                <input data-id-borrower={index} onChange={this.checkedClick.bind(this)} type='checkbox' checked={borrower.checked}/>
                             </td>
                         </tr>
                     )}
-
-                    {/*----------Modal Edit Borrower*/}
-                    <Modal
-                        isOpen={this.state.modalIsOpen}
-                        onRequestClose={this.closeModal.bind(this)}
-                        contentLabel="Example Modal" >
-                        <Form onSubmit={this.handleEdit.bind(this)} onChange={this.logChange.bind(this)}>
-                            <label>Name User</label>
-                            <Input className="form-control" value={this.state.name_user} placeholder='John' name='name_user' />
-                            <label>Book</label>
-                            <Input className="form-control" value={this.state.book_id} name='book_id'/>
-                            <GetBook books = {this.state.books} />
-                            <label>Date Return</label>
-                            <Input type="date" className="form-control" value={this.state.date_return} name='date_return'/>
-                            <div className="submit-section">
-                                <Button className="btn btn-uth-submit">Submit</Button>
-                            </div>
-                        </Form>
-                    </Modal>
-
                     </tbody>
-                </Table>
-
-                {/*--------Form Add Borrower---------------*/}
-                <form onSubmit={this.addBorrowerSubmit.bind(this)} onChange={this.logChange.bind(this)}>
-                    <label>Name</label>
-                    <Input name='name_user' placeholder="name user"/>
-                    <label>Book</label>
-                    <input name='book_id'/>
-                    
-                    {/*Tag Select In React Select*/}
-                    <div className="section">
-                        <Select.Creatable
-                            multi={multi}
-                            options={books}
-                            onChange={this.handleOnChange.bind(this)}
-                            value={multi ? multiValue : value}
-                        />
-                        <div className="hint">{this.props.hint}</div>
-                        <div className="checkbox-list">
-                            <div>
-                                <label className="checkbox">
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox-control"
-                                        checked={multi}
-                                        onChange={() => this.setState({ multi: true })}
-                                    />
-                                    <span className="checkbox-label">Multi Select</span>
-                                </label>
-                            </div>
-                            <label className="checkbox">
-                                <input
-                                    type="checkbox"
-                                    className="checkbox-control"
-                                    checked={!multi}
-                                    onChange={() => this.setState({ multi: false })}
-                                />
-                                <span className="checkbox-label">Single Value</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <Input type='date' name='date_return'/>
-                    <Input type='submit'/>
-                </form>
-            </Container>
+                </table>
+            </div>
         )
     }
+
 }
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Borrower);
