@@ -1,6 +1,6 @@
 import {ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, LOAD_BORROWER} from "./actions";
 
-export function addToReducer(state = [], action) {
+export function borrowerReducer(state = [], action) {
     if(action.type === ADD_BORROWER) {
         return [...state,{...action.borrower}]
     }

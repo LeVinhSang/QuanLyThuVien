@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        borrowers: state.addToReducer
+        borrowers: state.borrowerReducer
     }
 };
 

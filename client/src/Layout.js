@@ -4,33 +4,23 @@ import Router from "./Route";
 
 
 export default class LayoutBorrower extends React.Component {
-    state = {
-        collapsed: false,
-    };
-    onCollapse = (collapsed) => {
-        console.log(collapsed);
-        this.setState({ collapsed });
-    };
 
     render() {
+
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Layout.Sider
-                    collapsible
-                    collapsed={this.state.collapsed}
-                    onCollapse={this.onCollapse}
-                >
+                <Layout.Sider>
                     <div className="logo">
                         {/*todo*/}
                     </div>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
-                            <Icon type="pie-chart" />
-                            <span>Option 1</span>
+                            <Icon type="user" />
+                            <span>Borrower</span>
                         </Menu.Item>
                         <Menu.Item key="2">
-                            <Icon type="desktop" />
-                            <span>Option 2</span>
+                            <Icon type="book" />
+                            <span>Get Book</span>
                         </Menu.Item>
                         <Menu.SubMenu
                             key="sub1"

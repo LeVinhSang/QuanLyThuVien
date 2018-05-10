@@ -1,7 +1,9 @@
 import {ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, LOAD_BORROWER} from "./actions";
 
 const borrowerApi = store => next => action => {
+
     if(action.type === LOAD_BORROWER) {
+
         fetch("/borrowers", {
             method: 'GET'
         }).then( res => res.json()).then( data => next({
@@ -11,7 +13,7 @@ const borrowerApi = store => next => action => {
         );
     }
 
-    if(action.type === EDIT_CHECKED) {
+    else if(action.type === EDIT_CHECKED) {
         next({
             type: EDIT_CHECKED,
             id: action.id,
@@ -19,7 +21,7 @@ const borrowerApi = store => next => action => {
         });
     }
 
-    if(action.type === ADD_BORROWER) {
+    else if(action.type === ADD_BORROWER) {
         let data = {
             name_user: action.name_user,
             book_id: action.book_id,
@@ -38,7 +40,7 @@ const borrowerApi = store => next => action => {
         }));
     }
 
-    if(action.type === EDIT_BORROWER) {
+    else if(action.type === EDIT_BORROWER) {
         let data = {
             name_user: action.name_user,
             book_id: action.book_id,
@@ -60,7 +62,7 @@ const borrowerApi = store => next => action => {
         );
     }
 
-    if(action.type === DELETE_BORROWER) {
+    else if(action.type === DELETE_BORROWER) {
         action.borrowers.map( borrower => {
             if(borrower.checked === true) {
                 fetch("/borrower", {
@@ -78,6 +80,10 @@ const borrowerApi = store => next => action => {
             type: DELETE_BORROWER,
             borrowers: action.borrowers
         })
+    }
+
+    else {
+        next(action);
     }
 };
 
