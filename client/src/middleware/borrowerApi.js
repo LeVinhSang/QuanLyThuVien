@@ -1,4 +1,4 @@
-import {ADD_BORROWER, EDIT_BORROWER, EDIT_CHECKED, LOAD_BORROWER} from "./actions";
+import {ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, LOAD_BORROWER} from "./actions";
 
 const borrowerApi = store => next => action => {
     if(action.type === LOAD_BORROWER) {
@@ -52,9 +52,32 @@ const borrowerApi = store => next => action => {
             },
             body: JSON.stringify(data)
         }).then( res => res.json()).then( data => next({
-            type: EDIT_BORROWER,
-            borrower: data
-        }));
+                type: EDIT_BORROWER,
+                borrower: data,
+                id: action.id,
+                key: action.key
+            })
+        );
+    }
+
+    if(action.type === DELETE_BORROWER) {
+        action.borrowers.map( borrower => {
+            if(borrower.checked === true) {
+                fetch("/borrower", {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({id: borrower.id})
+                }).then();
+            }
+            return 0;
+        });
+
+        next({
+            type: DELETE_BORROWER,
+            borrowers: action.borrowers
+        })
     }
 };
 

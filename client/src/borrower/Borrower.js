@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {addBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/actions";
+import {addBorrower, deleteBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/actions";
 import {connect} from 'react-redux';
 import { Modal, Button, Input, Icon, Form, Radio } from 'antd';
 
@@ -17,8 +17,12 @@ const mapDispatchToProps = dispatch => {
             dispatch(editChecked(id, checked));
         },
 
-        editBorrower: (name, id_book, date_return, id) => {
-            dispatch(editBorrower(name, id_book, date_return, id));
+        editBorrower: (name, id_book, date_return, id, key) => {
+            dispatch(editBorrower(name, id_book, date_return, id, key));
+        },
+
+        deleteBorrower: (borrowers) => {
+            dispatch(deleteBorrower(borrowers));
         }
     }
 };
@@ -35,9 +39,6 @@ class Borrower extends Component {
         this.state = {
             visible: false,
             visibleEdit: false,
-            name: '',
-            id_book: '',
-            date_return: '',
             formLayout: 'horizontal',
         };
     };
@@ -52,21 +53,26 @@ class Borrower extends Component {
     showModal = () => {
         this.setState({
             visible: true,
+            name: '',
+            id_book: '',
+            date_return: ''
         });
     };
 
-    showModalEdit = (member) => {
+    showModalEdit = (member, index) => {
         this.setState({
             visibleEdit: true,
             name: member.user.user_name,
-            book_id: member.book.id,
-            date_return: member.date_return
+            id_book: member.book.id_book,
+            date_return: member.date_return,
+            id: member.id,
+            key: index
         });
     };
 
     handleOkEdit = (e) => {
         e.preventDefault();
-        this.props.editBorrower(this.state.name, this.state.id_book, this.state.date_return, e.currentTarget.getAttribute('data-id-borrower'));
+        this.props.editBorrower(this.state.name, this.state.id_book, this.state.date_return, this.state.id, this.state.key);
 
         this.setState({
             visibleEdit: false,
@@ -131,6 +137,11 @@ class Borrower extends Component {
         this.setState({ formLayout: e.target.value });
     };
 
+
+    deleteClick = e => {
+        e.preventDefault();
+        this.props.deleteBorrower(this.props.borrowers);
+    };
     /*----------------------------------------End Modal------------------------------------------*/
 
 
@@ -278,7 +289,7 @@ class Borrower extends Component {
                         <th>Book</th>
                         <th>Date Borrow</th>
                         <th>Date Return</th>
-                        <th><button>Delete</button></th>
+                        <th><button onClick={this.deleteClick.bind(this)}>Delete</button></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -290,7 +301,7 @@ class Borrower extends Component {
                             <td>{borrower.date_return}</td>
                             <td>{borrower.date_borrow}</td>
                             <td>
-                                <button onSubmit={this.showModalEdit(borrower).bind(this)}>Edit</button> |
+                                <a onClick={() => this.showModalEdit(borrower, index)}>Edit</a> |
                                 <input data-id-borrower={index} onChange={this.checkedClick.bind(this)} type='checkbox' checked={borrower.checked}/>
                             </td>
                         </tr>
