@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {addBorrower, deleteBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/actions";
+import {addBorrower, deleteBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/borrower/actions";
 import {connect} from 'react-redux';
-import { Modal, Button, Input, Icon, Form, Radio } from 'antd';
+import { Modal, Button, Input, Icon, Form, Radio} from 'antd';
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        borrowers: state
+        borrowers: state.addToReducer
     }
 };
 
@@ -40,9 +40,9 @@ class Borrower extends Component {
             visible: false,
             visibleEdit: false,
             formLayout: 'horizontal',
+            collapsed: false,
         };
     };
-
 
     componentWillMount() {
         this.props.loadBorrower();
@@ -146,7 +146,6 @@ class Borrower extends Component {
 
 
     render() {
-
         const { name, id_book , date_return} = this.state;
         const suffix = name ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
         const suffixBook = id_book ? <Icon type="close-circle" onClick={this.emitBookEmpty} /> : null;
