@@ -33,8 +33,8 @@ router.get('/books/react', (req, res, next) => {
     next();
 }, bookController.searchForReact);
 
-router.get('/search-basic', (req, res, next) => {
-    req.condition = new bookSearch.bookKeyword(req.query.keyword);
+router.get('/book/search-basic/:keyword', (req, res, next) => {
+    req.condition = new bookSearch.bookKeyword(req.params.keyword);
     next();
 }, bookController.search);
 
@@ -76,8 +76,8 @@ router.get('/search-outDate', (req, res, next) => {
     next();
 }, borrowerController.search);
 
-router.get('/search-basic', (req, res, next) => {
-    req.condition = new borrowerSearch.borrowerKeyword(req.query.keyword);
+router.get('/search-basic/:keyword', (req, res, next) => {
+    req.condition = new borrowerSearch.borrowerKeyword(req.params.keyword);
     next();
 }, borrowerController.search);
 

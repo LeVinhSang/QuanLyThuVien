@@ -1,4 +1,7 @@
-import {ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, LOAD_BORROWER} from "./actions";
+import {
+    ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
+    LOAD_BORROWER
+} from "./actions";
 
 export function borrowerReducer(state = [], action) {
     if(action.type === ADD_BORROWER) {
@@ -23,6 +26,10 @@ export function borrowerReducer(state = [], action) {
 
     if(action.type === DELETE_BORROWER) {
         return action.borrowers.filter( borrower => !borrower.checked )
+    }
+
+    if(action.type === GET_KEYWORD_BORROWER) {
+        return [...action.borrowers]
     }
 
     return state;

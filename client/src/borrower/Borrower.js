@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
-import {addBorrower, deleteBorrower, editBorrower, editChecked, loadBorrower} from "../middleware/borrower/actions";
+import {
+    addBorrower, deleteBorrower, editBorrower, editChecked, getKeyWordBorrower,
+    loadBorrower
+} from "../middleware/borrower/actions";
 import {connect} from 'react-redux';
-import { Modal, Button, Input, Icon, Form, Radio} from 'antd';
+import { Modal, Button, Input, Icon, Form, Radio, Select, AutoComplete, Avatar} from 'antd';
+import {loadBook} from "../middleware/book/actions";
+import _ from 'underscore';
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -23,13 +28,23 @@ const mapDispatchToProps = dispatch => {
 
         deleteBorrower: (borrowers) => {
             dispatch(deleteBorrower(borrowers));
+        },
+
+        loadBook: () => {
+            dispatch(loadBook());
+        },
+
+        getKeywordBorrower: (keyword) => {
+            dispatch(getKeyWordBorrower(keyword));
         }
     }
 };
 
 const mapStateToProps = state => {
     return {
-        borrowers: state.borrowerReducer
+        completes: state.autoCompleteReducer,
+        borrowers: state.borrowerReducer,
+        books: state.bookReducer
     }
 };
 
@@ -41,11 +56,13 @@ class Borrower extends Component {
             visibleEdit: false,
             formLayout: 'horizontal',
             collapsed: false,
+            keyword: ''
         };
     };
 
     componentWillMount() {
         this.props.loadBorrower();
+        this.props.loadBook();
     }
 
     /*----------------------------------------------Modal----------------------------------------------*/
@@ -54,7 +71,6 @@ class Borrower extends Component {
         this.setState({
             visible: true,
             name: '',
-            id_book: '',
             date_return: ''
         });
     };
@@ -66,7 +82,7 @@ class Borrower extends Component {
             id_book: member.book.id_book,
             date_return: member.date_return,
             id: member.id,
-            key: index
+            key: index,
         });
     };
 
@@ -87,7 +103,7 @@ class Borrower extends Component {
 
     handleOk = (e) => {
         e.preventDefault();
-        this.props.addBorrower(this.state.name, this.state.id_book, this.state.date_return);
+        this.props.addBorrower(this.state.name, this.state.bookSelect, this.state.date_return);
 
         this.setState({
             visible: false,
@@ -96,18 +112,13 @@ class Borrower extends Component {
 
     handleCancel = () => {
         this.setState({
-            visible: false,
+            visible: false
         });
     };
 
     emitEmpty = () => {
         this.nameInput.focus();
         this.setState({ name: '' });
-    };
-
-    emitBookEmpty = () => {
-        this.IDBookInput.focus();
-        this.setState({ id_book: '' });
     };
 
     emitDateReturnEmpty = () => {
@@ -119,10 +130,6 @@ class Borrower extends Component {
 
     onChangeUserName = (e) => {
         this.setState({ name: e.target.value });
-    };
-
-    onChangeBookID = (e) => {
-        this.setState({ id_book: e.target.value });
     };
 
     onChangeDateReturn = (e) => {
@@ -144,11 +151,28 @@ class Borrower extends Component {
     };
     /*----------------------------------------End Modal------------------------------------------*/
 
+    handleChangeSelect(value) {
+        this.setState({bookSelect: value});
+    }
+
+    handleChange(value) {
+        this.setState({id_book: value.key});
+    }
+
+    /*-----------------------------Search Keyword Borrower ------------------*/
+
+    inputSearchOnChange = (value) => {
+        this.setState({keyword: value});
+    };
+
+    formSubmit = e => {
+        e.preventDefault();
+        this.props.getKeywordBorrower(this.state.keyword);
+    };
 
     render() {
         const { name, id_book , date_return} = this.state;
         const suffix = name ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
-        const suffixBook = id_book ? <Icon type="close-circle" onClick={this.emitBookEmpty} /> : null;
         const suffixDate = date_return ? <Icon type="close-circle" onClick={this.emitDateReturnEmpty} /> : null;
 
         const { formLayout } = this.state;
@@ -157,8 +181,29 @@ class Borrower extends Component {
             wrapperCol: { span: 14 },
         } : null;
 
+        /*------------------Select ADD--------------------------------------------*/
+
+        const bookSelect = [];
+        const spanCompletes = [];
+        this.props.books.map(book => bookSelect.push(<Select.Option key={book.id_book}>{book.title}</Select.Option>));
+        this.props.completes.map(complete => spanCompletes.push(complete.user.user_name));
+
         return (
+
             <div>
+                <Form onSubmit={this.formSubmit.bind(this)}>
+                    <AutoComplete
+                        style={{ width: 300 }}
+                        dataSource={_.uniq(spanCompletes)}
+                        placeholder="Search Borrower"
+                        onChange={this.inputSearchOnChange}
+                        filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+                    >
+                        <Input suffix={<Icon type="search" className="certain-category-icon" />} />
+                    </AutoComplete>
+                </Form>
+
+
                 <div>
                     <Button type="primary" onClick={this.showModal}>New Borrower</Button>
                 </div>
@@ -166,22 +211,17 @@ class Borrower extends Component {
                     title="Create Borrower"
                     visible={this.state.visible}
                     onOk={this.handleOk}
-                    onCancel={this.handleCancel}
+                    onCancel={this.handleCancel.bind(this)}
                 >
                     <Form layout={formLayout}>
-                        <Form.Item
-                            label="Type Form"
-                            {...formItemLayout}
-                        >
+                        <Form.Item label="Type Form" {...formItemLayout}>
                             <Radio.Group defaultValue="horizontal" onChange={this.handleFormLayoutChange}>
                                 <Radio.Button value="horizontal">Horizontal</Radio.Button>
                                 <Radio.Button value="vertical">Vertical</Radio.Button>
                                 <Radio.Button value="inline">Inline</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
+                        <Form.Item {...formItemLayout}>
                             <Input
                                 type='text'
                                 placeholder="Enter your username"
@@ -192,22 +232,17 @@ class Borrower extends Component {
                                 ref={node => this.nameInput = node}
                             />
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
-                            <Input
-                                type='number'
-                                placeholder="Enter your book_id"
-                                prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                suffix={suffixBook}
-                                value={id_book}
-                                onChange={this.onChangeBookID.bind(this)}
-                                ref={node => this.IDBookInput = node}
-                            />
+                        <Form.Item {...formItemLayout}>
+                            <Select
+                                mode="tags"
+                                style={{ width: '100%' }}
+                                placeholder="Book"
+                                onChange={this.handleChangeSelect.bind(this)}
+                            >
+                                {bookSelect}
+                            </Select>
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
+                        <Form.Item {...formItemLayout}>
                             <Input
                                 type='date'
                                 placeholder="Enter your book_id"
@@ -228,45 +263,31 @@ class Borrower extends Component {
                     onCancel={this.handleCancelEdit}
                 >
                     <Form layout={formLayout}>
-                        <Form.Item
-                            label="Type Form"
-                            {...formItemLayout}
-                        >
+                        <Form.Item label="Type Form" {...formItemLayout}>
                             <Radio.Group defaultValue="horizontal" onChange={this.handleFormLayoutChange}>
                                 <Radio.Button value="horizontal">Horizontal</Radio.Button>
                                 <Radio.Button value="vertical">Vertical</Radio.Button>
                                 <Radio.Button value="inline">Inline</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
+                        <Form.Item{...formItemLayout}>
                             <Input
                                 type='text'
                                 placeholder="Enter your username"
                                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 suffix={suffix}
+                                key={name}
                                 value={name}
                                 onChange={this.onChangeUserName.bind(this)}
                                 ref={node => this.nameInput = node}
                             />
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
-                            <Input
-                                type='number'
-                                placeholder="Enter your book_id"
-                                prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                suffix={suffixBook}
-                                value={id_book}
-                                onChange={this.onChangeBookID.bind(this)}
-                                ref={node => this.IDBookInput = node}
-                            />
+                        <Form.Item{...formItemLayout}>
+                            <Select labelInValue defaultValue={{ key: id_book }} style={{ width: 120 }} onChange={this.handleChange.bind(this)}>
+                                {this.props.books.map(book => <Select.Option key={book.id_book} value={book.id_book}>{book.title}</Select.Option>)}
+                            </Select>
                         </Form.Item>
-                        <Form.Item
-                            {...formItemLayout}
-                        >
+                        <Form.Item{...formItemLayout}>
                             <Input
                                 type='date'
                                 placeholder="Enter your book_id"
@@ -280,9 +301,35 @@ class Borrower extends Component {
                     </Form>
                 </Modal>
 
+                <Form layout="inline">
+                    {this.props.borrowers.map( (borrower, index) =>
+                    <Form.Item key={index}>
+                        <div>
+                            <img alt=" " width='156px' height="209px" src={borrower.book.images}/>
+                        </div>
+                        <div>
+                            <Avatar src= {borrower.user.avatar}/>
+                            <label> {borrower.user.user_name}</label>
+                        </div>
+                        <div>
+                            Email: {borrower.user.email}
+                        </div>
+                        <div>
+                            Book: {borrower.book.title}
+                        </div>
+                        <div>
+                            Date Borrow: {borrower.date_borrow}
+                        </div>
+                        <div>
+                            Date Return: {borrower.date_return}
+                        </div>
+                    </Form.Item>
+                    )}
+                </Form>
                 <table>
                     <thead>
                     <tr>
+                        <th>Avatar</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Book</th>
@@ -294,6 +341,7 @@ class Borrower extends Component {
                     <tbody>
                     {this.props.borrowers.map( (borrower, index) =>
                         <tr key={index}>
+                            <td><Avatar src= {borrower.user.avatar}/></td>
                             <td>{borrower.user.user_name}</td>
                             <td>{borrower.user.email}</td>
                             <td>{borrower.book.title}</td>

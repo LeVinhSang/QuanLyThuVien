@@ -1,26 +1,43 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import {Layout, Menu, Breadcrumb, Icon} from 'antd';
+import {Link} from "react-router-dom";
 import Router from "./Route";
+import Timer from "./Timer";
+
+export default class LayoutWeb extends React.Component {
+    state = {
+        collapsed: true,
+        seconds: new Date()
+    };
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
 
 
-export default class LayoutBorrower extends React.Component {
+    onCollapse = (collapsed) => {
+        this.setState({ collapsed });
+    };
 
     render() {
 
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Layout.Sider>
+                <Layout.Sider
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    onCollapse={this.onCollapse}
+                >
+                >
                     <div className="logo">
                         {/*todo*/}
                     </div>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
-                            <Icon type="user" />
-                            <span>Borrower</span>
+                            <Link to="/"><Icon type="user" /><span>Borrower</span></Link>
                         </Menu.Item>
                         <Menu.Item key="2">
-                            <Icon type="book" />
-                            <span>Get Book</span>
+                            <Link to="/books"><Icon type="book" /><span>Get Book</span></Link>
                         </Menu.Item>
                         <Menu.SubMenu
                             key="sub1"
@@ -44,13 +61,15 @@ export default class LayoutBorrower extends React.Component {
                     </Menu>
                 </Layout.Sider>
                 <Layout>
-                    <Layout.Header style={{ background: '#fff', padding: 0 }} />
+                    <Layout.Header style={{ background: '#fff', padding: 0 }}>
+                    </Layout.Header>
                     <Layout.Content style={{ margin: '0 16px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Timer/>
+                            </Breadcrumb.Item>
                         </Breadcrumb>
-                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+                        <div style={{ padding: 24, background: '#fff', minHeight: 430 }}>
                             <Router/>
                         </div>
                     </Layout.Content>

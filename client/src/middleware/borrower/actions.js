@@ -3,6 +3,7 @@ export const LOAD_BORROWER = 'LOAD_BORROWER';
 export const EDIT_CHECKED = 'EDIT_CHECKED';
 export const EDIT_BORROWER = 'EDIT_BORROWER';
 export const DELETE_BORROWER = 'DELETED_BORROWER';
+export const GET_KEYWORD_BORROWER = 'GET_KEYWORD_BORROWER';
 
 export function addBorrower(name_user, book_id, date_return) {
     return {
@@ -40,5 +41,12 @@ export function deleteBorrower(borrowers) {
     return {
         type: DELETE_BORROWER,
         borrowers: borrowers
+    }
+}
+
+export function getKeyWordBorrower(keyword) {
+    return {
+        type: GET_KEYWORD_BORROWER,
+        keyword: keyword
     }
 }

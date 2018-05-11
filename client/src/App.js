@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import LayoutBorrower from "./Layout";
+import LayoutWeb from "./Layout";
 
 class App extends Component {
     render() {
         return (
             <div className="App">
-                <LayoutBorrower/>
+                <LayoutWeb/>
             </div>
         );
     }
