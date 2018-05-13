@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {getKeyWordBook, loadBook} from "../middleware/book/actions";
 import {connect} from 'react-redux';
-import {Input, Icon, AutoComplete, Form} from 'antd';
 
 
 const mapDispatchToProps = dispatch => {
@@ -32,33 +31,12 @@ class Book extends Component {
         this.props.loadBook();
     }
 
-    inputKeywordBookChang = value => {
-        this.setState({keyword: value});
-    };
-
-    formSubmit = e => {
-        e.preventDefault();
-        this.props.getKeywordBook(this.state.keyword);
-    };
-
     render() {
         const books = [];
         this.props.books.map(book => books.push(book.title));
 
         return (
             <div>
-
-                <Form onSubmit={this.formSubmit.bind(this)}>
-                    <AutoComplete
-                        style={{ width: 300 }}
-                        dataSource={books}
-                        placeholder="Search Book"
-                        onChange = {this.inputKeywordBookChang.bind(this)}
-                        filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-                    >
-                        <Input suffix={<Icon type="search" className="certain-category-icon" />} />
-                    </AutoComplete>
-                </Form>
 
                 <table>
                     <thead>

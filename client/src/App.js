@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import LayoutWeb from "./Layout";
+import Router from "./Route/Route";
 
 class App extends Component {
     render() {
         return (
-            <div className="App">
-                <LayoutWeb/>
+            <div>
+                <Router/>
             </div>
         );
     }

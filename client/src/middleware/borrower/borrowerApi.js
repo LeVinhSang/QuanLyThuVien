@@ -9,10 +9,13 @@ const borrowerApi = store => next => action => {
 
         fetch("/borrowers", {
             method: 'GET'
-        }).then( res => res.json()).then( data => next({
-                type: LOAD_BORROWER,
-                borrowers: data
-            })
+        }).then( res => res.json()).then( data => {
+            data.map(data => data.checked = false);
+            next({
+                    type: LOAD_BORROWER,
+                    borrowers: data
+                })
+            }
         );
     }
 
