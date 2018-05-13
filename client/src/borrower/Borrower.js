@@ -6,6 +6,7 @@ import {
 import {connect} from 'react-redux';
 import {loadBook} from "../middleware/book/actions";
 
+
 const mapDispatchToProps = dispatch => {
     return {
         addBorrower: (name, id_book, date_return) => {
@@ -82,35 +83,33 @@ class Borrower extends Component {
     render() {
 
         return (
-            <div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Book</th>
-                        <th>Date Borrow</th>
-                        <th>Date Return</th>
-                        <th><button onClick={this.deleteClick.bind(this)}>Delete</button></th>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Book</th>
+                    <th>Date Borrow</th>
+                    <th>Date Return</th>
+                    <th><button onClick={this.deleteClick.bind(this)}>Delete</button></th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.props.borrowers.map( (borrower, index) =>
+                    <tr key={index}>
+                        <td>{borrower.user.user_name}</td>
+                        <td>{borrower.user.email}</td>
+                        <td>{borrower.book.title}</td>
+                        <td>{borrower.date_return}</td>
+                        <td>{borrower.date_borrow}</td>
+                        <td>
+                            <a>Edit</a> |
+                            <input data-id-borrower={index} onChange={this.checkedClick.bind(this)} type='checkbox' checked={borrower.checked}/>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {this.props.borrowers.map( (borrower, index) =>
-                        <tr key={index}>
-                            <td>{borrower.user.user_name}</td>
-                            <td>{borrower.user.email}</td>
-                            <td>{borrower.book.title}</td>
-                            <td>{borrower.date_return}</td>
-                            <td>{borrower.date_borrow}</td>
-                            <td>
-                                <a>Edit</a> |
-                                <input data-id-borrower={index} onChange={this.checkedClick.bind(this)} type='checkbox' checked={borrower.checked}/>
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
-            </div>
+                )}
+                </tbody>
+            </table>
         )
     }
 

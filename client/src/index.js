@@ -6,6 +6,8 @@ import {Provider} from "react-redux";
 import store from "./middleware/store";
 import {BrowserRouter} from 'react-router-dom';
 import App from "./App";
+import 'antd/dist/antd.css';
+import 'typeface-roboto'
 
 ReactDOM.render(
     <BrowserRouter>
