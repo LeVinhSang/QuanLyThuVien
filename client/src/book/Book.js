@@ -36,38 +36,35 @@ class Book extends Component {
         this.props.books.map(book => books.push(book.title));
 
         return (
-            <div>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Publisher</th>
-                        <th>Genre</th>
-                        <th>Amount</th>
-                        <th>Images</th>
-                        <th><button>Delete</button></th>
+            <table>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Genre</th>
+                    <th>Amount</th>
+                    <th>Images</th>
+                    <th><button>Delete</button></th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.props.books.map( (book, index) =>
+                    <tr key={index}>
+                        <td>{book.title}</td>
+                        <td>{book.author}</td>
+                        <td>{book.publisher.name}</td>
+                        <td>{book.genre}</td>
+                        <td>{book.amount}</td>
+                        <td>{book.images}</td>
+                        <td>
+                            <a>Edit</a> |
+                            <input data-id-book={index} type='checkbox' checked={book.checked}/>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {this.props.books.map( (book, index) =>
-                        <tr key={index}>
-                            <td>{book.title}</td>
-                            <td>{book.author}</td>
-                            <td>{book.publisher.name}</td>
-                            <td>{book.genre}</td>
-                            <td>{book.amount}</td>
-                            <td>{book.images}</td>
-                            <td>
-                                <a>Edit</a> |
-                                <input data-id-book={index} type='checkbox' checked={book.checked}/>
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
-            </div>
+                )}
+                </tbody>
+            </table>
         )
     }
 }
