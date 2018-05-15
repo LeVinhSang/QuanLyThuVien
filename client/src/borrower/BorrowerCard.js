@@ -1,20 +1,13 @@
 import React, {Component} from 'react';
 import {
-    addBorrower, getKeyWordBorrower,
+    addBorrower,
     loadBorrower
 } from "../middleware/borrower/actions";
 import {connect} from 'react-redux';
 import {loadBook} from "../middleware/book/actions";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CardHeader from "@material-ui/core/CardHeader";
-import {Avatar} from "material-ui";
 import Paper from '@material-ui/core/Paper';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -32,20 +25,28 @@ import Slide from '@material-ui/core/Slide';
 const styles = ({
     media: {
         height: 0,
-        paddingTop: '56.25%',
+        paddingTop: '70.25%',
     },
     gridList: {
         flexWrap: 'nowrap',
         transform: 'translateZ(0)',
     },
+
+    gridListBorrower: {
+        transform: 'translateZ(0)',
+    },
+
     title: {
         color:'white',
     },
     titleBar: {
         background:
-        'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
-        'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+        'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)'
     },
+
+    header: {
+        width:40
+    }
 
 });
 
@@ -62,10 +63,6 @@ const mapDispatchToProps = dispatch => {
 
         loadBook: () => {
             dispatch(loadBook());
-        },
-
-        keywordBorrower: (keyword) => {
-            dispatch(getKeyWordBorrower(keyword));
         }
     }
 };
@@ -96,10 +93,8 @@ class BorrowerCard extends Component {
         }
     }
 
-    componentWillMount() {
-        if(this.props.stateSearch === false) {
-            this.props.loadBorrower();
-        }
+    componentDidMount() {
+        this.props.loadBorrower();
         this.props.loadBook();
     }
 
@@ -120,17 +115,114 @@ class BorrowerCard extends Component {
 
 
     render() {
-        const { classes } = this.props;
-        if(this.props.stateSearch === true) {
-            this.props.keywordBorrower(this.props.keyword);
-        }
-
-        if(this.props.stateSearch === false) {
-            this.props.loadBorrower();
-        }
+        const {classes} = this.props;
+        const self = this;
         return (
-            <div>
+            <div style={{ backgroundColor:'#424242'}}>
+                <Paper style={{backgroundColor:'#424242', height:40}}>
+                    <h2 style={{marginLeft:10, color:'white'}}>New List Borrower</h2>
+                </Paper>
+                <GridList className={classes.gridList} cols={4.5} style={{color:'white'}}>
+                    {this.props.completes.map( (borrower, index) => (
+                        <GridListTile key={index}>
+                            <img src={borrower.book.images} alt='' />
+                            <GridListTileBar
+                                title={<span>{borrower.user.user_name} ({borrower.book.title})</span>}
+                                subtitle={<span>date return: {borrower.date_return}</span>}
+                                classes={{
+                                    root: classes.titleBar,
+                                    title: classes.title,
+                                }}
+                                actionIcon={
+                                    <IconButton onClick={() => self.handleClickOpen(borrower)}>
+                                        <StarBorderIcon className={classes.title} />
+                                    </IconButton>
+                                }
+                            />
+                        </GridListTile>
+                    ))}
+                </GridList>
+                <Paper style={{backgroundColor:'white', height:20}}/>
+                <Paper style={{ backgroundColor:'#424242'}}>
+                    <Paper style={{backgroundColor:'#424242', height:40}}>
+                        <h2 style={{marginLeft:10, color:'white'}}>Borrower</h2>
+                    </Paper>
+                    <Paper style={{backgroundColor:'#424242', textAlign:'center'}}>
+                        <GridList className={classes.gridListBorrower} cols={4} style={{color:'white'}}>
+                            {this.props.borrowers.map( (borrower, index) => (
+                                <GridListTile key={index}>
+                                    <img src={borrower.book.images} alt='' />
+                                    <GridListTileBar
+                                        title={<span>{borrower.user.user_name} ({borrower.book.title})</span>}
+                                        subtitle={<span>date return: {borrower.date_return}</span>}
+                                        classes={{
+                                            root: classes.titleBar,
+                                            title: classes.title,
+                                        }}
+                                        actionIcon={
+                                            <IconButton onClick={() => self.handleClickOpen(borrower)}>
+                                                <StarBorderIcon className={classes.title} />
+                                            </IconButton>
+                                        }
+                                    />
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    </Paper>
+                </Paper>
 
+                <Paper style={{backgroundColor:'white', height:20}}/>
+                <Paper style={{backgroundColor:'#424242', height:40}}>
+                    <h2 style={{marginLeft:10, color:'white'}}>New List Book</h2>
+                </Paper>
+                <GridList className={classes.gridList} cols={4.5} style={{color:'white'}}>
+                    {this.props.books.map( (book, index) => (
+                        <GridListTile key={index}>
+                            <img src={book.images} alt='' />
+                            <GridListTileBar
+                                title={<span>{book.title} ({book.genre})</span>}
+                                subtitle={<span>NXB: {book.publisher.name}</span>}
+                                classes={{
+                                    root: classes.titleBar,
+                                    title: classes.title,
+                                }}
+                                actionIcon={
+                                    <IconButton>
+                                        <StarBorderIcon className={classes.title} />
+                                    </IconButton>
+                                }
+                            />
+                        </GridListTile>
+                    ))}
+                </GridList>
+                <Paper style={{backgroundColor:'white', height:20}}/>
+                <Paper style={{ backgroundColor:'#424242'}}>
+                    <Paper style={{backgroundColor:'#424242', height:40}}>
+                        <h2 style={{marginLeft:10, color:'white'}}>Book</h2>
+                    </Paper>
+                    <Paper style={{backgroundColor:'#424242', textAlign:'center'}}>
+                        <GridList className={classes.gridListBorrower} cols={5} style={{color:'white'}}>
+                            {this.props.books.map( (book, index) => (
+                                <GridListTile key={index}>
+                                    <img src={book.images} alt='' />
+                                    <GridListTileBar
+                                        title={<span>{book.title} ({book.genre})</span>}
+                                        subtitle={<span>NXB: {book.publisher.name}</span>}
+                                        classes={{
+                                            root: classes.titleBar,
+                                            title: classes.title,
+                                        }}
+                                        actionIcon={
+                                            <IconButton>
+                                                <StarBorderIcon className={classes.title} />
+                                            </IconButton>
+                                        }
+                                    />
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    </Paper>
+                </Paper>
                 <Dialog
                     open={this.state.open}
                     TransitionComponent={Transition}
@@ -161,63 +253,6 @@ class BorrowerCard extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
-                <GridList className={classes.gridList} cols={2.5} style={{color:'white'}}>
-                    {this.props.completes.map( (borrower, index) => (
-                        <GridListTile key={index}>
-                            <img src={borrower.book.images} alt='' />
-                            <GridListTileBar
-                                title={borrower.user.user_name}
-                                subtitle={<span>date return: {borrower.date_return}</span>}
-                                classes={{
-                                    root: classes.titleBar,
-                                    title: classes.title,
-                                }}
-                                actionIcon={
-                                    <IconButton>
-                                        <StarBorderIcon className={classes.title} />
-                                    </IconButton>
-                                }
-                            />
-                        </GridListTile>
-                    ))}
-                </GridList>
-
-                {this.props.borrowers.map( (borrower, index) =>
-                    <Paper style = {{height: 150,width: 240, display: 'inline-block', marginLeft:20, marginTop:20, marginBottom:20}} key={index}>
-                        <Card key={index}>
-                            <CardHeader
-                                avatar={
-                                    <Avatar src={borrower.user.avatar} aria-label="Recipe" className={classes.avatar}/>
-                                }
-                                title={borrower.user.user_name}
-                                subheader={borrower.date_borrow}
-                            />
-
-                            <CardMedia
-                                className={classes.media}
-                                image={borrower.book.images}
-                                title={borrower.book.title}
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="headline" component="h2">
-                                    {borrower.book.title}
-                                </Typography>
-                                <Typography component="p">
-                                    ({borrower.date_return})
-                                </Typography>
-                                <Typography component="p">
-                                    Viet-Hung Industrial University
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small" color="primary" onClick={() => this.handleClickOpen(borrower)}>
-                                    Learn More
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </Paper>
-                )}
             </div>
         );
     }

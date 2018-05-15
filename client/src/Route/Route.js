@@ -11,8 +11,10 @@ export default class Router extends Component {
         const self = this;
         return (
             <Switch>
-                <Route exact path="/" render={()=><BorrowerCard keyword={self.props.keyword} stateSearch={self.props.stateSearch}/>}/>
-                <Route path="/books" component={Book}/>
+                <Route exact path="/" render={()=><BorrowerCard borrowers={self.props.borrowers}/>}/>
+                <Route path="/" render={()=><Book/>}/>
+                <Route path="/" component={BorrowerCard}/>
+                <Route path="/admin/borrower" component={Borrower}/>
             </Switch>
         )
     }

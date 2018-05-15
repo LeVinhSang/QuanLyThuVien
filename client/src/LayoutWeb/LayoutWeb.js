@@ -24,6 +24,10 @@ import '../App.css';
 import Timer from "../Timer";
 import { Input } from 'antd';
 import Button from '@material-ui/core/Button';
+import {getKeyWordBorrower, loadBorrower} from "../middleware/borrower/actions";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+
 
 const drawerWidth = 220;
 
@@ -57,7 +61,6 @@ const styles = theme => ({
         },
     },
     content: {
-        width: `calc(100%)`,
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
@@ -81,12 +84,40 @@ const styles = theme => ({
     icon: {},
 });
 
+
+const mapDispatchToProps = dispatch => {
+    return {
+        loadBorrower: () => {
+            dispatch(loadBorrower());
+        },
+
+        keywordBorrower: (keyword) => {
+            dispatch(getKeyWordBorrower(keyword));
+        }
+    }
+};
+
+const mapStateToProps = state => {
+    return {
+        completes: state.autoCompleteReducer,
+        borrowers: state.borrowerReducer,
+        books: state.bookReducer
+    }
+};
+
 class LayoutWeb extends React.Component {
     state = {
         mobileOpen: false,
-        keyword:'',
-        stateSearch: false
+        keyword:''
     };
+
+    onSearchInput(keyword) {
+        if(keyword === '') {
+            this.props.loadBorrower();
+        }
+
+        else this.props.keywordBorrower(keyword)
+    }
 
     handleDrawerToggle = () => {
         this.setState({ mobileOpen: !this.state.mobileOpen });
@@ -94,6 +125,10 @@ class LayoutWeb extends React.Component {
 
     menuClick = () => {
         this.setState({mobileOpen: false})
+    };
+
+    homeButtonClick = () => {
+        window.location.href = '/'
     };
 
     render() {
@@ -152,19 +187,14 @@ class LayoutWeb extends React.Component {
                             <MenuIcon />
                         </IconButton>
                         <Typography className={classes.flex} variant="title" color="inherit" noWrap>
-                            Viet-Hung Industrial University
+                            <Button color="inherit" className={classes.button} onClick={this.homeButtonClick.bind(this)}>
+                                Home
+                            </Button>
                         </Typography>
 
                         <Input.Search
                             placeholder="Search"
-                            onSearch={ value => {
-                                if(value === '') {
-                                    self.setState({stateSearch: false})
-                                }
-                                else {
-                                    self.setState({keyword: value, stateSearch: true})
-                                }
-                            }}
+                            onSearch={ value => self.onSearchInput(value)}
                             style={{ width: 200 }}
                         />
                         <Button color="inherit" className={classes.button}>
@@ -204,7 +234,7 @@ class LayoutWeb extends React.Component {
                 </Hidden>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    {<Router keyword={this.state.keyword} stateSearch={this.state.stateSearch}/>}
+                    {<Router keyword={this.state.keyword}/>}
                 </main>
             </div>
         );
@@ -216,4 +246,7 @@ LayoutWeb.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(LayoutWeb);
+export default withStyles(styles, { withTheme: true })(withRouter(connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LayoutWeb)));
