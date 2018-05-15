@@ -64,7 +64,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(loadBook());
         },
 
-        getKeywordBorrower: (keyword) => {
+        keywordBorrower: (keyword) => {
             dispatch(getKeyWordBorrower(keyword));
         }
     }
@@ -97,7 +97,9 @@ class BorrowerCard extends Component {
     }
 
     componentWillMount() {
-        this.props.loadBorrower();
+        if(this.props.stateSearch === false) {
+            this.props.loadBorrower();
+        }
         this.props.loadBook();
     }
 
@@ -118,8 +120,14 @@ class BorrowerCard extends Component {
 
 
     render() {
-
         const { classes } = this.props;
+        if(this.props.stateSearch === true) {
+            this.props.keywordBorrower(this.props.keyword);
+        }
+
+        if(this.props.stateSearch === false) {
+            this.props.loadBorrower();
+        }
         return (
             <div>
 
@@ -155,7 +163,7 @@ class BorrowerCard extends Component {
                 </Dialog>
 
                 <GridList className={classes.gridList} cols={2.5} style={{color:'white'}}>
-                    {this.props.borrowers.map( (borrower, index) => (
+                    {this.props.completes.map( (borrower, index) => (
                         <GridListTile key={index}>
                             <img src={borrower.book.images} alt='' />
                             <GridListTileBar
@@ -175,7 +183,6 @@ class BorrowerCard extends Component {
                     ))}
                 </GridList>
 
-                <Paper>
                 {this.props.borrowers.map( (borrower, index) =>
                     <Paper style = {{height: 150,width: 240, display: 'inline-block', marginLeft:20, marginTop:20, marginBottom:20}} key={index}>
                         <Card key={index}>
@@ -211,7 +218,6 @@ class BorrowerCard extends Component {
                         </Card>
                     </Paper>
                 )}
-                </Paper>
             </div>
         );
     }

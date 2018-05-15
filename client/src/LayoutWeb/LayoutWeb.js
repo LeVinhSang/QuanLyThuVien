@@ -22,6 +22,8 @@ import {Link} from 'react-router-dom';
 import logo from '../logo.svg';
 import '../App.css';
 import Timer from "../Timer";
+import { Input } from 'antd';
+import Button from '@material-ui/core/Button';
 
 const drawerWidth = 220;
 
@@ -40,7 +42,7 @@ const styles = theme => ({
         marginLeft: drawerWidth,
         [theme.breakpoints.up('md')]: {
             width: `calc(100% - ${drawerWidth}px)`,
-        },
+        }
     },
     navIconHide: {
         [theme.breakpoints.up('md')]: {
@@ -72,6 +74,9 @@ const styles = theme => ({
             },
         },
     },
+    flex: {
+        flex: 1,
+    },
     primary: {},
     icon: {},
 });
@@ -79,6 +84,8 @@ const styles = theme => ({
 class LayoutWeb extends React.Component {
     state = {
         mobileOpen: false,
+        keyword:'',
+        stateSearch: false
     };
 
     handleDrawerToggle = () => {
@@ -91,7 +98,7 @@ class LayoutWeb extends React.Component {
 
     render() {
         const { classes, theme } = this.props;
-
+        const self = this;
         const drawer = (
             <div>
                 <div className={classes.toolbar}>
@@ -144,9 +151,28 @@ class LayoutWeb extends React.Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" noWrap>
+                        <Typography className={classes.flex} variant="title" color="inherit" noWrap>
                             Viet-Hung Industrial University
                         </Typography>
+
+                        <Input.Search
+                            placeholder="Search"
+                            onSearch={ value => {
+                                if(value === '') {
+                                    self.setState({stateSearch: false})
+                                }
+                                else {
+                                    self.setState({keyword: value, stateSearch: true})
+                                }
+                            }}
+                            style={{ width: 200 }}
+                        />
+                        <Button color="inherit" className={classes.button}>
+                            Sign Up
+                        </Button>
+                        <Button color="inherit" className={classes.button}>
+                            Log In
+                        </Button>
                     </Toolbar>
                 </AppBar>
                 <Hidden mdUp>
@@ -178,7 +204,7 @@ class LayoutWeb extends React.Component {
                 </Hidden>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    {<Router/>}
+                    {<Router keyword={this.state.keyword} stateSearch={this.state.stateSearch}/>}
                 </main>
             </div>
         );

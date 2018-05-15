@@ -36,6 +36,7 @@ class Book extends Component {
         this.props.books.map(book => books.push(book.title));
 
         return (
+
             <table>
                 <thead>
                 <tr>
