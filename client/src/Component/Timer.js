@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-export default class Timer extends React.Component {
+export default class Timer extends Component {
     constructor(props) {
         super(props);
         this.state = { seconds: new Date().toLocaleString() };

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getKeyWordBook, loadBook} from "../middleware/book/actions";
+import {getKeyWordBook, loadBook} from "../../../middleware/book/actions";
 import {connect} from 'react-redux';
 
 
@@ -9,7 +9,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(loadBook());
         },
 
-        getKeywordBook: (keyword) => {
+        keywordBook: (keyword) => {
             dispatch(getKeyWordBook(keyword));
         }
     };

@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {
     addBorrower, deleteBorrower, editBorrower, editChecked, getKeyWordBorrower,
     loadBorrower
-} from "../middleware/borrower/actions";
+} from "../../middleware/borrower/actions";
 import {connect} from 'react-redux';
-import {loadBook} from "../middleware/book/actions";
+import {loadBook} from "../../middleware/book/actions";
 
 
 const mapDispatchToProps = dispatch => {
