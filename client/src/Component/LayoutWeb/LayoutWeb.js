@@ -22,7 +22,7 @@ import {getKeyWordBorrower, loadBorrower} from "../../middleware/borrower/action
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {getKeyWordBook, loadBook} from "../../middleware/book/actions";
-import {Typography, StepLabel, Step, Stepper, Avatar, Button, ListItemIcon, ListItemText, withStyles} from '@material-ui/core';
+import {StepLabel, Step, Stepper, Avatar, Button, ListItemIcon, ListItemText, withStyles} from '@material-ui/core';
 
 const drawerWidth = 220;
 
@@ -184,17 +184,15 @@ class LayoutWeb extends React.Component {
     };
     handleOk = (e) => {
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields((err) => {
             if (!err) {
-                console.log('Received values of form: ', values);
                 this.setState({
                     visible: false,
                 });
             }
         });
     };
-    handleCancel = (e) => {
-        console.log(e);
+    handleCancel = () => {
         this.setState({
             visible: false,
         });
@@ -207,19 +205,8 @@ class LayoutWeb extends React.Component {
             visibleSignUp: true,
         });
     };
-    handleOkSignUp = (e) => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-                this.setState({
-                    visibleSignUp: false,
-                });
-            }
-        });
-    };
-    handleCancelSignUp = (e) => {
-        console.log(e);
+
+    handleCancelSignUp = () => {
         this.setState({
             visibleSignUp: false,
         });
@@ -238,12 +225,6 @@ class LayoutWeb extends React.Component {
         const { activeStep } = this.state;
         this.setState({
             activeStep: activeStep - 1,
-        });
-    };
-
-    handleReset = () => {
-        this.setState({
-            activeStep: 0,
         });
     };
 
@@ -336,26 +317,33 @@ class LayoutWeb extends React.Component {
                                 )}
                             </Form.Item>
                             <Form.Item>
-                                {getFieldDecorator('remember', {
-                                    valuePropName: 'checked',
-                                    initialValue: true,
+                                <Input prefix={<Icon type="solution" style={{ color: 'rgba(0,0,0,.25)' }} />} type="text" placeholder="Link Avatar" />
+                            </Form.Item>
+                            <Form.Item>
+                                {getFieldDecorator('email', {
+                                    rules: [{ required: true, message: 'Please input your Email!' }],
                                 })(
-                                    <Checkbox>Remember me</Checkbox>
+                                    <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} type="email" placeholder="Email" />
                                 )}
-                                <a className="login-form-forgot" href="">Forgot password</a>
-                                <div>
-                                    <Button variant="raised" color="primary" className={classes.button}>
-                                        Log in
-                                    </Button>
-                                </div>
-                                <div>
-                                    Or <a href="">register now!</a>
-                                </div>
                             </Form.Item>
                         </Form>
                     );
                 case 1:
-                    return 'What is an ad group anyways?';
+                    return (
+                        <Form className="login-form">
+                            <label>
+                                We have sent you a confirmation code in your email.
+                                Please enter a validation code
+                            </label>
+                            <Form.Item>
+                                {getFieldDecorator('Code Confirm', {
+                                    rules: [{ required: true, message: 'Please input your Code Confirm!' }],
+                                })(
+                                    <Input prefix={<Icon type="number" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Your Code" />
+                                )}
+                            </Form.Item>
+                        </Form>
+                    );
                 case 2:
                     return 'This is the bit I really care about!';
                 default:
@@ -415,7 +403,7 @@ class LayoutWeb extends React.Component {
                 <Modal
                     title="Basic Modal"
                     visible={this.state.visibleSignUp}
-                    onOk={this.handleOkSignUp}
+                    onOk={this.handleCancelSignUp}
                     onCancel={this.handleCancelSignUp}
                 >
                     <Stepper activeStep={activeStep} alternativeLabel>
@@ -430,14 +418,11 @@ class LayoutWeb extends React.Component {
                     <div>
                         {this.state.activeStep === steps.length ? (
                             <div>
-                                <Typography>
-                                    All steps completed - you&quot;re finished
-                                </Typography>
-                                <Button onClick={this.handleReset}>Reset</Button>
+                                You registration account success...!
                             </div>
                         ) : (
                             <div>
-                                <Typography>{getStepContent(activeStep)}</Typography>
+                                {getStepContent(activeStep)}
                                 <div>
                                     <Button
                                         disabled={activeStep === 0}
