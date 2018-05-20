@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import LayoutWeb from "./Component/LayoutWeb/LayoutWeb";
+import LayoutPage from './Layout/LayoutPage';
 
 class App extends Component {
     render() {
         return (
-            <LayoutWeb/>
+            <LayoutPage/>
         );
     }
 }
