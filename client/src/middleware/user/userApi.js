@@ -1,4 +1,4 @@
-import {ADD_USER, SEND_CODE} from "./actions";
+import {ADD_USER, LOGIN, SEND_CODE} from "./actions";
 
 const userApi = store => next => action => {
 
@@ -37,6 +37,31 @@ const userApi = store => next => action => {
                 type: SEND_CODE,
                 user: data
             })
+        });
+    }
+
+    else if(action.type === LOGIN) {
+        let data = {
+            user_name: action.user_name,
+            password: action.password
+        };
+
+        fetch("/login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json()).then( (data) => {
+            if(data.message === 'login false') {
+                alert('user_name or password wrong!')
+            }
+            else {
+                localStorage.setItem('user_name', data.user_name);
+                localStorage.setItem('email', data.email);
+                localStorage.setItem('avatar', data.avatar);
+                next(action)
+            }
         });
     }
 

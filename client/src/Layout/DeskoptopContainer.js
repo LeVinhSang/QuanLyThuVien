@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react';
 import {
-    Button, Container, Form, Grid, Header, Icon, Image, Menu, Message, Modal,
-    Responsive, Segment, Visibility, Dropdown, Input, Label
+    Button, Container, Form, Grid, Header, Icon, Menu, Message, Modal,
+    Responsive, Segment, Visibility, Dropdown, Input, Label, Popup, Image
 } from 'semantic-ui-react';
 
 import {connect} from 'react-redux';
-import {addUser, sendCode} from "../middleware/user/actions";
+import {addUser, login, sendCode} from "../middleware/user/actions";
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -51,6 +51,10 @@ const mapDispatchToProps = dispatch => {
 
         addUser: (user_name, password, email, avatar) => {
             dispatch(addUser(user_name, password, email, avatar));
+        },
+
+        login: (user_name, password) => {
+            dispatch(login(user_name, password));
         }
     }
 };
@@ -70,13 +74,16 @@ class DesktopContainer extends Component {
             modalOpenSignUp: false,
             modalCodeConfirm: false,
             name_user:'',
+            name_user_login:'',
+            password_login:'',
             password:'',
             email: '',
             avatar:'',
             codeConfirm: 0,
             label: false,
             code: 0,
-            label_check: false
+            label_check: false,
+            isOpenPopup: false
         };
     }
 
@@ -113,9 +120,15 @@ class DesktopContainer extends Component {
                 modalOpenSignUp: false,
                 codeConfirm: rand,
                 label: false,
-                label_check: false
+                label_check: false,
             })
         }
+    }
+
+
+    handleLogin(e) {
+        e.preventDefault();
+        this.props.login(this.state.name_user_login, this.state.password_login);
     }
 
     handleSubmitCode(e) {
@@ -126,6 +139,7 @@ class DesktopContainer extends Component {
 
         else {
             this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar)
+            this.setState({modalCodeConfirm: false})
         }
     }
 
@@ -134,6 +148,13 @@ class DesktopContainer extends Component {
         if(user) {
             return true
         }
+    };
+
+    handleLogout = () => {
+        localStorage.removeItem("user_name");
+        localStorage.removeItem('avatar');
+        localStorage.removeItem('email');
+        this.setState({isOpenPopup: false, modalOpen: false});
     };
 
     render() {
@@ -178,6 +199,8 @@ class DesktopContainer extends Component {
                                                 icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
+                                                name='name_user_login'
+                                                onChange={this.logChange.bind(this)}
                                             />
                                             <Form.Input
                                                 fluid
@@ -185,9 +208,11 @@ class DesktopContainer extends Component {
                                                 iconPosition='left'
                                                 placeholder='Password'
                                                 type='password'
+                                                onChange={this.logChange.bind(this)}
+                                                name='password_login'
                                             />
 
-                                            <Button color='teal' fluid size='large' onClick={this.handleOpen.bind(this)}>Login</Button>
+                                            <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
                                         </Segment>
                                     </Form>
                                     <Message>
@@ -286,16 +311,22 @@ class DesktopContainer extends Component {
         );
 
 
-        const avatarPopover = (
-            <div>
-                <Image avatar src={avatar}/>
-            </div>
+        const userEditor = (
+            <Menu vertical>
+                <Menu.Item link><Icon name='edit'/>Chang Password</Menu.Item>
+                <Menu.Item link><Icon name='edit'/>Change Email</Menu.Item>
+                <Menu.Item link><Icon name='edit'/>Change Avatar</Menu.Item>
+                <Menu.Item link onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
+            </Menu>
         );
 
-        const userPopover = (
-            <div>
-
-            </div>
+        const avatarPopover = (
+            <Popup
+                trigger={<Image avatar src={avatar}/>}
+                content={userEditor}
+                on='click'
+                position='bottom center'
+            />
         );
 
         return (

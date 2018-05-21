@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react';
 import {
     Button, Container, Form, Grid, Header, Icon, Image, Menu, Message, Modal,
-    Responsive, Segment, Sidebar, Label
+    Responsive, Segment, Sidebar, Label, Popup
 } from 'semantic-ui-react';
 
 import {connect} from 'react-redux';
@@ -75,7 +75,8 @@ class MobileContainer extends Component {
             codeConfirm: 0,
             label: false,
             code: 0,
-            label_check: false
+            label_check: false,
+            isOpenPopup: false
         };
     }
 
@@ -120,7 +121,8 @@ class MobileContainer extends Component {
         }
 
         else {
-            this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar)
+            this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar);
+            this.setState({isOpenPopup: false});
         }
     }
 
@@ -138,6 +140,13 @@ class MobileContainer extends Component {
     };
 
     handleToggle = () => this.setState({ sidebarOpened: !this.state.sidebarOpened });
+
+    handleLogout = () => {
+        localStorage.removeItem("user_name");
+        localStorage.removeItem('avatar');
+        localStorage.removeItem('email');
+        this.setState({isOpenPopup: false});
+    };
 
     render() {
         const { children } = this.props;
@@ -288,17 +297,22 @@ class MobileContainer extends Component {
             </div>
         );
 
-
-        const avatarPopover = (
-            <div>
-                <Image avatar src={avatar}/>
-            </div>
+        const userEditor = (
+            <Menu vertical>
+                <Menu.Item link><Icon name='edit'/>Chang Password</Menu.Item>
+                <Menu.Item link><Icon name='edit'/>Change Email</Menu.Item>
+                <Menu.Item link><Icon name='edit'/>Change Avatar</Menu.Item>
+                <Menu.Item link onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
+            </Menu>
         );
 
-        const userPopover = (
-            <div>
-
-            </div>
+        const avatarPopover = (
+            <Popup
+                trigger={<Image avatar src={avatar}/>}
+                content={userEditor}
+                on='click'
+                position='bottom center'
+            />
         );
 
         return (

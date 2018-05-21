@@ -3,7 +3,7 @@ class UserController {
     create(req, res, next) {
         let repo = req.app.get('user.repo');
         repo.add(req.user).then( () => {
-            res.send('message');
+            res.send(req.user);
         }).catch(next);
     }
 
@@ -25,6 +25,20 @@ class UserController {
         let repo = req.app.get('user.repo');
         repo.activated(req.params.user_name).then( () => {
             res.send('message');
+        }).catch(next);
+    }
+
+    sendCode(req, res, next) {
+        let service = req.app.get('code.service');
+        service.sendCode(req.body.email, req.body.code).then( () => {
+            res.send('success');
+        }).catch(next)
+    }
+
+    login(req, res, next) {
+        let repo = req.app.get('user.provide');
+        repo.provide(req.body.user_name).then( (user) => {
+            res.send(user);
         }).catch(next);
     }
 }

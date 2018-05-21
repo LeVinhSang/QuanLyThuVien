@@ -12,7 +12,6 @@ class UserFactory {
         let user = new User(userRaw.user_name, userRaw.email);
         let hash = await bcrypt.hash(userRaw.password, 10).then( hash => hash);
         user.setPassword(hash);
-        user.setRole(userRaw.role);
         user.setAvatar(userRaw.avatar);
         return user;
     }

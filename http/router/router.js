@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
     res.send({message: 'success'});
 });
 
-/*-------------------------------------------------Book--------------------------------------------------------*/
+/*-------------------------------------------------book--------------------------------------------------------*/
 
 router.get('/books', (req, res, next) => {
     req.condition = new bookSearch.bookUndeleted();
@@ -48,9 +48,14 @@ router.put('/book/:id', request.book, bookController.update);
 router.delete('/book/:id', bookController.remove);
 
 
+/*----------------------------------------------------User---------------------------------------------------*/
+
 router.post('/user', request.user, userController.create);
+router.post('/send-code', userController.sendCode);
 router.put('/user/:user_name', request.user, userController.update);
 router.delete('/user/:user_name', userController.remove);
+
+router.post('/login', request.checkLogin, userController.login);
 
 
 router.get('/search-basic', (req, res, next) => {
@@ -63,7 +68,7 @@ router.get('/search-advance', (req, res, next) => {
     next();
 }, borrowerController.search);
 
-/*----------------------------------------------Borrower----------------------------------------------------------*/
+/*----------------------------------------------borrower----------------------------------------------------------*/
 
 router.get('/borrowers', (req, res, next) => {
     req.condition = new borrowerSearch.borrowerUndeleted();
@@ -153,5 +158,7 @@ router.get('/search-advance', (req, res, next) => {
 router.post('/feedback', request.feedback, feedbackController.create);
 router.put('/feedback/:id', request.feedback, feedbackController.update);
 router.delete('/feedback/:id', feedbackController.remove);
+
+
 
 module.exports = router;

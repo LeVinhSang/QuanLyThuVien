@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Image, List} from 'semantic-ui-react'
+import {Button, Image, List} from 'semantic-ui-react'
 import {loadBook} from "../middleware/book/actions";
 
 
@@ -23,12 +23,17 @@ const mapStateToProps = state => {
 
 class Book extends Component {
 
-
     componentWillMount() {
         this.props.loadBook();
     }
 
     render() {
+        function isAuthenticated() {
+            const user = localStorage.getItem('user_name');
+            if(user) {
+                return true
+            }
+        }
 
         return (
             <List relaxed>
@@ -39,6 +44,9 @@ class Book extends Component {
                             <List.Header as='a'>{book.title}</List.Header>
                             <List.Description>
                                 <b>{book.publisher.name}</b>
+                            </List.Description>
+                            <List.Description>
+                                {isAuthenticated() ? <Button>Borrow</Button> : ''}
                             </List.Description>
                         </List.Content>
                     </List.Item>

@@ -14,18 +14,16 @@ class UserRepository {
         return this.connection('users').insert({
             user_name: user.getUser_name(),
             password: user.getPassword(),
-            images: user.getAvatar(),
-            role: user.getRole(),
+            avatar: user.getAvatar(),
             email: user.getEmail(),
-            status: status.DISABLE
+            status: status.ACTIVATED
         });
     }
 
     edit(user) {
         return this.connection('users').insert({
             password: user.getPassword(),
-            role: user.getRole(),
-            images: user.getAvatar(),
+            avatar: user.getAvatar(),
             email: user.getEmail()
         }).where({user_name: user.getUser_name()});
     }

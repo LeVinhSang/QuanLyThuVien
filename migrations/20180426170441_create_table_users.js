@@ -5,9 +5,8 @@ exports.up = function(knex, Promise) {
         table.string('password').notNull();
         table.string('avatar');
         table.string('email').notNull();
-        table.string('role');
         table.string('status');
-        table.integer('code');
+        table.string('role');
     });
 };
 

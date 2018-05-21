@@ -8,11 +8,11 @@ exports.seed = function(knex, Promise) {
           {
               user_name: 'levinhsang', password: '$2b$10$lPlpLlOw.18Aj4Ro9egjSuVqL4UCOr3gm25TC5RYsyCrIKteR7uUG',
               avatar: 'http://www.1999.co.jp/itbig48/10485758.jpg',
-              email: 'sanglv@sphinx-software.com', status: 'activated', role: 'admin'},
+              email: 'sanglv@sphinx-software.com', role: 'admin'},
           {
               user_name: 'levinhsang1', password: '$2b$10$lPlpLlOw.18Aj4Ro9egjSuVqL4UCOr3gm25TC5RYsyCrIKteR7uUG',
               avatar: 'http://www.1999.co.jp/itbig48/10485758.jpg',
-              email: 'sanglv@sphinx-software.com', status: 'activated'}
+              email: 'sanglv@sphinx-software.com'}
       ]);
     });
 };
