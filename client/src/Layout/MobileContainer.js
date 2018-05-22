@@ -6,7 +6,7 @@ import {
 } from 'semantic-ui-react';
 
 import {connect} from 'react-redux';
-import {addUser, sendCode} from "../middleware/user/actions";
+import {addUser, login, sendCode} from "../middleware/user/actions";
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -51,6 +51,10 @@ const mapDispatchToProps = dispatch => {
 
         addUser: (user_name, password, email, avatar) => {
             dispatch(addUser(user_name, password, email, avatar));
+        },
+
+        login: (user_name, password) => {
+            dispatch(login(user_name, password));
         }
     }
 };
@@ -70,6 +74,8 @@ class MobileContainer extends Component {
             modalCodeConfirm: false,
             name_user:'',
             password:'',
+            name_user_login:'',
+            password_login:'',
             email: '',
             avatar:'',
             codeConfirm: 0,
@@ -124,6 +130,11 @@ class MobileContainer extends Component {
             this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar);
             this.setState({isOpenPopup: false});
         }
+    }
+
+    handleLogin(e) {
+        e.preventDefault();
+        this.props.login(this.state.name_user_login, this.state.password_login);
     }
 
     isAuthenticated = () => {
@@ -190,6 +201,8 @@ class MobileContainer extends Component {
                                                 icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
+                                                name='name_user_login'
+                                                onChange={this.logChange.bind(this)}
                                             />
                                             <Form.Input
                                                 fluid
@@ -197,9 +210,11 @@ class MobileContainer extends Component {
                                                 iconPosition='left'
                                                 placeholder='Password'
                                                 type='password'
+                                                name='password_login'
+                                                onChange={this.logChange.bind(this)}
                                             />
 
-                                            <Button color='teal' fluid size='large' onClick={this.handleOpen.bind(this)}>Login</Button>
+                                            <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
                                         </Segment>
                                     </Form>
                                     <Message>

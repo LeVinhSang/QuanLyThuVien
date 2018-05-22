@@ -50,7 +50,7 @@ router.delete('/book/:id', bookController.remove);
 
 /*----------------------------------------------------User---------------------------------------------------*/
 
-router.post('/user', request.user, userController.create);
+router.post('/user', request.checkSignUp ,request.user, userController.create);
 router.post('/send-code', userController.sendCode);
 router.put('/user/:user_name', request.user, userController.update);
 router.delete('/user/:user_name', userController.remove);
