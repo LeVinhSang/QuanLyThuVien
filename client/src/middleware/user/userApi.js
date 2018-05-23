@@ -1,4 +1,4 @@
-import {ADD_USER, LOGIN, SEND_CODE} from "./actions";
+import {ADD_USER, LOGIN, SEND_CODE, SIGN_UP} from "./actions";
 
 const userApi = store => next => action => {
 
@@ -9,9 +9,7 @@ const userApi = store => next => action => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({email: action.email, code: action.code})
-        }).then( () => next({
-            type: SEND_CODE,
-        }));
+        }).then( () => next({type: SEND_CODE}))
     }
 
     if(action.type === ADD_USER) {
@@ -60,6 +58,29 @@ const userApi = store => next => action => {
                 localStorage.setItem('user_name', data.user_name);
                 localStorage.setItem('email', data.email);
                 localStorage.setItem('avatar', data.avatar);
+                next(action)
+            }
+        });
+    }
+
+    else if(action.type === SIGN_UP) {
+        let data = {
+            user_name: action.user_name
+        };
+
+        fetch("/sign-up", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json()).then( (data) => {
+            if(data.user_name !== '') {
+                localStorage.setItem('message', 'user name existed!');
+                next(action);
+            }
+            else {
+                localStorage.removeItem('message');
                 next(action)
             }
         });

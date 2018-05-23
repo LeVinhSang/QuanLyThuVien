@@ -5,8 +5,8 @@ import {
     Responsive, Segment, Visibility, Dropdown, Input, Label, Popup, Image
 } from 'semantic-ui-react';
 
-import {connect} from 'react-redux';
-import {addUser, login, sendCode} from "../middleware/user/actions";
+import {connect}                          from 'react-redux';
+import {addUser, login, sendCode, signUp} from "../middleware/user/actions";
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -55,6 +55,10 @@ const mapDispatchToProps = dispatch => {
 
         login: (user_name, password) => {
             dispatch(login(user_name, password));
+        },
+
+        signUp: (user_name) => {
+            dispatch(signUp(user_name));
         }
     }
 };
@@ -103,6 +107,11 @@ class DesktopContainer extends Component {
 
     logChange(e) {
         this.setState({[e.target.name]: e.target.value});
+    }
+
+    inputSignUpChange(value) {
+        this.setState({name_user: value});
+        this.props.signUp(value);
     }
 
     handleSignUpClick(e) {
@@ -158,14 +167,20 @@ class DesktopContainer extends Component {
     };
 
     render() {
+
+        function isLoginAuthenticated() {
+            const check = localStorage.getItem('message');
+            if(check) {
+                return true
+            }
+        };
+
         const { children } = this.props;
         const { fixed } = this.state;
         const avatar = localStorage.getItem('avatar');
         const label_check_true = (
             <Label basic color='red' pointing='below'>Values ​​are not empty</Label>
         );
-
-        const label_check_false = '';
 
         const modal = (
             <div>
@@ -193,10 +208,8 @@ class DesktopContainer extends Component {
                                     <Header as='h2' color='teal' icon='sign in' content='LOGIN' />
                                     <Form size='large'>
                                         <Segment stacked>
-                                            {this.state.label_check ? label_check_true : label_check_false}
                                             <Form.Input
                                                 fluid
-                                                icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
                                                 name='name_user_login'
@@ -211,7 +224,6 @@ class DesktopContainer extends Component {
                                                 onChange={this.logChange.bind(this)}
                                                 name='password_login'
                                             />
-
                                             <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
                                         </Segment>
                                     </Form>
@@ -252,14 +264,15 @@ class DesktopContainer extends Component {
                                     <Header as='h2' color='teal' icon='sign in' content='SIGN UP' />
                                     <Form size='large'>
                                         <Segment stacked>
-                                            {this.state.label_check ? label_check_true : label_check_false}
+                                            {this.state.label_check ? label_check_true : ''}
                                             <Form.Input
                                                 fluid
                                                 icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
-                                                onChange={this.logChange.bind(this)}
+                                                onChange={ (e) => this.inputSignUpChange(e.target.value)}
                                                 name='name_user'
+                                                loading
                                             />
                                             <Form.Input
                                                 fluid
@@ -291,7 +304,8 @@ class DesktopContainer extends Component {
                                                 name='avatar'
                                             />
 
-                                            <Button color='teal' fluid size='large' onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>
+                                            {isLoginAuthenticated() ? <Button color='teal' fluid size='large' disabled>Sign Up</Button>
+                                                : <Button color='teal' fluid size='large' onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>}
                                         </Segment>
                                     </Form>
                                     <Message>

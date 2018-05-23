@@ -1,6 +1,7 @@
 export const SEND_CODE = 'SEND_CODE';
 export const ADD_USER  = 'ADD_USER';
 export const LOGIN     = 'LOGIN';
+export const SIGN_UP   = 'SIGN_UP';
 
 export function sendCode(email, code) {
     return {
@@ -25,5 +26,12 @@ export function login(user_name, password) {
         type: LOGIN,
         user_name: user_name,
         password: password
+    }
+}
+
+export function signUp(user_name) {
+    return {
+        type: SIGN_UP,
+        user_name: user_name
     }
 }
