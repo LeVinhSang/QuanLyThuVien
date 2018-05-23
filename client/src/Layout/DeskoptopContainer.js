@@ -1,24 +1,24 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react';
+import PropTypes          from 'prop-types'
+import React, {Component} from 'react';
 import {
     Button, Container, Form, Grid, Header, Icon, Menu, Message, Modal,
     Responsive, Segment, Visibility, Dropdown, Input, Label, Popup, Image
-} from 'semantic-ui-react';
+}                         from 'semantic-ui-react';
 
-import {connect}                          from 'react-redux';
-import {addUser, login, sendCode, signUp} from "../middleware/user/actions";
+import {connect}                                                  from 'react-redux';
+import {addUser, changePass, checkEmail, login, sendCode, signUp} from "../middleware/user/actions";
 
-const HomepageHeading = ({ mobile }) => (
+const HomepageHeading = ({mobile}) => (
     <Container text>
         <Header
             as='h1'
             content='Digital  Library'
             inverted
             style={{
-                fontSize: mobile ? '2em' : '4em',
-                fontWeight: 'normal',
+                fontSize    : mobile ? '2em' : '4em',
+                fontWeight  : 'normal',
                 marginBottom: 0,
-                marginTop: mobile ? '1.5em' : '3em',
+                marginTop   : mobile ? '1.5em' : '3em',
             }}
         />
         <Header
@@ -26,14 +26,14 @@ const HomepageHeading = ({ mobile }) => (
             content='Do whatever you want when you want to.'
             inverted
             style={{
-                fontSize: mobile ? '1.5em' : '1.7em',
+                fontSize  : mobile ? '1.5em' : '1.7em',
                 fontWeight: 'normal',
-                marginTop: mobile ? '0.5em' : '1.5em',
+                marginTop : mobile ? '0.5em' : '1.5em',
             }}
         />
         <Button primary size='huge'>
             Get Started
-            <Icon name='right arrow' />
+            <Icon name='right arrow'/>
         </Button>
     </Container>
 );
@@ -59,6 +59,14 @@ const mapDispatchToProps = dispatch => {
 
         signUp: (user_name) => {
             dispatch(signUp(user_name));
+        },
+
+        changePass: (user_name, password) => {
+            dispatch(changePass(user_name, password));
+        },
+
+        checkEmail: (email) => {
+            dispatch(checkEmail(email));
         }
     }
 };
@@ -74,39 +82,58 @@ class DesktopContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalOpen: false,
-            modalOpenSignUp: false,
-            modalCodeConfirm: false,
-            name_user:'',
-            name_user_login:'',
-            password_login:'',
-            password:'',
-            email: '',
-            avatar:'',
-            codeConfirm: 0,
-            label: false,
-            code: 0,
-            label_check: false,
-            isOpenPopup: false
+            modalOpen          : false,
+            modalOpenSignUp    : false,
+            modalCodeConfirm   : false,
+            name_user          : '',
+            name_user_login    : '',
+            password_login     : '',
+            password           : '',
+            email              : '',
+            avatar             : '',
+            codeConfirm        : 0,
+            label              : false,
+            code               : 0,
+            label_check        : false,
+            isOpenPopup        : false,
+            modalOpenChangePass: false,
+            icePass            : false,
+            newPassword        : '',
+            resetPass          : false,
+            inputEmail         : false,
+            stateUser          : false
         };
     }
 
-    handleOpen = () => this.setState({ modalOpen: true , modalOpenSignUp: false});
+    handleOpen = () => this.setState({
+        modalOpen      : true,
+        modalOpenSignUp: false,
+        label_check    : false
+    });
 
     handleOpenSignUp = () => {
-        this.setState({ modalOpenSignUp: true, modalOpen:false });
+        this.setState({
+            modalOpenSignUp: true,
+            modalOpen      : false
+        });
         localStorage.removeItem('message');
     };
 
-    handleClose = () => this.setState({ modalOpen: false });
+    handleClose = () => this.setState({modalOpen: false});
 
-    handleCloseSignUp = () => this.setState({ modalOpenSignUp: false, label_check: false });
+    handleCloseSignUp = () => this.setState({
+        modalOpenSignUp: false,
+        label_check    : false
+    });
 
-    handleCloseCodeConfirm = () => this.setState({ modalCodeConfirm: false, label: false });
+    handleCloseCodeConfirm = () => this.setState({
+        modalCodeConfirm: false,
+        label           : false
+    });
 
-    hideFixedMenu = () => this.setState({ fixed: false });
+    hideFixedMenu = () => this.setState({fixed: false});
 
-    showFixedMenu = () => this.setState({ fixed: true });
+    showFixedMenu = () => this.setState({fixed: true});
 
     logChange(e) {
         this.setState({[e.target.name]: e.target.value});
@@ -120,7 +147,7 @@ class DesktopContainer extends Component {
     handleSignUpClick(e) {
         e.preventDefault();
 
-        if(this.state.name_user === '' || this.state.password === '' || this.state.email === '') {
+        if (this.state.name_user === '' || this.state.password === '' || this.state.email === '') {
             this.setState({label_check: true});
         }
 
@@ -129,10 +156,10 @@ class DesktopContainer extends Component {
             this.props.sendCode(this.state.email, rand);
             this.setState({
                 modalCodeConfirm: true,
-                modalOpenSignUp: false,
-                codeConfirm: rand,
-                label: false,
-                label_check: false,
+                modalOpenSignUp : false,
+                codeConfirm     : rand,
+                label           : false,
+                label_check     : false,
             });
         }
     }
@@ -145,19 +172,19 @@ class DesktopContainer extends Component {
 
     handleSubmitCode(e) {
         e.preventDefault();
-        if(this.state.codeConfirm !== Number(this.state.code)) {
+        if (this.state.codeConfirm !== Number(this.state.code)) {
             this.setState({label: true})
         }
 
         else {
-            this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar)
+            this.props.addUser(this.state.name_user, this.state.password, this.state.email, this.state.avatar);
             this.setState({modalCodeConfirm: false})
         }
     }
 
     isAuthenticated = () => {
         const user = localStorage.getItem('user_name');
-        if(user) {
+        if (user) {
             return true
         }
     };
@@ -166,21 +193,87 @@ class DesktopContainer extends Component {
         localStorage.removeItem("user_name");
         localStorage.removeItem('avatar');
         localStorage.removeItem('email');
-        this.setState({isOpenPopup: false, modalOpen: false});
+        this.setState({
+            isOpenPopup: false,
+            modalOpen  : false
+        });
+    };
+
+    handleOpenChangePass = () => {
+        this.setState({modalOpenChangePass: true});
+    };
+
+    handleCloseChangePass = () => {
+        this.setState({modalOpenChangePass: false});
+    };
+
+    handleChangePass = () => {
+        this.props.changePass(localStorage.getItem('user_name'), this.state.newPassword);
+        this.setState({modalOpenChangePass: false});
+    };
+
+    handleOpenResetPass = () => {
+        this.setState({
+            resetPass: true,
+            modalOpen: false
+        });
+    };
+
+    handleCloseResetPass = () => {
+        this.setState({resetPass: false});
+    };
+
+    resetPass = () => {
+        let rand = 100000 + Math.floor(Math.random() * 899999);
+        this.props.sendCode(localStorage.getItem('email'), rand);
+        this.setState({
+            modalCodeConfirm   : true,
+            modalOpenSignUp    : false,
+            codeConfirm        : rand,
+            modalOpenChangePass: false
+        });
+    };
+
+    handelCheckEmail = () => {
+        this.props.checkEmail(this.state.inputEmail);
+        this.setState({stateUser: true});
     };
 
     render() {
 
+        const hidePass = (
+            <Form.Input
+                value={this.state.newPassword}
+                type='password'
+                fluid
+                icon={<Icon name='hide' circular link onClick={() => this.setState({icePass: true})}/>}
+                placeholder='New Password'
+                name='newPassword'
+                onChange={this.logChange.bind(this)}
+            />
+        );
+
+        const icePass = (
+            <Form.Input
+                fluid
+                value={this.state.newPassword}
+                icon={<Icon name='eye' circular link onClick={() => this.setState({icePass: false})}/>}
+                placeholder='New Password'
+                name='newPassword'
+                onChange={this.logChange.bind(this)}
+            />
+        );
+
         function isLoginAuthenticated() {
             const check = localStorage.getItem('message');
-            if(check) {
-                return true
+            if (check) {
+                return true;
             }
         }
 
-        const { children } = this.props;
-        const { fixed } = this.state;
-        const avatar = localStorage.getItem('avatar');
+        const {children}       = this.props;
+        const {fixed}          = this.state;
+        const avatar           = localStorage.getItem('avatar');
         const label_check_true = (
             <Label basic color='red' pointing='below'>Values ​​are not empty</Label>
         );
@@ -188,7 +281,8 @@ class DesktopContainer extends Component {
         const modal = (
             <div>
                 <Modal
-                    trigger={<Button inverted={!fixed} primary={fixed} onClick={this.handleOpen.bind(this)}>Login</Button>}
+                    trigger={<Button inverted={!fixed} primary={fixed}
+                                     onClick={this.handleOpen.bind(this)}>Login</Button>}
                     open={this.state.modalOpen}
                     onClose={this.handleClose.bind(this)}
                     basic
@@ -204,15 +298,16 @@ class DesktopContainer extends Component {
                             </style>
                             <Grid
                                 textAlign='center'
-                                style={{ height: '100%' }}
+                                style={{height: '100%'}}
                                 verticalAlign='middle'
                             >
-                                <Grid.Column style={{ maxWidth: 450 }}>
-                                    <Header as='h2' color='teal' icon='sign in' content='LOGIN' />
+                                <Grid.Column style={{maxWidth: 450}}>
+                                    <Header as='h2' color='teal' icon='sign in' content='LOGIN'/>
                                     <Form size='large'>
                                         <Segment stacked>
                                             <Form.Input
                                                 fluid
+                                                icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
                                                 name='name_user_login'
@@ -227,11 +322,14 @@ class DesktopContainer extends Component {
                                                 onChange={this.logChange.bind(this)}
                                                 name='password_login'
                                             />
-                                            <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
+
+                                            <Button color='teal' fluid size='large'
+                                                    onClick={this.handleLogin.bind(this)}>Login</Button>
                                         </Segment>
                                     </Form>
                                     <Message>
-                                        New to us? <a onClick={this.handleOpenSignUp.bind(this)}>Sign Up</a>
+                                        New to us? <a onClick={this.handleOpenSignUp.bind(this)}>Sign Up</a> | <a
+                                        onClick={this.handleOpenResetPass.bind(this)}>Forgot Password</a>
                                     </Message>
                                 </Grid.Column>
                             </Grid>
@@ -239,12 +337,13 @@ class DesktopContainer extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='green' onClick={this.handleClose.bind(this)} inverted>
-                            <Icon name='checkmark' /> Got it
+                            <Icon name='checkmark'/> Got it
                         </Button>
                     </Modal.Actions>
                 </Modal>
                 <Modal
-                    trigger={<Button inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }} onClick={this.handleOpenSignUp.bind(this)}>Sign Up</Button>}
+                    trigger={<Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}
+                                     onClick={this.handleOpenSignUp.bind(this)}>Sign Up</Button>}
                     open={this.state.modalOpenSignUp}
                     onClose={this.handleCloseSignUp.bind(this)}
                     basic
@@ -260,21 +359,23 @@ class DesktopContainer extends Component {
                             </style>
                             <Grid
                                 textAlign='center'
-                                style={{ height: '100%' }}
+                                style={{height: '100%'}}
                                 verticalAlign='middle'
                             >
-                                <Grid.Column style={{ maxWidth: 450 }}>
-                                    <Header as='h2' color='teal' icon='sign in' content='SIGN UP' />
+                                <Grid.Column style={{maxWidth: 450}}>
+                                    <Header as='h2' color='teal' icon='sign in' content='SIGN UP'/>
                                     <Form size='large'>
                                         <Segment stacked>
                                             {this.state.label_check ? label_check_true : ''}
-                                            {isLoginAuthenticated() ? <Label basic color='red' pointing='below'>User name existed!</Label> : ''}
+                                            {isLoginAuthenticated() ?
+                                                <Label basic color='red' pointing='below'>User name
+                                                    existed!</Label> : ''}
                                             <Form.Input
                                                 fluid
                                                 icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
-                                                onChange={ (e) => this.inputSignUpChange(e.target.value)}
+                                                onChange={(e) => this.inputSignUpChange(e.target.value)}
                                                 name='name_user'
                                             />
                                             <Form.Input
@@ -307,8 +408,10 @@ class DesktopContainer extends Component {
                                                 name='avatar'
                                             />
 
-                                            {isLoginAuthenticated() ? <Button color='teal' fluid size='large' disabled>Sign Up</Button>
-                                                : <Button color='teal' fluid size='large' onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>}
+                                            {isLoginAuthenticated() ?
+                                                <Button color='teal' fluid size='large' disabled>Sign Up</Button>
+                                                : <Button color='teal' fluid size='large'
+                                                          onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>}
                                         </Segment>
                                     </Form>
                                     <Message>
@@ -320,7 +423,7 @@ class DesktopContainer extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='green' onClick={this.handleCloseSignUp.bind(this)} inverted>
-                            <Icon name='checkmark' /> Got it
+                            <Icon name='checkmark'/> Got it
                         </Button>
                     </Modal.Actions>
                 </Modal>
@@ -330,7 +433,8 @@ class DesktopContainer extends Component {
 
         const userEditor = (
             <Menu vertical>
-                <Menu.Item link><Icon name='edit'/>Chang Password</Menu.Item>
+                <Menu.Item link onClick={this.handleOpenChangePass.bind(this)}><Icon name='edit'/>Chang
+                    Password</Menu.Item>
                 <Menu.Item link><Icon name='edit'/>Change Email</Menu.Item>
                 <Menu.Item link><Icon name='edit'/>Change Avatar</Menu.Item>
                 <Menu.Item link onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
@@ -346,10 +450,22 @@ class DesktopContainer extends Component {
             />
         );
 
+        const listUser = (
+            <div>
+                {this.props.users.map((user, index) =>
+                    <a key={index}>{user.user_name}</a>
+                )}
+            </div>
+        );
+
+        console.log(this.props.users);
         return (
             <Responsive {...Responsive.onlyComputer}>
                 <Visibility once={false} onBottomPassed={this.showFixedMenu} onBottomPassedReverse={this.hideFixedMenu}>
-                    <Segment inverted textAlign='center' style={{ minHeight: 700, padding: '1em 0em'}} vertical>
+                    <Segment inverted textAlign='center' style={{
+                        minHeight: 700,
+                        padding  : '1em 0em'
+                    }} vertical>
                         <Menu
                             fixed={fixed ? 'top' : null}
                             inverted={!fixed}
@@ -365,9 +481,17 @@ class DesktopContainer extends Component {
                                     <Input
                                         action={
                                             <Dropdown button floating options={
-                                                [{ key: 'Borrowers', text: 'Borrowers', value: 'Borrowers' },
-                                                    { key: 'Books', text: 'Books', value: 'Books' }]
-                                            } defaultValue='Borrowers' />
+                                                [{
+                                                    key  : 'Borrowers',
+                                                    text : 'Borrowers',
+                                                    value: 'Borrowers'
+                                                },
+                                                    {
+                                                        key  : 'Books',
+                                                        text : 'Books',
+                                                        value: 'Books'
+                                                    }]
+                                            } defaultValue='Borrowers'/>
                                         }
                                         icon='search'
                                         iconPosition='left'
@@ -394,11 +518,11 @@ class DesktopContainer extends Component {
                                             </style>
                                             <Grid
                                                 textAlign='center'
-                                                style={{ height: '100%' }}
+                                                style={{height: '100%'}}
                                                 verticalAlign='middle'
                                             >
-                                                <Grid.Column style={{ maxWidth: 450 }}>
-                                                    <Header as='h2' color='teal' icon='sign in' content='LOGIN' />
+                                                <Grid.Column style={{maxWidth: 450}}>
+                                                    <Header as='h2' color='teal' icon='sign in' content='INPUT CODE'/>
                                                     <Form size='large'>
                                                         <Segment stacked>
                                                             <Label basic color='red' pointing='below'>
@@ -413,11 +537,13 @@ class DesktopContainer extends Component {
                                                                 name='code'
                                                                 onChange={this.logChange.bind(this)}
                                                             />
-                                                            <Button color='teal' fluid size='large' onClick={this.handleSubmitCode.bind(this)}>Submit</Button>
+                                                            <Button color='teal' fluid size='large'
+                                                                    onClick={this.handleSubmitCode.bind(this)}>Submit</Button>
                                                         </Segment>
                                                     </Form>
                                                     <Message>
-                                                        Send to code? <a onClick={this.handleSignUpClick.bind(this)}>Send Again</a>
+                                                        Send to code? <a onClick={this.handleSignUpClick.bind(this)}>Send
+                                                        Again</a>
                                                     </Message>
                                                 </Grid.Column>
                                             </Grid>
@@ -425,13 +551,106 @@ class DesktopContainer extends Component {
                                     </Modal.Content>
                                     <Modal.Actions>
                                         <Button color='green' onClick={this.handleCloseCodeConfirm.bind(this)} inverted>
-                                            <Icon name='checkmark' /> Got it
+                                            <Icon name='checkmark'/> Got it
                                         </Button>
                                     </Modal.Actions>
                                 </Modal>
+
+                                {/*---------------------------ChangePass--------------------------*/}
+                                <Modal
+                                    open={this.state.modalOpenChangePass}
+                                    onClose={this.handleCloseChangePass.bind(this)}
+                                    basic
+                                    size='small'
+                                >
+                                    <Modal.Content>
+                                        <div className='login-form'>
+                                            <style>{`body > div,
+                                                  body > div > div,
+                                                  body > div > div > div.login-form {
+                                                    height: 100%;}`
+                                            }
+                                            </style>
+                                            <Grid
+                                                textAlign='center'
+                                                style={{height: '100%'}}
+                                                verticalAlign='middle'
+                                            >
+                                                <Grid.Column style={{maxWidth: 450}}>
+                                                    <Header as='h2' color='teal' icon='sign in' content='LOGIN'/>
+                                                    <Form size='large'>
+                                                        <Segment stacked>
+                                                            {this.state.icePass ? icePass : hidePass}
+                                                            <Button color='teal' fluid size='large'
+                                                                    onClick={this.handleChangePass.bind(this)}>ChangePass</Button>
+                                                        </Segment>
+                                                    </Form>
+                                                </Grid.Column>
+                                            </Grid>
+                                        </div>
+                                    </Modal.Content>
+                                    <Modal.Actions>
+                                        <Button color='green' onClick={this.handleCloseChangePass.bind(this)} inverted>
+                                            <Icon name='checkmark'/> Got it
+                                        </Button>
+                                    </Modal.Actions>
+                                </Modal>
+
+                                {/*---------------Modal Reset pass---------------------*/}
+                                <Modal
+                                    open={this.state.resetPass}
+                                    onClose={this.handleCloseResetPass.bind(this)}
+                                    basic
+                                    size='small'
+                                >
+                                    <Modal.Content>
+                                        <div className='login-form'>
+                                            <style>{`body > div,
+                                                  body > div > div,
+                                                  body > div > div > div.login-form {
+                                                    height: 100%;}`
+                                            }
+                                            </style>
+                                            <Grid
+                                                textAlign='center'
+                                                style={{height: '100%'}}
+                                                verticalAlign='middle'
+                                            >
+                                                <Grid.Column style={{maxWidth: 450}}>
+                                                    <Header as='h2' color='teal' icon='sign in' content='RESET PASS'/>
+                                                    <Form size='large'>
+                                                        <Segment stacked>
+                                                            <Label basic color='red' pointing='below'>
+                                                                Please, input email to us check account for you does not
+                                                                exist?
+                                                            </Label>
+                                                            {this.state.stateUser ? listUser : <Form.Input
+                                                                fluid
+                                                                icon='mail'
+                                                                iconPosition='left'
+                                                                placeholder='Input Email'
+                                                                name='inputEmail'
+                                                                onChange={this.logChange.bind(this)}
+                                                            />}
+                                                            //todo
+                                                            <Button color='teal' fluid size='large'
+                                                                    onClick={this.handelCheckEmail.bind(this)}>Check</Button>
+                                                        </Segment>
+                                                    </Form>
+                                                </Grid.Column>
+                                            </Grid>
+                                        </div>
+                                    </Modal.Content>
+                                    <Modal.Actions>
+                                        <Button color='green' onClick={this.handleCloseResetPass.bind(this)} inverted>
+                                            <Icon name='checkmark'/> Got it
+                                        </Button>
+                                    </Modal.Actions>
+                                </Modal>
+
                             </Container>
                         </Menu>
-                        <HomepageHeading />
+                        <HomepageHeading/>
                     </Segment>
                 </Visibility>
 

@@ -50,9 +50,10 @@ router.delete('/book/:id', bookController.remove);
 
 /*----------------------------------------------------User---------------------------------------------------*/
 
-router.post('/user' ,request.user, userController.create);
+router.post('/user', request.user, userController.create);
 router.post('/send-code', userController.sendCode);
-router.put('/user/:user_name', request.user, userController.update);
+router.post('/user/check-email', userController.checkEmail);
+router.put('/user', request.user, userController.update);
 router.delete('/user/:user_name', userController.remove);
 
 router.post('/login', request.checkLogin, userController.login);
@@ -144,22 +145,21 @@ router.delete('/topic/:id', topicController.remove);
 router.get('/feedbacks', (req, res, next) => {
     req.condition = new feedbackSearch.feedbackUndeleted();
     next();
-},feedbackController.search);
+}, feedbackController.search);
 
 router.get('/search-basic', (req, res, next) => {
     req.condition = new feedbackSearch.feedbackKeyword(req.query.keyword);
     next();
-},feedbackController.search);
+}, feedbackController.search);
 
 router.get('/search-advance', (req, res, next) => {
     req.condition = new feedbackSearch.feedbackAdvance(req.query.name_user_feedback, req.query.title);
     next();
-},feedbackController.search);
+}, feedbackController.search);
 
 router.post('/feedback', request.feedback, feedbackController.create);
 router.put('/feedback/:id', request.feedback, feedbackController.update);
 router.delete('/feedback/:id', feedbackController.remove);
-
 
 
 module.exports = router;

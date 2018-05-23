@@ -1,37 +1,56 @@
-export const SEND_CODE = 'SEND_CODE';
-export const ADD_USER  = 'ADD_USER';
-export const LOGIN     = 'LOGIN';
-export const SIGN_UP   = 'SIGN_UP';
+export const SEND_CODE   = 'SEND_CODE';
+export const ADD_USER    = 'ADD_USER';
+export const LOGIN       = 'LOGIN';
+export const SIGN_UP     = 'SIGN_UP';
+export const CHANGE_PASS = 'CHANGE_PASS';
+export const CHECK_EMAIL = 'CHECK_EMAIL';
 
 export function sendCode(email, code) {
     return {
-        type: SEND_CODE,
+        type : SEND_CODE,
         email: email,
-        code: code
+        code : code
     }
 }
 
 export function addUser(user_name, password, email, avatar) {
     return {
-        type: ADD_USER,
+        type     : ADD_USER,
         user_name: user_name,
-        password: password,
-        email: email,
-        avatar: avatar
+        password : password,
+        email    : email,
+        avatar   : avatar
     }
 }
 
 export function login(user_name, password) {
     return {
-        type: LOGIN,
+        type     : LOGIN,
         user_name: user_name,
-        password: password
+        password : password
     }
 }
 
 export function signUp(user_name) {
     return {
-        type: SIGN_UP,
+        type     : SIGN_UP,
         user_name: user_name
     }
 }
+
+export function changePass(user_name, password) {
+    return {
+        type     : CHANGE_PASS,
+        user_name: user_name,
+        password : password
+    }
+}
+
+export function checkEmail(email) {
+    return {
+        type : CHECK_EMAIL,
+        email: email
+    }
+}
+
+

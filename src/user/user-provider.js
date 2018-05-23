@@ -42,6 +42,22 @@ class UserProvider {
             });
     }
 
+    async provideCheckEmail(email) {
+        let factory = this.factory;
+        return await this.connection('users').select('user_name')
+            .where({email: email})
+            .then( results => {
+                if(results.length === 0) {
+                    return new User('', '');
+                }
+                return results.map(result => {
+                    result.role= '';
+                    result.password = '';
+                    return factory.makeFromDB(result)
+                });
+            });
+    }
+
 }
 
 module.exports = UserProvider;

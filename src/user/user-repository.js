@@ -21,7 +21,7 @@ class UserRepository {
     }
 
     edit(user) {
-        return this.connection('users').insert({
+        return this.connection('users').update({
             password: user.getPassword(),
             avatar: user.getAvatar(),
             email: user.getEmail()

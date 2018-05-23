@@ -1,4 +1,4 @@
-import {ADD_USER, LOGIN, SEND_CODE, SIGN_UP} from "./actions";
+import {ADD_USER, CHANGE_PASS, CHECK_EMAIL, LOGIN, SEND_CODE, SIGN_UP} from "./actions";
 
 const userApi = store => next => action => {
 
@@ -31,10 +31,7 @@ const userApi = store => next => action => {
             localStorage.setItem('user_name', data.user_name);
             localStorage.setItem('avatar', data.avatar);
             localStorage.setItem('email', data.email);
-            next({
-                type: SEND_CODE,
-                user: data
-            })
+            next(action)
         });
     }
 
@@ -83,6 +80,44 @@ const userApi = store => next => action => {
                 localStorage.removeItem('message');
                 next(action)
             }
+        });
+    }
+
+    else if(action.type === CHANGE_PASS) {
+        let data = {
+            user_name: action.user_name,
+            password: action.password,
+        };
+
+        fetch("/user", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then( res => res.json()).then(data => {
+            alert(data.message);
+            next({
+                type: CHECK_EMAIL,
+            })
+        });
+    }
+
+    else if(action.type === CHECK_EMAIL) {
+        fetch("/user/check-email", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: action.email})
+        }).then( res => res.json()).then(data => {
+            if(data.length === 1 && data.user_name === '') {
+                alert('email not exist?');
+            }
+            next({
+                type: CHECK_EMAIL,
+                users: data
+            })
         });
     }
 
