@@ -37,7 +37,14 @@ class UserController {
 
     login(req, res, next) {
         let repo = req.app.get('user.provide');
-        repo.provide(req.body.user_name).then( (user) => {
+        repo.provide(req.body.user_name).then((user) => {
+            res.send(user);
+        }).catch(next);
+    }
+
+    signUp(req, res, next) {
+        let repo = req.app.get('user.provide');
+        repo.provideSignUp(req.body.user_name).then((user) => {
             res.send(user);
         }).catch(next);
     }

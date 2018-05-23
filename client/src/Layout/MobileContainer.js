@@ -5,8 +5,8 @@ import {
     Responsive, Segment, Sidebar, Label, Popup
 } from 'semantic-ui-react';
 
-import {connect} from 'react-redux';
-import {addUser, login, sendCode} from "../middleware/user/actions";
+import {connect}                          from 'react-redux';
+import {addUser, login, sendCode, signUp} from "../middleware/user/actions";
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -55,6 +55,10 @@ const mapDispatchToProps = dispatch => {
 
         login: (user_name, password) => {
             dispatch(login(user_name, password));
+        },
+
+        signUp: (user_name) => {
+            dispatch(signUp(user_name));
         }
     }
 };
@@ -98,6 +102,11 @@ class MobileContainer extends Component {
 
     logChange(e) {
         this.setState({[e.target.name]: e.target.value});
+    }
+
+    inputSignUpChange(value) {
+        this.setState({name_user: value});
+        this.props.signUp(value);
     }
 
     handleSignUpClick(e) {
@@ -160,6 +169,14 @@ class MobileContainer extends Component {
     };
 
     render() {
+
+        function isLoginAuthenticated() {
+            const check = localStorage.getItem('message');
+            if(check) {
+                return true
+            }
+        }
+
         const { children } = this.props;
         const { sidebarOpened } = this.state;
         const avatar = localStorage.getItem('avatar');
@@ -255,12 +272,13 @@ class MobileContainer extends Component {
                                     <Form size='large'>
                                         <Segment stacked>
                                             {this.state.label_check ? label_check_true : label_check_false}
+                                            {isLoginAuthenticated() ? <Label basic color='red' pointing='below'>User name existed!</Label> : ''}
                                             <Form.Input
                                                 fluid
                                                 icon='user'
                                                 iconPosition='left'
                                                 placeholder='User Name'
-                                                onChange={this.logChange.bind(this)}
+                                                onChange={ (e) => this.inputSignUpChange(e.target.value)}
                                                 name='name_user'
                                             />
                                             <Form.Input
@@ -293,7 +311,8 @@ class MobileContainer extends Component {
                                                 name='avatar'
                                             />
 
-                                            <Button color='teal' fluid size='large' onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>
+                                            {isLoginAuthenticated() ? <Button color='teal' fluid size='large' disabled>Sign Up</Button>
+                                                : <Button color='teal' fluid size='large' onClick={this.handleSignUpClick.bind(this)}>Sign Up</Button>}
                                         </Segment>
                                     </Form>
                                     <Message>

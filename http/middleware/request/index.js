@@ -5,4 +5,3 @@ exports.curriculum = require('./curriculum-request');
 exports.topic      = require('./topic-request');
 exports.feedback   = require('./feedback-request');
 exports.checkLogin = require('./check-login');
-exports.checkSignUp = require('./check-sign-up');

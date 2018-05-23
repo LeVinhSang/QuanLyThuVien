@@ -93,7 +93,10 @@ class DesktopContainer extends Component {
 
     handleOpen = () => this.setState({ modalOpen: true , modalOpenSignUp: false});
 
-    handleOpenSignUp = () => this.setState({ modalOpenSignUp: true, modalOpen:false });
+    handleOpenSignUp = () => {
+        this.setState({ modalOpenSignUp: true, modalOpen:false });
+        localStorage.removeItem('message');
+    };
 
     handleClose = () => this.setState({ modalOpen: false });
 
@@ -130,7 +133,7 @@ class DesktopContainer extends Component {
                 codeConfirm: rand,
                 label: false,
                 label_check: false,
-            })
+            });
         }
     }
 
@@ -173,7 +176,7 @@ class DesktopContainer extends Component {
             if(check) {
                 return true
             }
-        };
+        }
 
         const { children } = this.props;
         const { fixed } = this.state;
@@ -265,6 +268,7 @@ class DesktopContainer extends Component {
                                     <Form size='large'>
                                         <Segment stacked>
                                             {this.state.label_check ? label_check_true : ''}
+                                            {isLoginAuthenticated() ? <Label basic color='red' pointing='below'>User name existed!</Label> : ''}
                                             <Form.Input
                                                 fluid
                                                 icon='user'
@@ -272,7 +276,6 @@ class DesktopContainer extends Component {
                                                 placeholder='User Name'
                                                 onChange={ (e) => this.inputSignUpChange(e.target.value)}
                                                 name='name_user'
-                                                loading
                                             />
                                             <Form.Input
                                                 fluid

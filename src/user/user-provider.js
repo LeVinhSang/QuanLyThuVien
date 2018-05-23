@@ -31,6 +31,17 @@ class UserProvider {
             });
     }
 
+    async provideSignUp(user_name) {
+        return await this.connection('users').select('user_name')
+            .where({user_name: user_name})
+            .then( results => {
+                if(results.length === 0) {
+                    return new User('', '');
+                }
+                return new User(results[0].user_name, '')
+            });
+    }
+
 }
 
 module.exports = UserProvider;
