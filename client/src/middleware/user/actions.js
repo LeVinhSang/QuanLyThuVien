@@ -4,6 +4,7 @@ export const LOGIN       = 'LOGIN';
 export const SIGN_UP     = 'SIGN_UP';
 export const CHANGE_PASS = 'CHANGE_PASS';
 export const CHECK_EMAIL = 'CHECK_EMAIL';
+export const GET_USER    = 'GET_USER';
 
 export function sendCode(email, code) {
     return {
@@ -52,5 +53,12 @@ export function checkEmail(email) {
         email: email
     }
 }
+
+export function getUser() {
+    return {
+        type: GET_USER
+    }
+}
+
 
 

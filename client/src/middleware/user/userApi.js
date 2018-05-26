@@ -1,4 +1,4 @@
-import {ADD_USER, CHANGE_PASS, CHECK_EMAIL, LOGIN, SEND_CODE, SIGN_UP} from "./actions";
+import { ADD_USER, CHANGE_PASS, CHECK_EMAIL, GET_USER, LOGIN, SEND_CODE, SIGN_UP } from "./actions";
 
 const userApi = store => next => action => {
 
@@ -72,13 +72,11 @@ const userApi = store => next => action => {
             },
             body: JSON.stringify(data)
         }).then(res => res.json()).then( (data) => {
-            if(data.user_name !== '') {
-                localStorage.setItem('message', 'user name existed!');
-                next(action);
+            if(data.message === 'sign up false') {
+                alert('user name existed!');
             }
             else {
-                localStorage.removeItem('message');
-                next(action)
+                next(action);
             }
         });
     }
@@ -111,7 +109,7 @@ const userApi = store => next => action => {
             },
             body: JSON.stringify({email: action.email})
         }).then( res => res.json()).then(data => {
-            if(data.length === 1 && data.user_name === '') {
+            if(data.user_name === '') {
                 alert('email not exist?');
             }
             next({
@@ -119,6 +117,17 @@ const userApi = store => next => action => {
                 users: data
             })
         });
+    }
+
+    else if(action.type === GET_USER) {
+        fetch("/user/check-email", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: action.email})
+        }).then( res => res.json()).then(data => next({type: GET_USER, users: data})
+        );
     }
 
     else {

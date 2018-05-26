@@ -632,7 +632,6 @@ class DesktopContainer extends Component {
                                                                 name='inputEmail'
                                                                 onChange={this.logChange.bind(this)}
                                                             />}
-                                                            //todo
                                                             <Button color='teal' fluid size='large'
                                                                     onClick={this.handelCheckEmail.bind(this)}>Check</Button>
                                                         </Segment>

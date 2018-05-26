@@ -58,6 +58,11 @@ class UserProvider {
             });
     }
 
+    async provideCheckSignUp() {
+        let factory = this.factory;
+        return await this.connection('users').select('user_name')
+            .then( results => results.map(result => factory.makeFromDB(result)));
+    }
 }
 
 module.exports = UserProvider;

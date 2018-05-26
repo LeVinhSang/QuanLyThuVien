@@ -55,6 +55,13 @@ class UserController {
             res.send(user);
         }).catch(next);
     }
+
+    checkSignUp(req, res, next) {
+        let repo = req.app.get('user.provide');
+        repo.provideCheckSignUp().then((users) => {
+            res.send(users);
+        }).catch(next);
+    }
 }
 
 module.exports = UserController;
