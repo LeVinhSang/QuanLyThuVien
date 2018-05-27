@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Button, Image, List} from 'semantic-ui-react'
-import {loadBook} from "../middleware/book/actions";
+import React, { Component }                           from 'react';
+import { connect }                                    from 'react-redux';
+import { Button, Divider, Image, Label, List, Popup } from 'semantic-ui-react'
+import { loadBook }                                   from "../middleware/book/actions";
+import { addBorrowerUser }               from "../middleware/borrower/actions";
 
 
 const mapDispatchToProps = dispatch => {
@@ -10,6 +11,10 @@ const mapDispatchToProps = dispatch => {
         loadBook: () => {
             dispatch(loadBook());
         },
+
+        createBorrower: (user_name, book_id, date_return) => {
+            dispatch(addBorrowerUser(user_name, book_id, date_return));
+        }
     }
 };
 
@@ -20,24 +25,27 @@ const mapStateToProps = state => {
 };
 
 
-
 class Book extends Component {
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.loadBook();
     }
 
     render() {
         function isAuthenticated() {
             const user = localStorage.getItem('user_name');
-            if(user) {
+            if (user) {
                 return true
             }
         }
 
+        let date = new Date();
+        date.setMonth( date.getMonth() + 1);
+        date = date.toISOString().substr(0, 10);
+
         return (
             <List relaxed>
-                {this.props.books.map ( (book, index) =>
+                {this.props.books.map((book, index) =>
                     <List.Item key={index}>
                         <Image avatar src={book.images}/>
                         <List.Content>
@@ -46,7 +54,18 @@ class Book extends Component {
                                 <b>{book.publisher.name}</b>
                             </List.Description>
                             <List.Description>
-                                {isAuthenticated() ? <Button>Borrow</Button> : ''}
+                                {isAuthenticated() ?
+                                    <Popup
+                                        trigger={<Button>Borrow</Button>}
+                                        content={<div>
+                                            <Label>You want borrow book and date return in {date}</Label>
+                                            <Divider/>
+                                            <Button floated={'right'} onClick={() => this.props.createBorrower(localStorage.getItem('user_name'), book.id_book, date)}>Yes</Button>
+                                        </div>}
+                                        on='click'
+                                        position='bottom center'
+                                    />
+                                    : ''}
                             </List.Description>
                         </List.Content>
                     </List.Item>
@@ -56,6 +75,7 @@ class Book extends Component {
     }
 
 }
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps

@@ -45,8 +45,7 @@ const mapStateToProps = state => {
 
 class BorrowerList extends Component {
 
-
-    componentWillMount() {
+    componentDidMount() {
         this.props.loadBorrower();
     }
 

@@ -1,5 +1,6 @@
-const connection       = require('../../../database');
-const BorrowerFactory      = require('../borrower-factory');
+const connection      = require('../../../database');
+const BorrowerFactory = require('../borrower-factory');
+const status          = require('../status');
 
 class Searcher {
 
@@ -10,7 +11,7 @@ class Searcher {
      */
     constructor(connection, factory) {
         this.connection = connection;
-        this.factory = factory;
+        this.factory    = factory;
     }
 
     /**
@@ -19,14 +20,15 @@ class Searcher {
      * @return {Borrower[]}
      */
     search(condition) {
-        let factory = this.factory;
+        let factory  = this.factory;
         let sqlQuery = this.connection('borrowers')
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow',
                 'borrowers.date_return',
                 'users.user_name', 'users.email', 'users.avatar',
-                'books.id_book','books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
+                'books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',
                 'publishers.name', 'publishers.phone', 'publishers.address')
+            .where({'borrowers.status': status.CONFIRM})
             .leftJoin('books', function () {
                 this.on('borrowers.book_id', '=', 'books.id_book')
             })
@@ -38,7 +40,7 @@ class Searcher {
             });
 
         condition.describe(sqlQuery);
-        return sqlQuery.then(results => results.map( element => factory.makeFromDB(element)));
+        return sqlQuery.then(results => results.map(element => factory.makeFromDB(element)));
     }
 }
 

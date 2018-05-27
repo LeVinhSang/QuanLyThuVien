@@ -1,5 +1,5 @@
 import {
-    ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
+    ADD_BORROWER, ADD_BORROWER_USER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
     LOAD_BORROWER
 } from "./actions";
 
@@ -47,6 +47,26 @@ const borrowerApi = store => next => action => {
                 borrower: data
             }));
             return 0;
+        });
+    }
+
+    else if(action.type === ADD_BORROWER_USER) {
+
+        let data = {
+            name_user: action.name_user,
+            book_id: action.book_id,
+            date_return: action.date_return
+        };
+
+        fetch("/borrower", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then( res => res.json()).then( () => {
+            alert('success');
+            window.location.href='/'
         });
     }
 

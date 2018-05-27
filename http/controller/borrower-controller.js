@@ -2,7 +2,7 @@ class BorrowerController {
 
     create(req, res, next) {
         let repo = req.app.get('borrower.repo');
-        repo.add(req.borrower).then( borrower => {
+        repo.add(req.borrower, req.body.id_book).then( borrower => {
             req.borrower.setId(borrower[0]);
             res.send(req.borrower);
         }).catch(next)

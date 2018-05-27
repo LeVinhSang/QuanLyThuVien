@@ -1,12 +1,12 @@
-import PropTypes          from 'prop-types'
-import React, {Component} from 'react';
+import PropTypes            from 'prop-types'
+import React, { Component } from 'react';
 import {
     Button, Container, Form, Grid, Header, Icon, Menu, Message, Modal,
     Responsive, Segment, Visibility, Dropdown, Input, Label, Popup, Image
-}                         from 'semantic-ui-react';
+}                           from 'semantic-ui-react';
 
-import {connect}                                                  from 'react-redux';
-import {addUser, changePass, checkEmail, login, sendCode, signUp} from "../middleware/user/actions";
+import { connect }                                                  from 'react-redux';
+import { addUser, changePass, checkEmail, login, sendCode, signUp } from "../middleware/user/actions";
 
 const HomepageHeading = ({mobile}) => (
     <Container text>
@@ -101,7 +101,7 @@ class DesktopContainer extends Component {
             newPassword        : '',
             resetPass          : false,
             inputEmail         : false,
-            stateUser          : false
+            stateUser          : false,
         };
     }
 
@@ -458,7 +458,6 @@ class DesktopContainer extends Component {
             </div>
         );
 
-        console.log(this.props.users);
         return (
             <Responsive {...Responsive.onlyComputer}>
                 <Visibility once={false} onBottomPassed={this.showFixedMenu} onBottomPassedReverse={this.hideFixedMenu}>

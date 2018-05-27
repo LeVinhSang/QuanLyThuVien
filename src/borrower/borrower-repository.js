@@ -16,12 +16,19 @@ class BorrowerRepository {
      * @returns {Promise <void> }
      */
     async add(borrower) {
+        let amount = await this.connection('books').select('amount').where({id_book: borrower.getBook().getId()});
+        let book = this.connection('books').update({
+            amount: amount[0].amount -1
+        }).where({id_book: borrower.getBook().getId()});
+
         return await this.connection('borrowers').insert({
             name_user: borrower.getUser().getUser_name(),
             book_id: borrower.getBook().getId(),
             date_borrow: new Date().toISOString().substr(0, 10),
             status: status.PENDING,
             date_return: borrower.getDate_return()
+        }).then( () => {
+            return book;
         });
     }
 
