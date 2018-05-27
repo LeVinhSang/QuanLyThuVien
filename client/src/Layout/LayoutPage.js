@@ -4,10 +4,10 @@ import {
     Button, Container, Divider, Grid, Header, Icon, Image, List, Segment
 } from 'semantic-ui-react';
 
-import Borrower from '../Borrower/Borrower';
-import Book from "../Book/Book";
-import MobileContainer from "./MobileContainer";
+import MobileContainer  from "./MobileContainer";
 import DesktopContainer from "./DeskoptopContainer";
+import Router           from "../Router";
+import { withRouter }   from "react-router-dom";
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -54,25 +54,10 @@ ResponsiveContainer.propTypes = {
     children: PropTypes.node,
 };
 
+
 const HomepageLayout = () => (
     <ResponsiveContainer>
-        <Segment style={{ padding: '8em 0em' }} vertical>
-            <Grid container stackable>
-                <Grid.Row>
-                    <Grid.Column width={13}>
-                        <Borrower/>
-                    </Grid.Column>
-                    <Grid.Column floated='right' width={3}>
-                        <Book/>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column textAlign='center'>
-                        <Button size='huge'>Check Them Out</Button>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-        </Segment>
+        <Router/>
         <Segment style={{ padding: '0em' }} vertical>
             <Grid celled='internally' columns='equal' stackable>
                 <Grid.Row textAlign='center'>
@@ -148,4 +133,4 @@ const HomepageLayout = () => (
         </Segment>
     </ResponsiveContainer>
 );
-export default HomepageLayout;
+export default withRouter(HomepageLayout);

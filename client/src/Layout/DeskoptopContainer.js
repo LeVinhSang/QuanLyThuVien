@@ -7,6 +7,7 @@ import {
 
 import { connect }                                                  from 'react-redux';
 import { addUser, changePass, checkEmail, login, sendCode, signUp } from "../middleware/user/actions";
+import { Link, withRouter }                                         from "react-router-dom";
 
 const HomepageHeading = ({mobile}) => (
     <Container text>
@@ -190,14 +191,24 @@ class DesktopContainer extends Component {
         }
     };
 
+    isAuthenticatedAdmin = () => {
+        const user = localStorage.getItem('role');
+        if(user === 'admin') {
+            return true;
+        }
+    };
+
     handleLogout = () => {
         localStorage.removeItem("user_name");
         localStorage.removeItem('avatar');
         localStorage.removeItem('email');
+        localStorage.removeItem('role');
         this.setState({
             isOpenPopup: false,
             modalOpen  : false
         });
+
+        window.location.href = '/';
     };
 
     handleOpenChangePass = () => {
@@ -474,9 +485,8 @@ class DesktopContainer extends Component {
                             size='large'
                         >
                             <Container>
-                                <Menu.Item active>Home</Menu.Item>
-                                <Menu.Item>Borrowers</Menu.Item>
-                                <Menu.Item>Books</Menu.Item>
+                                <Menu.Item><Link to={'/'}>Home</Link></Menu.Item>
+                                {this.isAuthenticatedAdmin() ? <Menu.Item><Link to={'/management'}>Management</Link></Menu.Item> : ''}
                                 <Menu.Item position={'right'}>
                                     <Input
                                         action={
@@ -663,7 +673,7 @@ DesktopContainer.propTypes = {
     children: PropTypes.node,
 };
 
-export default DesktopContainer = connect(
+export default DesktopContainer = withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(DesktopContainer);
+)(DesktopContainer));

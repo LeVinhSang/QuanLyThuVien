@@ -55,6 +55,7 @@ const userApi = store => next => action => {
                 localStorage.setItem('user_name', data.user_name);
                 localStorage.setItem('email', data.email);
                 localStorage.setItem('avatar', data.avatar);
+                localStorage.setItem('role', data.role);
                 next(action)
             }
         });
