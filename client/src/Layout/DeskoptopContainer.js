@@ -102,6 +102,7 @@ class DesktopContainer extends Component {
             resetPass          : false,
             inputEmail         : false,
             stateUser          : false,
+            selectSearch       : 'borrowers'
         };
     }
 
@@ -490,7 +491,7 @@ class DesktopContainer extends Component {
                                                         text : 'Books',
                                                         value: 'Books'
                                                     }]
-                                            } defaultValue='Borrowers'/>
+                                            } defaultValue='Borrowers' onChange={ (e , items) => this.setState({selectSearch: items.value})}/>
                                         }
                                         icon='search'
                                         iconPosition='left'
