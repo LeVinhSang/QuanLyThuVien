@@ -8,6 +8,8 @@ import {
 import { connect }                                                  from 'react-redux';
 import { addUser, changePass, checkEmail, login, sendCode, signUp } from "../middleware/user/actions";
 import { Link, withRouter }                                         from "react-router-dom";
+import { getKeyWordBorrower, loadBorrower }                         from "../middleware/borrower/actions";
+import { getKeyWordBook, loadBook }                                 from "../middleware/book/actions";
 
 const HomepageHeading = ({mobile}) => (
     <Container text>
@@ -68,6 +70,22 @@ const mapDispatchToProps = dispatch => {
 
         checkEmail: (email) => {
             dispatch(checkEmail(email));
+        },
+
+        getKeywordBorrower: keyword => {
+            dispatch(getKeyWordBorrower(keyword));
+        },
+
+        getKeywordBook: keyword => {
+            dispatch(getKeyWordBook(keyword));
+        },
+
+        loadBook: () => {
+            dispatch(loadBook());
+        },
+
+        loadBorrower: () => {
+            dispatch(loadBorrower());
         }
     }
 };
@@ -250,6 +268,10 @@ class DesktopContainer extends Component {
         this.props.checkEmail(this.state.inputEmail);
         this.setState({stateUser: true});
     };
+
+    onChangeSearch(keyword) {
+        this.props.onChange(this.state.selectSearch, keyword);
+    }
 
     render() {
 
@@ -506,6 +528,7 @@ class DesktopContainer extends Component {
                                         icon='search'
                                         iconPosition='left'
                                         placeholder='Search...'
+                                        onChange={ e => this.onChangeSearch(e.currentTarget.value)}
                                     />
                                 </Menu.Item>
                                 <Menu.Item position='right'>

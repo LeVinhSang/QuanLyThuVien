@@ -45,7 +45,7 @@ HomepageHeading.propTypes = {
 
 const ResponsiveContainer = ({ children }) => (
     <div>
-        <DesktopContainer>{children}</DesktopContainer>
+        <DesktopContainer onChange={() => console.log(this.props)}>{children}</DesktopContainer>
         <MobileContainer>{children}</MobileContainer>
     </div>
 );

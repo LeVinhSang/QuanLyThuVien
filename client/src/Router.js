@@ -16,7 +16,7 @@ export default  class Router extends React.Component {
         return (
             <main>
                 <Switch>
-                    <Route exact path='/' component = {User}/>
+                    <Route exact path='/' component = {() => <User/>}/>
                     <Route path='/management' component = {this.isAuthenticatedAdmin() ? Management : User}/>
                 </Switch>
             </main>

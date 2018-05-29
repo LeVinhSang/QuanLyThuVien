@@ -45,7 +45,7 @@ router.get('/search-advance', (req, res, next) => {
 
 router.post('/book', check.dataBook, request.book, bookController.create);
 router.put('/book/:id', request.book, bookController.update);
-router.delete('/book/:id', bookController.remove);
+router.delete('/book', bookController.remove);
 
 
 /*----------------------------------------------------User---------------------------------------------------*/
@@ -75,6 +75,11 @@ router.get('/search-advance', (req, res, next) => {
 
 router.get('/borrowers', (req, res, next) => {
     req.condition = new borrowerSearch.borrowerUndeleted();
+    next();
+}, borrowerController.search);
+
+router.get('/admin/borrowers', (req, res, next) => {
+    req.condition = new borrowerSearch.borrowerAdmin();
     next();
 }, borrowerController.search);
 

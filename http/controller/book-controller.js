@@ -16,7 +16,7 @@ class BookController {
 
     remove(req, res, next) {
         let repo = req.app.get('book.repo');
-        repo.delete(req.params.id).then( () => {
+        repo.delete(req.body.id).then( () => {
             res.send('success');
         }).catch(next);
     }

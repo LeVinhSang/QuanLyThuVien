@@ -5,6 +5,7 @@ export const EDIT_CHECKED         = 'EDIT_CHECKED';
 export const EDIT_BORROWER        = 'EDIT_BORROWER';
 export const DELETE_BORROWER      = 'DELETED_BORROWER';
 export const GET_KEYWORD_BORROWER = 'GET_KEYWORD_BORROWER';
+export const LOAD_BORROWER_ADMIN  = 'LOAD_BORROWER_ADMIN';
 
 export function addBorrower(name_user, book_id, date_return) {
     return {
@@ -26,6 +27,10 @@ export function addBorrowerUser(name_user, book_id, date_return) {
 
 export function loadBorrower() {
     return {type: LOAD_BORROWER}
+}
+
+export function loadBorrowerAdmin() {
+    return {type: LOAD_BORROWER_ADMIN}
 }
 
 export function editChecked(id, checked) {

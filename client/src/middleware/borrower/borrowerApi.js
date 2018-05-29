@@ -1,6 +1,6 @@
 import {
     ADD_BORROWER, ADD_BORROWER_USER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
-    LOAD_BORROWER
+    LOAD_BORROWER, LOAD_BORROWER_ADMIN
 } from "./actions";
 
 const borrowerApi = store => next => action => {
@@ -13,6 +13,20 @@ const borrowerApi = store => next => action => {
                 data.map(data => data.checked = false);
                 next({
                     type: LOAD_BORROWER,
+                    borrowers: data
+                })
+            }
+        );
+    }
+
+    else if(action.type === LOAD_BORROWER_ADMIN) {
+
+        fetch("/admin/borrowers", {
+            method: 'GET'
+        }).then( res => res.json()).then( data => {
+                data.map(data => data.checked = false);
+                next({
+                    type: LOAD_BORROWER_ADMIN,
                     borrowers: data
                 })
             }

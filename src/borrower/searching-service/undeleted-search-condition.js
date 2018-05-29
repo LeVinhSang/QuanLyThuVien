@@ -1,3 +1,5 @@
+const status          = require('../status');
+
 class UndeletedSearchCondition {
 
     /**
@@ -6,7 +8,7 @@ class UndeletedSearchCondition {
      * @return {Borrower[]}
      */
     describe(sqlQuery) {
-        return sqlQuery.where({'borrowers.deleted_at': null})
+        return sqlQuery.where({'borrowers.deleted_at': null, 'borrowers.status': status.CONFIRM})
     }
 }
 

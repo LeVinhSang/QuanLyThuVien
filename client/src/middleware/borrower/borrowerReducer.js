@@ -1,6 +1,6 @@
 import {
     ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
-    LOAD_BORROWER
+    LOAD_BORROWER, LOAD_BORROWER_ADMIN
 } from "./actions";
 
 export function borrowerReducer(state = [], action) {
@@ -9,6 +9,10 @@ export function borrowerReducer(state = [], action) {
     }
 
     if(action.type === LOAD_BORROWER) {
+        return [...action.borrowers]
+    }
+
+    if(action.type === LOAD_BORROWER_ADMIN) {
         return [...action.borrowers]
     }
 

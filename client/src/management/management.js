@@ -1,14 +1,14 @@
-import React, { Component }                          from 'react'
-import { Button, Checkbox, Divider, Table }          from 'semantic-ui-react'
-import { withRouter }                                from "react-router-dom";
-import { deleteBook, editCheckedBook, loadBook }     from "../middleware/book/actions";
-import { deleteBorrower, editChecked, loadBorrower } from "../middleware/borrower/actions";
-import { connect }                                   from 'react-redux';
+import React, { Component }                               from 'react'
+import { Button, Checkbox, Container, Divider, Table }    from 'semantic-ui-react'
+import { withRouter }                                     from "react-router-dom";
+import { deleteBook, editCheckedBook, loadBook }          from "../middleware/book/actions";
+import { deleteBorrower, editChecked, loadBorrowerAdmin } from "../middleware/borrower/actions";
+import { connect }                                        from 'react-redux';
 
 const mapDispatchToProps = dispatch => {
     return {
         loadBorrower: () => {
-            dispatch(loadBorrower());
+            dispatch(loadBorrowerAdmin());
         },
 
         loadBook: () => {
@@ -48,10 +48,19 @@ class Management extends Component {
         this.props.loadBook();
     }
 
+    renderCheckedStatus = status => {
+        switch (status.toLowerCase()) {
+            case 'pending':
+                return false;
+            default:
+                return true;
+        }
+    };
+
     render() {
 
-        return (
-            <div>
+            return (
+            <Container>
                 <Table singleLine>
                     <Table.Header>
                         <Table.Row>
@@ -60,6 +69,7 @@ class Management extends Component {
                             <Table.HeaderCell>E-mail address</Table.HeaderCell>
                             <Table.HeaderCell>Date Borrow</Table.HeaderCell>
                             <Table.HeaderCell>Date Return</Table.HeaderCell>
+                            <Table.HeaderCell>Status</Table.HeaderCell>
                             <Table.HeaderCell><Button
                                 onClick={() => this.props.deleteBorrower(this.props.borrowers)}>Delete</Button>
                             </Table.HeaderCell>
@@ -74,6 +84,7 @@ class Management extends Component {
                                 <Table.Cell>{borrower.user.email}</Table.Cell>
                                 <Table.Cell>{borrower.date_borrow}</Table.Cell>
                                 <Table.Cell>{borrower.date_return}</Table.Cell>
+                                <Table.Cell><Checkbox toggle checked={this.renderCheckedStatus(borrower.status)}/></Table.Cell>
                                 <Table.Cell>
                                     <Checkbox checked={borrower.checked}
                                               onChange={(e, items) => this.props.editChecked(index, items.checked)}/>
@@ -111,7 +122,7 @@ class Management extends Component {
                         )}
                     </Table.Body>
                 </Table>
-            </div>
+            </Container>
         )
     }
 }

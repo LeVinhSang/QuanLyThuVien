@@ -1,3 +1,5 @@
+const status          = require('../status');
+
 class KeywordSearchCondition {
 
     /**
@@ -18,7 +20,7 @@ class KeywordSearchCondition {
         return sqlQuery.where( function () {
             this.where('borrowers.name_user', 'like', '%' + keyword + '%')
                 .orWhere('books.title', 'like', '%' + keyword + '%')
-        }).where({'borrowers.deleted_at': null});
+        }).where({'borrowers.deleted_at': null, 'borrowers.status': status.CONFIRM});
     }
 }
 
