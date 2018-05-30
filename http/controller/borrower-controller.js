@@ -19,15 +19,15 @@ class BorrowerController {
     remove(req, res, next) {
         let repo = req.app.get('borrower.repo');
         repo.delete(req.body.id).then( () => {
-            res.send('success');
+            res.send({message: 'success'});
         }).catch(next)
     }
 
     confirm(req, res, next) {
         let repo = req.app.get('borrower.repo');
         repo.confirm(req.params.id).then( () => {
-            res.send('success');
-        }).catch(next)
+            res.send({message: 'success'});
+        }).catch(next);
     }
 
     search(req, res, next) {

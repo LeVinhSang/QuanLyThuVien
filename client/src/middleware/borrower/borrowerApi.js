@@ -1,5 +1,6 @@
 import {
-    ADD_BORROWER, ADD_BORROWER_USER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
+    ADD_BORROWER, ADD_BORROWER_USER, CONFIRM_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED,
+    GET_KEYWORD_BORROWER,
     LOAD_BORROWER, LOAD_BORROWER_ADMIN
 } from "./actions";
 
@@ -135,6 +136,14 @@ const borrowerApi = store => next => action => {
                 type: GET_KEYWORD_BORROWER,
                 borrowers: data
             }));
+    }
+
+    else if(action.type === CONFIRM_BORROWER) {
+
+        fetch('/borrower/confirm/'+ action.id, {
+            method: 'PUT'
+        }).then(res => res.json())
+            .then( () => next(action));
     }
 
     else {

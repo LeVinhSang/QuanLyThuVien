@@ -102,7 +102,7 @@ router.get('/search-advance', (req, res, next) => {
 router.get('/borrower/send-mail', check.dataBorrower, borrowerController.sendMail);
 router.post('/borrower', request.borrower, borrowerController.create);
 router.put('/borrower', request.borrower, borrowerController.update);
-router.put('/borrower/confirm/:id', request.borrower, borrowerController.confirm);
+router.put('/borrower/confirm/:id', borrowerController.confirm);
 router.delete('/borrower', borrowerController.remove);
 
 /*--------------------------------------------------Curriculums---------------------------------------------*/

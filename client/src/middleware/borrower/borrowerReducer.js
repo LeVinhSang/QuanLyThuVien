@@ -1,5 +1,5 @@
 import {
-    ADD_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
+    ADD_BORROWER, CONFIRM_BORROWER, DELETE_BORROWER, EDIT_BORROWER, EDIT_CHECKED, GET_KEYWORD_BORROWER,
     LOAD_BORROWER, LOAD_BORROWER_ADMIN
 } from "./actions";
 
@@ -14,6 +14,12 @@ export function borrowerReducer(state = [], action) {
 
     if(action.type === LOAD_BORROWER_ADMIN) {
         return [...action.borrowers]
+    }
+
+    if(action.type === CONFIRM_BORROWER) {
+        let borrower = [...state];
+        borrower[action.index].status = 'confirm';
+        return [...borrower];
     }
 
     if(action.type === EDIT_CHECKED) {

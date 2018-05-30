@@ -1,9 +1,9 @@
-import React, { Component }                               from 'react'
-import { Button, Checkbox, Container, Divider, Table }    from 'semantic-ui-react'
-import { withRouter }                                     from "react-router-dom";
-import { deleteBook, editCheckedBook, loadBook }          from "../middleware/book/actions";
-import { deleteBorrower, editChecked, loadBorrowerAdmin } from "../middleware/borrower/actions";
-import { connect }                                        from 'react-redux';
+import React, { Component }                                                from 'react'
+import { Button, Checkbox, Container, Divider, Table }                     from 'semantic-ui-react'
+import { withRouter }                                                      from "react-router-dom";
+import { deleteBook, editCheckedBook, loadBook }                           from "../middleware/book/actions";
+import { confirmBorrower, deleteBorrower, editChecked, loadBorrowerAdmin } from "../middleware/borrower/actions";
+import { connect }                                                         from 'react-redux';
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -29,6 +29,9 @@ const mapDispatchToProps = dispatch => {
 
         deleteBook: (books) => {
             dispatch(deleteBook(books));
+        },
+        confirmBorrower: (id, index) => {
+            dispatch(confirmBorrower(id, index))
         }
     }
 };
@@ -57,6 +60,13 @@ class Management extends Component {
         }
     };
 
+
+    editStatus(id, index, checked) {
+        if(checked) {
+            this.props.confirmBorrower(id, index);
+        }
+    }
+
     render() {
 
             return (
@@ -84,7 +94,7 @@ class Management extends Component {
                                 <Table.Cell>{borrower.user.email}</Table.Cell>
                                 <Table.Cell>{borrower.date_borrow}</Table.Cell>
                                 <Table.Cell>{borrower.date_return}</Table.Cell>
-                                <Table.Cell><Checkbox toggle checked={this.renderCheckedStatus(borrower.status)}/></Table.Cell>
+                                <Table.Cell><Checkbox toggle checked={this.renderCheckedStatus(borrower.status)} onChange={(e, items) => this.editStatus(borrower.id, index, items.checked)}/></Table.Cell>
                                 <Table.Cell>
                                     <Checkbox checked={borrower.checked}
                                               onChange={(e, items) => this.props.editChecked(index, items.checked)}/>
