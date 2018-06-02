@@ -23,9 +23,9 @@ class BorrowerController {
         }).catch(next)
     }
 
-    confirm(req, res, next) {
+    updateStatus(req, res, next) {
         let repo = req.app.get('borrower.repo');
-        repo.confirm(req.params.id).then( () => {
+        repo.updateStatus(req.params.id, req.body.status).then( () => {
             res.send({message: 'success'});
         }).catch(next);
     }

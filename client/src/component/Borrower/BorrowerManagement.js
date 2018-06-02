@@ -1,7 +1,7 @@
 import React, { Component }                           from 'react';
 import { Checkbox, Table, Button, Input, Grid, Icon } from 'semantic-ui-react';
 import { Link }                                       from 'react-router-dom';
-import { borrowerService }                            from "../services";
+import { borrowerService }                            from "../../services/index";
 
 class BorrowerManagement extends Component {
 
@@ -51,7 +51,7 @@ class BorrowerManagement extends Component {
         let borrowerSearch           = [...this.state.borrowerSearch];
         borrowerSearch[index].status = checked ? 'confirm' : 'pending';
         this.setState({borrowerSearch: borrowerSearch});
-        borrowerService.updateStatus(id, {active: borrowerSearch[index].active})
+        borrowerService.updateStatus(id, {status: borrowerSearch[index].status})
     };
 
     onChangeInputSearch(e) {
@@ -111,7 +111,7 @@ class BorrowerManagement extends Component {
                         {borrowerSearch.map((borrower, index) =>
                             <Table.Row key={index}>
                                 <Table.Cell><Link to={{
-                                    pathname: `/borrower-editor/${borrower.id}`,
+                                    pathname: `/borrower-editor/${borrower.id}`
                                 }}>{borrower.user.user_name}</Link></Table.Cell>
                                 <Table.Cell>{borrower.book.title}</Table.Cell>
                                 <Table.Cell>{borrower.user.email}</Table.Cell>

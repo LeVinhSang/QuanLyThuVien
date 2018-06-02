@@ -1,6 +1,6 @@
-import React, { Component }                             from 'react';
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import { Link }                                         from "react-router-dom";
+import React, { Component }                                          from 'react';
+import { Button, Form, Grid, Header, Icon, Message, Popup, Segment } from 'semantic-ui-react';
+import { Link }                                                      from "react-router-dom";
 
 class SignUp extends Component {
 
@@ -11,11 +11,12 @@ class SignUp extends Component {
 
 
     state = {
-        name_user        : '',
-        password         : '',
-        re_enter_password: '',
-        email            : '',
-        avatar           : ''
+        name_user           : '',
+        password            : '',
+        re_enter_password   : '',
+        email               : '',
+        avatar              : '',
+        checkReEnterPassword: true
     };
 
     logChange(e) {
@@ -24,7 +25,7 @@ class SignUp extends Component {
 
     render() {
 
-        const {name_user, password, re_enter_password, email, avatar} = this.state;
+        const {name_user, password, re_enter_password, email, avatar, checkReEnterPassword} = this.state;
 
         return (
             <div className='login-form' style={{marginTop: '5%'}}>
@@ -47,26 +48,24 @@ class SignUp extends Component {
                                     onChange={this.logChange.bind(this)}
                                     name='name_user'
                                 />
-                                <Form.Input
-                                    fluid
-                                    value={password}
-                                    icon='lock'
-                                    iconPosition='left'
-                                    placeholder='Password'
-                                    type='password'
-                                    onChange={this.logChange.bind(this)}
-                                    name='password'
-                                />
-
-                                <Form.Input
-                                    value={re_enter_password}
-                                    fluid
-                                    icon='lock'
-                                    iconPosition='left'
-                                    placeholder='re_enter_password'
-                                    type='password'
-                                    onChange={this.logChange.bind(this)}
-                                    name='re_enter_password'
+                                <Form.Input type="password" fluid  placeholder='Password'
+                                            iconPosition='left'
+                                            icon='lock'
+                                            value={password}
+                                            name='password' onChange={this.logChange.bind(this)}/>
+                                <br/>
+                                <Form.Input type="password" fluid
+                                            iconPosition='left'
+                                            value={re_enter_password}
+                                            placeholder='Re enter password' name='re_enter_password'
+                                            icon={checkReEnterPassword ?
+                                                <Icon name='check circle' link color='blue'
+                                                      inverted/> : <Popup
+                                                    trigger={<Icon name='remove circle' link color='red'
+                                                                   inverted/>}
+                                                    content={'Re enter password must be like password'}
+                                                    position='top center'
+                                                />}
                                 />
 
                                 <Form.Input
@@ -101,8 +100,8 @@ class SignUp extends Component {
                     </Grid.Column>
                 </Grid>
             </div>
-        )
+    )
     }
-}
+    }
 
-export default SignUp;
+    export default SignUp;

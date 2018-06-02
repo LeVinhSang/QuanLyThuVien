@@ -1,5 +1,3 @@
-const status          = require('../status');
-
 class AdvanceSearchCondition {
 
     /**
@@ -18,7 +16,7 @@ class AdvanceSearchCondition {
      * @return {Borrower[]}
      */
     describe(sqlQuery) {
-        return sqlQuery.where({deleted_at: null, 'borrowers.name_user': this.name_user, 'books.title': this.title, 'borrowers.status': status.CONFIRM});
+        return sqlQuery.where({deleted_at: null, 'borrowers.name_user': this.name_user, 'books.title': this.title});
     }
 }
 

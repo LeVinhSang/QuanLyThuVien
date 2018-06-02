@@ -79,11 +79,10 @@ router.get('/borrowers', (req, res, next) => {
     next();
 }, borrowerController.search);
 
-router.get('/admin/borrowers', (req, res, next) => {
-    req.condition = new borrowerSearch.borrowerAdmin();
+router.get('/borrower/:id', (req, res, next) => {
+    req.condition = new borrowerSearch.borrowerDetail(req.params.id);
     next();
 }, borrowerController.search);
-
 
 router.get('/search-outDate', (req, res, next) => {
     req.condition = new borrowerSearch.borrowerOutDate();
@@ -103,7 +102,7 @@ router.get('/search-advance', (req, res, next) => {
 router.get('/borrower/send-mail', check.dataBorrower, borrowerController.sendMail);
 router.post('/borrower', request.borrower, borrowerController.create);
 router.put('/borrower', request.borrower, borrowerController.update);
-router.put('/borrower/confirm/:id', borrowerController.confirm);
+router.put('/borrower/status/:id', borrowerController.updateStatus);
 router.delete('/borrower', borrowerController.remove);
 
 /*--------------------------------------------------Curriculums---------------------------------------------*/

@@ -1,0 +1,29 @@
+.user_management .ui.card {
+    width: 100%;
+    box-shadow: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.user_management .ui.card > img {
+    width: 150px;
+}
+
+.user_management .ui.card .content {
+    border: none;
+}
+
+.user_management .ui.card .content > button {
+    margin: 0;
+}
+
+.user_management .content-profile,
+.user_management .content-assigned {
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.user_management .content-assigned {
+    margin-top: 30px !important;
+}

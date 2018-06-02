@@ -1,6 +1,6 @@
 import React, { Component }                                 from 'react';
 import { Button, Card, Divider, Icon, Image, Input, Popup } from "semantic-ui-react";
-import { bookService }                                      from '../services';
+import { bookService }                                      from '../../services/index';
 
 class Book extends Component {
 

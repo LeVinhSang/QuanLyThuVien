@@ -1,6 +1,6 @@
 import React, { Component }                                 from 'react';
 import { Button, Card, Divider, Icon, Image, Input, Popup } from "semantic-ui-react";
-import { borrowerService }                                  from '../services';
+import { borrowerService }                                  from '../../services/index';
 
 class Borrower extends Component {
 

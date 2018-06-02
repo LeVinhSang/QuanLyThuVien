@@ -57,9 +57,9 @@ class BorrowerRepository {
         }).where({id : id});
     }
 
-    async confirm(id) {
+    async updateStatus(id, status) {
         return await this.connection('borrowers').update({
-            status: status.CONFIRM
+            status: status
         }).where({id : id});
     }
 }
