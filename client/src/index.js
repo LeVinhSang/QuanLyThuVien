@@ -1,18 +1,13 @@
-import React                 from 'react';
-import ReactDOM              from 'react-dom';
+import React                       from 'react';
+import ReactDOM                    from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App                         from './App';
+import pages                       from './screens';
 import './index.css';
-import App                   from './App';
-import registerServiceWorker from './registerServiceWorker';
-import {Provider}            from "react-redux";
-import store                 from "./middleware/store";
-import {BrowserRouter as Router} from "react-router-dom"
-
 
 ReactDOM.render(
     <Router>
-        <Provider store={store}>
-            <App/>
-        </Provider>
+        <App pages={pages} defaultActive={true}/>
     </Router>,
-    document.getElementById('root'));
-registerServiceWorker();
+    document.getElementById('root')
+);
