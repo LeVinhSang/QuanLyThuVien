@@ -1,9 +1,9 @@
-import React, { Component }                                                      from 'react';
+import React, { Component }                                               from 'react';
 import { Icon, Grid, Form, Card, Image, Button, Label, Message, Segment } from 'semantic-ui-react';
-import default_avatar                                                            from './default_avatar.jpeg';
+import default_avatar                                                     from '../Book/default_avatar.jpeg';
 import './BorrowerEditor.css';
-import { ButtonLoading }                                                         from '../../lib';
-import { bookService, borrowerService }                                          from '../../services';
+import { ButtonLoading }                                                  from '../../lib';
+import { bookService, borrowerService }                                   from '../../services';
 
 
 class BorrowerEditor extends Component {
@@ -16,7 +16,8 @@ class BorrowerEditor extends Component {
         name_user           : '',
         imageBorrower       : '',
         date_return         : '',
-        date_borrow         : ''
+        date_borrow         : '',
+        id                  : ''
     };
 
     static route = {
@@ -33,7 +34,8 @@ class BorrowerEditor extends Component {
                 name_user    : res.data[0].user.user_name,
                 imageBorrower: res.data[0].user.avatar,
                 date_return  : res.data[0].date_return,
-                date_borrow  : res.data[0].date_borrow
+                date_borrow  : res.data[0].date_borrow,
+                id           : res.data[0].id
             });
         });
         bookService.getBooks().then(res => {
@@ -52,6 +54,12 @@ class BorrowerEditor extends Component {
         this.setState({[e.target.name]: e.currentTarget.value});
     }
 
+    handleSave() {
+        this.setState({isLoading: true});
+        let {id, valueDropdown, name_user} = this.state;
+        borrowerService.updateBorrower({id: id, name_user: name_user, book_id: valueDropdown})
+            .then( () => window.location.href = '/borrower-management')
+    }
 
     render() {
         const {imageBorrower, valueDropdown, name_user, bookOptions, isLoading, date_return, date_borrow} = this.state;
@@ -109,7 +117,7 @@ class BorrowerEditor extends Component {
                                 <Grid.Column>
                                     {isLoading ?
                                         <ButtonLoading text={'Save'}/>
-                                        : <Button primary floated='left' content='Save'/>
+                                        : <Button primary floated='left' content='Save' onClick={this.handleSave.bind(this)}/>
                                     }
                                 </Grid.Column>
                             </Grid.Row>

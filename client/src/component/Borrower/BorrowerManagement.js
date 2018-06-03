@@ -22,11 +22,17 @@ class BorrowerManagement extends Component {
     };
 
     componentDidMount() {
-        borrowerService.getBorrowers().then(res => this.setState({
-            borrowers      : res.data,
-            borrowerSearch : res.data,
-            borrowerKeyword: res.data
-        }));
+        borrowerService.getBorrowers().then(res => {
+            res.data.map(data => {
+                data.checked = false;
+                return data;
+            });
+            this.setState({
+                borrowers      : res.data,
+                borrowerSearch : res.data,
+                borrowerKeyword: res.data
+            })
+        });
     }
 
     statusActive = (e, {content}) => {
@@ -70,6 +76,18 @@ class BorrowerManagement extends Component {
         }
     };
 
+    handleCheckedBorrower = (id, checked) => {
+        let borrowers         = this.state.borrowerSearch;
+        borrowers[id].checked = checked;
+        this.setState({borrowerSearch: borrowers});
+    };
+
+    handleDelete() {;
+        this.state.borrowerSearch.map(borrower => borrower.checked && borrowerService.deleteBorrower(borrower.id));
+        let borrowers = this.state.borrowerSearch.filter(borrower => !borrower.checked);
+        this.setState({borrowerSearch: borrowers})
+    }
+
     render() {
 
         let {borrowerSearch, statusButton, statusActive} = this.state;
@@ -100,11 +118,15 @@ class BorrowerManagement extends Component {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={3}>Name</Table.HeaderCell>
-                            <Table.HeaderCell width={3}>Book</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>Book</Table.HeaderCell>
                             <Table.HeaderCell width={4}>Email</Table.HeaderCell>
                             <Table.HeaderCell width={2}>Status</Table.HeaderCell>
                             <Table.HeaderCell textAlign='center' width={2}>Date Borrow</Table.HeaderCell>
                             <Table.HeaderCell textAlign='center' width={2}>Date Return</Table.HeaderCell>
+                            <Table.HeaderCell textAlign='center' width={1}>
+                                <Button basic color='blue' onClick={this.handleDelete.bind(this)}
+                                        icon='trash'/>
+                            </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -125,10 +147,14 @@ class BorrowerManagement extends Component {
                                 <Table.Cell textAlign='center'>
                                     <p style={styles.capitalize}>{borrower.date_return}</p>
                                 </Table.Cell>
+                                <Table.Cell textAlign='center'>
+                                    <Checkbox checked={borrower.checked}
+                                              onChange={(e, items) => this.handleCheckedBorrower(index, items.checked)}/>
+                                </Table.Cell>
                             </Table.Row>
                         )}
                         <Table.Row>
-                            <Table.Cell colSpan={5}><u><i>More</i></u></Table.Cell>
+                            <Table.Cell colSpan={6}><u><i>More</i></u></Table.Cell>
                             <Table.Cell textAlign='center'>
                                 <Link to='/borrower-create'>
                                     <Icon name={'plus circle'} size={'large'}/>

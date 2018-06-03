@@ -2,7 +2,7 @@ import axios  from 'axios';
 import config from '../config';
 
 import BorrowerService from './BorrowerService';
-import BookService from './BookService';
+import BookService     from './BookService';
 
 axios.interceptors.request.use(axiosConfig => {
     //TODO add token here
@@ -22,4 +22,4 @@ axios.interceptors.response.use(
     }
 );
 export let borrowerService = new BorrowerService(axios, config);
-export let bookService = new BookService(axios, config);
+export let bookService     = new BookService(axios, config);

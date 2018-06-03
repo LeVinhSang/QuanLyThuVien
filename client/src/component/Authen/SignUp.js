@@ -15,7 +15,6 @@ class SignUp extends Component {
         password            : '',
         re_enter_password   : '',
         email               : '',
-        avatar              : '',
         checkReEnterPassword: true
     };
 
@@ -25,7 +24,7 @@ class SignUp extends Component {
 
     render() {
 
-        const {name_user, password, re_enter_password, email, avatar, checkReEnterPassword} = this.state;
+        const {name_user, password, re_enter_password, email, checkReEnterPassword} = this.state;
 
         return (
             <div className='login-form' style={{marginTop: '5%'}}>
@@ -53,11 +52,11 @@ class SignUp extends Component {
                                             icon='lock'
                                             value={password}
                                             name='password' onChange={this.logChange.bind(this)}/>
-                                <br/>
                                 <Form.Input type="password" fluid
                                             iconPosition='left'
                                             value={re_enter_password}
-                                            placeholder='Re enter password' name='re_enter_password'
+                                            placeholder='Re enter password'
+                                            name='re_enter_password'
                                             icon={checkReEnterPassword ?
                                                 <Icon name='check circle' link color='blue'
                                                       inverted/> : <Popup
@@ -78,18 +77,6 @@ class SignUp extends Component {
                                     onChange={this.logChange.bind(this)}
                                     name='email'
                                 />
-
-                                <Form.Input
-                                    value={avatar}
-                                    fluid
-                                    icon='linkify'
-                                    iconPosition='left'
-                                    placeholder='Link Avatar'
-                                    type='text'
-                                    onChange={this.logChange.bind(this)}
-                                    name='avatar'
-                                />
-
 
                                 <Button color='teal' fluid size='large'>Login</Button>
                             </Segment>
