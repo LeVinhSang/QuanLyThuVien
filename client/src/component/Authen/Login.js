@@ -1,6 +1,7 @@
 import React, { Component }                             from 'react';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { Link }                                         from "react-router-dom";
+import { loginService }                                 from '../../services';
 
 class Login extends Component {
 
@@ -9,6 +10,34 @@ class Login extends Component {
         path     : '/login',
         component: Login,
     };
+
+    state = {
+        user_name: '',
+        password : ''
+    };
+
+
+    logChange(e) {
+        this.setState({[e.target.name]: e.currentTarget.value});
+    }
+
+    handleLogin(e) {
+        let {user_name, password} = this.state;
+        e.preventDefault();
+        loginService.loginForm({user_name: user_name, password: password})
+            .then( res => {
+                if(res.data.message === 'login false') {
+                    alert('user_name or password wrong!');
+                }
+                else {
+                    localStorage.setItem('user_name', res.data.user_name);
+                    localStorage.setItem('email', res.data.email);
+                    localStorage.setItem('avatar', res.data.avatar);
+                    localStorage.setItem('role', res.data.role);
+                    window.location.href='/';
+                }
+            });
+    }
 
     render() {
         return (
@@ -28,6 +57,8 @@ class Login extends Component {
                                     icon='user'
                                     iconPosition='left'
                                     placeholder='E-mail address'
+                                    name='user_name'
+                                    onChange={this.logChange.bind(this)}
                                 />
                                 <Form.Input
                                     fluid
@@ -35,9 +66,11 @@ class Login extends Component {
                                     iconPosition='left'
                                     placeholder='Password'
                                     type='password'
+                                    name='password'
+                                    onChange={this.logChange.bind(this)}
                                 />
 
-                                <Button color='teal' fluid size='large'>Login</Button>
+                                <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
                             </Segment>
                         </Form>
                         <Message>

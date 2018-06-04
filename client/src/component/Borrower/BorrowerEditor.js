@@ -56,8 +56,8 @@ class BorrowerEditor extends Component {
 
     handleSave() {
         this.setState({isLoading: true});
-        let {id, valueDropdown, name_user} = this.state;
-        borrowerService.updateBorrower({id: id, name_user: name_user, book_id: valueDropdown})
+        let {id, valueDropdown, name_user, date_return} = this.state;
+        borrowerService.updateBorrower({id: id, name_user: name_user, book_id: valueDropdown, date_return: date_return})
             .then( () => window.location.href = '/borrower-management')
     }
 

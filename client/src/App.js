@@ -1,6 +1,6 @@
-import React, { Component }           from 'react';
-import { Link, Route }                from 'react-router-dom';
-import { Icon, Menu, Segment, Image } from 'semantic-ui-react';
+import React, { Component }                  from 'react';
+import { Link, Route }                       from 'react-router-dom';
+import { Icon, Menu, Segment, Image, Popup } from 'semantic-ui-react';
 import './App.css';
 
 
@@ -54,7 +54,12 @@ class App extends Component {
                                 <Icon name='alarm'/>
                             </Menu.Item>
                             <Menu.Item>
-                                <Image src='#'/>
+                                <Popup
+                                    trigger={<Image avatar src={localStorage.getItem('avatar')}/>}
+                                    content={userEditor}
+                                    on='click'
+                                    position='bottom center'
+                                />
                             </Menu.Item>
                             <Menu.Item>
                                 <Icon name='setting'/>

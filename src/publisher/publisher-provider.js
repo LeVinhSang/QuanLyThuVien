@@ -12,10 +12,15 @@ class PublisherProvider {
     
     async provide(id) {
         let factory = this.factory;
-        let publisher = await this.connection('publishers').select()
+        return await this.connection('publishers').select()
             .where({id: id})
             .then( results => factory.makeFromDB(results[0]));
-        return publisher;
+    }
+
+    async provideAll() {
+        let factory = this.factory;
+        return await this.connection('publishers').select()
+            .then( results => results.map(result => factory.makeFromDB(result)));
     }
 }
 
