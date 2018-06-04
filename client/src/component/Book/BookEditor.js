@@ -4,13 +4,14 @@ import default_avatar                                                     from '
 import '../Borrower/BorrowerEditor.css';
 import { ButtonLoading }                                                  from '../../lib';
 import { bookService }                                                    from '../../services';
+import Borrower                                                           from "../Borrower/Borrower";
 
 
 class BorrowerEditor extends Component {
 
     static route = {
         path     : '/book-editor/:id',
-        component: BorrowerEditor,
+        component: localStorage.getItem('role') === 'admin' ? BorrowerEditor : Borrower,
         icon     : <Icon name='book'/>,
         className: 'user_management'
     };

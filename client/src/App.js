@@ -36,11 +36,31 @@ class App extends Component {
         return !!localStorage.getItem('user_name');
     };
 
+    handleLogout = () => {
+        localStorage.removeItem("user_name");
+        localStorage.removeItem('avatar');
+        localStorage.removeItem('email');
+        localStorage.removeItem('role');
+        this.setState({
+            isOpenPopup: false,
+            modalOpen  : false
+        });
+
+        window.location.href = '/';
+    };
+
     render() {
 
         let {pages}                  = this.props;
         let {activeItem, menuActive} = this.state;
         let app                      = menuActive ? 'app menu-inactive' : 'app menu-active';
+
+        const userEditor = (
+            <Menu vertical>
+                <Link to='/edit-user'><Menu.Item><Icon name='edit'/>Edit Profile</Menu.Item></Link>
+                <Menu.Item onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
+            </Menu>
+        );
 
         return (
             <div className={app}>

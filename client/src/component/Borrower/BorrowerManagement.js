@@ -2,14 +2,15 @@ import React, { Component }                           from 'react';
 import { Checkbox, Table, Button, Input, Grid, Icon } from 'semantic-ui-react';
 import { Link }                                       from 'react-router-dom';
 import { borrowerService }                            from "../../services/index";
+import Borrower                                       from "./Borrower";
 
 class BorrowerManagement extends Component {
 
     static route = {
         path     : '/borrower-management',
-        component: BorrowerManagement,
+        component: localStorage.getItem('role') === 'admin' ? BorrowerManagement : Borrower,
         icon     : <Icon name='user'/>,
-        linkLabel: 'Borrower Management',
+        linkLabel: localStorage.getItem('role') ==='admin' ? 'Borrower Management' : null,
         className: 'borrower_management'
     };
 
