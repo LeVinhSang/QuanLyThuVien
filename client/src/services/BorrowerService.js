@@ -23,6 +23,10 @@ class BorrowerService {
     updateBorrower(data) {
         return this.axios.put(`${this.config.domain}/borrower`, data);
     }
+
+    createBorrower(data) {
+        return this.axios.post(`${this.config.domain}/borrower`, data);
+    }
 }
 
 export default BorrowerService;

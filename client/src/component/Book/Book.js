@@ -1,6 +1,6 @@
-import React, { Component }                                 from 'react';
-import { Button, Card, Divider, Icon, Image, Input, Popup } from "semantic-ui-react";
-import { bookService }                                      from '../../services/index';
+import React, { Component }                                        from 'react';
+import { Button, Card, Divider, Icon, Image, Input, Label, Popup } from "semantic-ui-react";
+import { borrowerService, bookService }                            from "../../services";
 
 class Book extends Component {
 
@@ -12,26 +12,48 @@ class Book extends Component {
         className: 'Books'
     };
 
-    state = {books: [], bookSearch: []};
+    state = {
+        books     : [],
+        bookSearch: []
+    };
 
     componentDidMount() {
         bookService.getBooks().then(res => {
-            this.setState({books: res.data, bookSearch: res.data})
+            this.setState({
+                books     : res.data,
+                bookSearch: res.data
+            })
         });
     }
 
     onChangeInputSearch(e) {
         let updatedList = this.state.books;
-        updatedList = updatedList.filter( item =>
+        updatedList     = updatedList.filter(item =>
             item.title.toLowerCase().search(e.currentTarget.value.toLowerCase()) !== -1);
         this.setState({bookSearch: updatedList});
     }
 
-    isAuthentication = () =>{
+    isAuthentication = () => {
         return !!localStorage.getItem('user_name');
     };
 
+    handleBorrowCLick(id) {
+        let date = new Date();
+        date.setMonth(date.getMonth() + 1);
+        date          = date.toISOString().substr(0, 10);
+        let name_user = localStorage.getItem('user_name');
+        borrowerService.createBorrower({
+            name_user  : name_user,
+            book_id    : id,
+            date_return: date
+        }).then( () => alert('success'));
+    }
+
     render() {
+
+        let date = new Date();
+        date.setMonth(date.getMonth() + 1);
+        date          = date.toISOString().substr(0, 10);
 
         return (
             <div>
@@ -40,7 +62,7 @@ class Book extends Component {
                     <Input style={{width: '300px'}} icon='search' placeholder='Search....' size='mini'
                            onChange={this.onChangeInputSearch.bind(this)}/>
                 </div>
-                <Divider inverted  hidden/>
+                <Divider inverted hidden/>
                 <Card.Group>
                     {this.state.bookSearch.map((book, index) =>
                         <Card key={index} style={{width: 200}}>
@@ -63,18 +85,28 @@ class Book extends Component {
                                             <Popup
                                                 on='click'
                                                 hideOnScroll
-                                                trigger={<Button content={'Detail'} basic color='green' />}
+                                                trigger={<Button content={'Detail'} basic color='green'/>}
                                                 content={<div>
                                                     Detail: .....
                                                 </div>}
                                             />
-                                            <Button content={'Detail'} basic color='red'/>
+                                            <Popup
+                                                trigger={<Button basic color='red'>Borrow</Button>}
+                                                content={<div>
+                                                    <Label>You want borrow book and date return in {date}</Label>
+                                                    <Divider/>
+                                                    <Button fluid    content={'Borrow'} basic color='blue'
+                                                            onClick={() => this.handleBorrowCLick(book.id_book)}/>
+                                                </div>}
+                                                on='click'
+                                                position='bottom center'
+                                            />
                                         </div>
                                         :
                                         <Popup
                                             on='click'
                                             hideOnScroll
-                                            trigger={<Button content={'Detail'} basic color='green' />}
+                                            trigger={<Button content={'Detail'} basic color='green'/>}
                                             content={<div>
                                                 Detail: .....
                                             </div>}

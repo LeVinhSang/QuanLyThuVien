@@ -1,7 +1,7 @@
-import React, { Component }                             from 'react';
+import React, { Component }                                    from 'react';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import { Link }                                         from "react-router-dom";
-import { loginService }                                 from '../../services';
+import { Link }                                                from "react-router-dom";
+import { loginService }                                        from '../../services';
 
 class Login extends Component {
 
@@ -12,10 +12,10 @@ class Login extends Component {
     };
 
     state = {
-        user_name: '',
-        password : ''
+        user_name       : '',
+        password        : '',
+        modalCodeConfirm: false
     };
-
 
     logChange(e) {
         this.setState({[e.target.name]: e.currentTarget.value});
@@ -24,9 +24,12 @@ class Login extends Component {
     handleLogin(e) {
         let {user_name, password} = this.state;
         e.preventDefault();
-        loginService.loginForm({user_name: user_name, password: password})
-            .then( res => {
-                if(res.data.message === 'login false') {
+        loginService.loginForm({
+            user_name: user_name,
+            password : password
+        })
+            .then(res => {
+                if (res.data.message === 'login false') {
                     alert('user_name or password wrong!');
                 }
                 else {
@@ -34,12 +37,13 @@ class Login extends Component {
                     localStorage.setItem('email', res.data.email);
                     localStorage.setItem('avatar', res.data.avatar);
                     localStorage.setItem('role', res.data.role);
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
             });
     }
 
     render() {
+
         return (
             <div className='login-form' style={{marginTop: '5%'}}>
                 <Grid
@@ -70,7 +74,8 @@ class Login extends Component {
                                     onChange={this.logChange.bind(this)}
                                 />
 
-                                <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Login</Button>
+                                <Button color='teal' fluid size='large'
+                                        onClick={this.handleLogin.bind(this)}>Login</Button>
                             </Segment>
                         </Form>
                         <Message>

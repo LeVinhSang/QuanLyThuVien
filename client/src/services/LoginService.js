@@ -7,6 +7,10 @@ class LoginService {
     loginForm(data) {
         return this.axios.post(`${this.config.domain}/login`, data);
     }
+
+    sendCodeConfirm(data) {
+        return this.axios.post(`${this.config.domain}/send-code`, data);
+    }
 }
 
 export default LoginService;

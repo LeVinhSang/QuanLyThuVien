@@ -1,6 +1,6 @@
-import React, { Component }                                          from 'react';
+import React, { Component }                                                 from 'react';
 import { Button, Form, Grid, Header, Icon, Message, Popup, Segment } from 'semantic-ui-react';
-import { Link }                                                      from "react-router-dom";
+import { Link }                                                             from "react-router-dom";
 
 class SignUp extends Component {
 
@@ -25,7 +25,6 @@ class SignUp extends Component {
     render() {
 
         const {name_user, password, re_enter_password, email, checkReEnterPassword} = this.state;
-
         return (
             <div className='login-form' style={{marginTop: '5%'}}>
                 <Grid
@@ -47,7 +46,7 @@ class SignUp extends Component {
                                     onChange={this.logChange.bind(this)}
                                     name='name_user'
                                 />
-                                <Form.Input type="password" fluid  placeholder='Password'
+                                <Form.Input type="password" fluid placeholder='Password'
                                             iconPosition='left'
                                             icon='lock'
                                             value={password}
@@ -77,8 +76,15 @@ class SignUp extends Component {
                                     onChange={this.logChange.bind(this)}
                                     name='email'
                                 />
+                                <Link to={{
+                                    pathname : '/input-code',
+                                    name_user: name_user,
+                                    password : password,
+                                    email    : email
 
-                                <Button color='teal' fluid size='large'>Login</Button>
+                                }}>
+                                    <Button color='teal' fluid size='large'>Login</Button>
+                                </Link>
                             </Segment>
                         </Form>
                         <Message>
@@ -87,8 +93,8 @@ class SignUp extends Component {
                     </Grid.Column>
                 </Grid>
             </div>
-    )
+        )
     }
-    }
+}
 
-    export default SignUp;
+export default SignUp;
