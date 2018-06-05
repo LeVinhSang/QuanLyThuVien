@@ -23,6 +23,10 @@ class LoginService {
     getUser(user_name) {
         return this.axios.get(`${this.config.domain}/search-advance/${user_name}`);
     }
+
+    postImage(data) {
+        return this.axios.post(`${this.config.domain}/upload`, data);
+    }
 }
 
 export default LoginService;

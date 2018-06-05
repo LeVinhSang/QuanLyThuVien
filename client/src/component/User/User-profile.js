@@ -21,11 +21,12 @@ class EditUser extends Component {
         error_user             : false,
         error_password         : false,
         error_re_enter_password: false,
-        error_line_id          : false
+        error_line_id          : false,
+        file                   : ''
     };
 
     static route = {
-        path     : '/edit-user/'+ localStorage.getItem('user_name'),
+        path     : '/edit-user/' + localStorage.getItem('user_name'),
         component: localStorage.getItem('user_name') ? EditUser : Borrower,
         icon     : <Icon name='users'/>,
         className: 'user_management'
@@ -77,6 +78,8 @@ class EditUser extends Component {
         e.preventDefault();
         this.checkValidation();
         this.setState({isLoading: true});
+        loginService.postImage({files: this.state.file});
+        console.log(this.state.file);
     }
 
     handleUploadImage() {
@@ -172,7 +175,7 @@ class EditUser extends Component {
                                         <Image src={avatar.length ? avatar : default_avatar}/>
                                         <input type='file' style={{display: 'none'}}
                                                onChange={this.handleSelectFile.bind(this)}
-                                               ref={input => this.inputElement = input}/>
+                                               ref={input => this.inputElement = input} name="fileChoice"/>
                                         <Card.Content>
                                             <Button primary onClick={this.handleUploadImage.bind(this)}>Upload
                                                 image</Button>

@@ -176,4 +176,19 @@ router.put('/feedback/:id', request.feedback, feedbackController.update);
 router.delete('/feedback/:id', feedbackController.remove);
 
 
+router.post('/upload', function(req, res) {
+        if (!req.body.files)
+            return res.status(400).send('No files were uploaded.');
+
+        let file = req.body.files;
+
+        file.mv('./upload/' + file.name, function (err) {
+            if (err)
+                return res.status(500).send(err);
+            res.send('File uploaded!');
+        });
+    }
+);
+
+
 module.exports = router;
