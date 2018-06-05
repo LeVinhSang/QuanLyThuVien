@@ -10,7 +10,7 @@ class BorrowerManagement extends Component {
         path     : '/borrower-management',
         component: localStorage.getItem('role') === 'admin' ? BorrowerManagement : Borrower,
         icon     : <Icon name='user'/>,
-        linkLabel: localStorage.getItem('role') ==='admin' ? 'Borrower Management' : null,
+        linkLabel: localStorage.getItem('role') === 'admin' ? 'Borrower Management' : null,
         className: 'borrower_management'
     };
 
@@ -83,8 +83,10 @@ class BorrowerManagement extends Component {
         this.setState({borrowerSearch: borrowers});
     };
 
-    handleDelete() {;
-        this.state.borrowerSearch.map(borrower => borrower.checked && borrowerService.deleteBorrower(borrower.id));
+    handleDelete() {
+        this.state.borrowerSearch.map(borrower =>
+            borrower.checked && borrowerService.deleteBorrower(borrower.id, borrower.book.id_book)
+        );
         let borrowers = this.state.borrowerSearch.filter(borrower => !borrower.checked);
         this.setState({borrowerSearch: borrowers})
     }

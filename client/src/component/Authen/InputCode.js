@@ -12,12 +12,12 @@ class InputCode extends Component {
 
     state = {
         code : '',
-        rand : '',
+        rand : undefined,
         label: false
     };
 
     componentDidMount() {
-        this.handleSendCode()
+        this.handleSendCode();
     }
 
     logChange(e) {
@@ -26,8 +26,21 @@ class InputCode extends Component {
 
     handleSubmitCode() {
         let {code, rand} = this.state;
+        let {name_user, password, email} = this.props.location;
         if (rand !== Number(code)) {
             this.setState({label: true});
+        }
+
+        else {
+            loginService.createUser({
+                user_name: name_user,
+                password: password,
+                email: email,
+            }).then( res => {
+                localStorage.setItem('user_name', res.data.user_name);
+                localStorage.setItem('email', res.data.email);
+                window.location.href = '/'
+            })
         }
     }
     ;
@@ -56,7 +69,8 @@ class InputCode extends Component {
                         <Form size='large'>
                             <Segment stacked>
                                 <Label basic color='red' pointing='below'>
-                                    {this.state.label ? 'Code wrong input again!' : 'We sent for you code in your email. Please check email and input code.'}
+                                    {this.state.label ? 'Code wrong or out date input again!' :
+                                        'We sent for you code in your email. Please check email and input code.'}
                                 </Label>
                                 <Form.Input
                                     type='number'

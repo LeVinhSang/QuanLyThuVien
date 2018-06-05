@@ -16,8 +16,8 @@ class BorrowerService {
         return this.axios.get(`${this.config.domain}/borrower/${id}`);
     }
 
-    deleteBorrower(id) {
-        return this.axios.delete(`${this.config.domain}/borrower/${id}`);
+    deleteBorrower(id, id_book) {
+        return this.axios.delete(`${this.config.domain}/borrower/${id}`, {id_book: id_book});
     }
 
     updateBorrower(data) {

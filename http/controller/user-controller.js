@@ -14,6 +14,13 @@ class UserController {
         }).catch(next);
     }
 
+    search(req, res, next) {
+        let repo = req.app.get('user.provide');
+        repo.provideDetail(req.params.user_name).then( user => {
+            res.send(user);
+        })
+    }
+
     remove(req, res, next) {
         let repo = req.app.get('user.repo');
         repo.delete(req.params.user_name).then(() => {
@@ -58,8 +65,8 @@ class UserController {
 
     checkSignUp(req, res, next) {
         let repo = req.app.get('user.provide');
-        repo.provideCheckSignUp().then((users) => {
-            res.send(users);
+        repo.provideCheckSignUp(req.params.user_name).then((users) => {
+            users.length ? res.send({message: 'success'}) : res.send({message: 'user name existed'})
         }).catch(next);
     }
 }

@@ -49,12 +49,20 @@ class BorrowerRepository {
     /**
      *
      * @param {int} id
+     * @param {int} id_book
      * @returns {Promise <void> }
      */
-    async delete(id) {
+    async delete(id, id_book) {
+
+        let amount = await this.connection('books').select('amount').where({id_book: id_book});
+        let book = this.connection('books').update({
+            amount: amount[0].amount + 1
+        }).where({id_book: id_book});
         return await this.connection('borrowers').update({
             deleted_at: new Date()
-        }).where({id : id});
+        }).where({id : id}).then( () => {
+            return book;
+        });
     }
 
     async updateStatus(id, status) {

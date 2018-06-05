@@ -49,6 +49,10 @@ class App extends Component {
         window.location.href = '/';
     };
 
+    editProfile = () => {
+        window.location.href = '/edit-user/' + localStorage.getItem('user_name');
+    };
+
     render() {
 
         let {pages}                  = this.props;
@@ -57,7 +61,7 @@ class App extends Component {
 
         const userEditor = (
             <Menu vertical>
-                <Link to='/edit-user'><Menu.Item><Icon name='edit'/>Edit Profile</Menu.Item></Link>
+                <Menu.Item onClick={this.editProfile.bind(this)}><Icon name='edit'/>Edit Profile</Menu.Item>
                 <Menu.Item onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
             </Menu>
         );

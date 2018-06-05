@@ -31,6 +31,13 @@ class UserProvider {
             });
     }
 
+    async provideDetail(user_name) {
+        let factory = this.factory;
+        return await this.connection('users').select()
+            .where({user_name: user_name})
+            .then( results => factory.makeFromDB(results[0]));
+    }
+
     async provideSignUp(user_name) {
         return await this.connection('users').select('user_name')
             .where({user_name: user_name})
@@ -58,9 +65,10 @@ class UserProvider {
             });
     }
 
-    async provideCheckSignUp() {
+    async provideCheckSignUp(user_name) {
         let factory = this.factory;
         return await this.connection('users').select('user_name')
+            .where({user_name: user_name})
             .then( results => results.map(result => factory.makeFromDB(result)));
     }
 }
