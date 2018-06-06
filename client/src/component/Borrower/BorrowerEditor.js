@@ -5,6 +5,7 @@ import './BorrowerEditor.css';
 import { ButtonLoading }                                                  from '../../lib';
 import { bookService, borrowerService }                                   from '../../services';
 import Borrower                                                           from "./Borrower";
+import jwt                                                                   from 'jsonwebtoken';
 
 
 class BorrowerEditor extends Component {
@@ -23,7 +24,8 @@ class BorrowerEditor extends Component {
 
     static route = {
         path     : '/borrower-editor/:id',
-        component: localStorage.getItem('role') === 'admin' ? BorrowerEditor : Borrower,
+        component: localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BorrowerEditor : Borrower,
         icon     : <Icon name='user'/>,
         className: 'user_management'
     };
@@ -58,8 +60,13 @@ class BorrowerEditor extends Component {
     handleSave() {
         this.setState({isLoading: true});
         let {id, valueDropdown, name_user, date_return} = this.state;
-        borrowerService.updateBorrower({id: id, name_user: name_user, book_id: valueDropdown, date_return: date_return})
-            .then( () => window.location.href = '/borrower-management')
+        borrowerService.updateBorrower({
+            id         : id,
+            name_user  : name_user,
+            book_id    : valueDropdown,
+            date_return: date_return
+        })
+            .then(() => window.location.href = '/borrower-management')
     }
 
     render() {
@@ -118,7 +125,8 @@ class BorrowerEditor extends Component {
                                 <Grid.Column>
                                     {isLoading ?
                                         <ButtonLoading text={'Save'}/>
-                                        : <Button primary floated='left' content='Save' onClick={this.handleSave.bind(this)}/>
+                                        : <Button primary floated='left' content='Save'
+                                                  onClick={this.handleSave.bind(this)}/>
                                     }
                                 </Grid.Column>
                             </Grid.Row>

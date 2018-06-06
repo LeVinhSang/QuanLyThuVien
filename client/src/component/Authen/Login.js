@@ -1,7 +1,7 @@
-import React, { Component }                                    from 'react';
+import React, { Component }                             from 'react';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import { Link }                                                from "react-router-dom";
-import { loginService }                                        from '../../services';
+import { Link }                                         from "react-router-dom";
+import { loginService }                                 from '../../services';
 
 class Login extends Component {
 
@@ -33,10 +33,7 @@ class Login extends Component {
                     alert('user_name or password wrong!');
                 }
                 else {
-                    localStorage.setItem('user_name', res.data.user_name);
-                    localStorage.setItem('email', res.data.email);
-                    localStorage.setItem('avatar', res.data.avatar);
-                    localStorage.setItem('role', res.data.role);
+                    localStorage.setItem('token', res.data);
                     window.location.href = '/';
                 }
             });

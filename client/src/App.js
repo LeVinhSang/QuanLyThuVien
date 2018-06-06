@@ -2,7 +2,7 @@ import React, { Component }                  from 'react';
 import { Link, Route }                       from 'react-router-dom';
 import { Icon, Menu, Segment, Image, Popup } from 'semantic-ui-react';
 import './App.css';
-
+import jwt                                   from 'jsonwebtoken';
 
 const RouteWithSubRoutes = route => (
     <Route
@@ -32,15 +32,12 @@ class App extends Component {
         });
     };
 
-    isAuthentication = () =>{
-        return !!localStorage.getItem('user_name');
+    isAuthentication = () => {
+        return !!localStorage.getItem('token');
     };
 
     handleLogout = () => {
-        localStorage.removeItem("user_name");
-        localStorage.removeItem('avatar');
-        localStorage.removeItem('email');
-        localStorage.removeItem('role');
+        localStorage.removeItem("token");
         this.setState({
             isOpenPopup: false,
             modalOpen  : false
@@ -50,11 +47,10 @@ class App extends Component {
     };
 
     editProfile = () => {
-        window.location.href = '/edit-user/' + localStorage.getItem('user_name');
+        window.location.href = '/edit-user/' + jwt.verify(localStorage.getItem('token'), 'sang').user_name;
     };
 
     render() {
-
         let {pages}                  = this.props;
         let {activeItem, menuActive} = this.state;
         let app                      = menuActive ? 'app menu-inactive' : 'app menu-active';
@@ -79,7 +75,7 @@ class App extends Component {
                             </Menu.Item>
                             <Menu.Item>
                                 <Popup
-                                    trigger={<Image avatar src={localStorage.getItem('avatar')}/>}
+                                    trigger={<Image avatar src={jwt.verify(localStorage.getItem('token'), 'sang').avatar}/>}
                                     content={userEditor}
                                     on='click'
                                     position='bottom center'

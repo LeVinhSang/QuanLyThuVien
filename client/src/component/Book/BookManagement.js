@@ -3,14 +3,18 @@ import { Checkbox, Table, Button, Input, Grid, Icon } from 'semantic-ui-react';
 import { Link }                                       from 'react-router-dom';
 import { bookService }                                from "../../services/index";
 import Borrower                                       from "../Borrower/Borrower";
+import jwt                                            from 'jsonwebtoken';
+
 
 class BookManagement extends Component {
 
     static route = {
         path     : '/book-management',
-        component: localStorage.getItem('role') === 'admin' ? BookManagement : Borrower,
+        component: localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BookManagement : Borrower,
         icon     : <Icon name='book'/>,
-        linkLabel: localStorage.getItem('role') === 'admin' ? 'Book Management' : null,
+        linkLabel: localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && 'Book Management' : null,
         className: 'book_management'
     };
 

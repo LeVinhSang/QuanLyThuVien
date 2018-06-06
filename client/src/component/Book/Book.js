@@ -1,6 +1,8 @@
 import React, { Component }                                        from 'react';
 import { Button, Card, Divider, Icon, Image, Input, Label, Popup } from "semantic-ui-react";
 import { borrowerService, bookService }                            from "../../services";
+import jwt                                                         from 'jsonwebtoken';
+
 
 class Book extends Component {
 
@@ -34,26 +36,26 @@ class Book extends Component {
     }
 
     isAuthentication = () => {
-        return !!localStorage.getItem('user_name');
+        return !!localStorage.getItem('token');
     };
 
     handleBorrowCLick(id) {
         let date = new Date();
         date.setMonth(date.getMonth() + 1);
         date          = date.toISOString().substr(0, 10);
-        let name_user = localStorage.getItem('user_name');
+        let name_user = jwt.verify(localStorage.getItem('token'), 'sang').user_name;
         borrowerService.createBorrower({
             name_user  : name_user,
             book_id    : id,
             date_return: date
-        }).then( () => alert('success'));
+        }).then(() => alert('success'));
     }
 
     render() {
 
         let date = new Date();
         date.setMonth(date.getMonth() + 1);
-        date          = date.toISOString().substr(0, 10);
+        date = date.toISOString().substr(0, 10);
 
         return (
             <div>
@@ -95,7 +97,7 @@ class Book extends Component {
                                                 content={<div>
                                                     <Label>You want borrow book and date return in {date}</Label>
                                                     <Divider/>
-                                                    <Button fluid    content={'Borrow'} basic color='blue'
+                                                    <Button fluid content={'Borrow'} basic color='blue'
                                                             onClick={() => this.handleBorrowCLick(book.id_book)}/>
                                                 </div>}
                                                 on='click'

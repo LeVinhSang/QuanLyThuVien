@@ -3,14 +3,17 @@ import { Checkbox, Table, Button, Input, Grid, Icon } from 'semantic-ui-react';
 import { Link }                                       from 'react-router-dom';
 import { borrowerService }                            from "../../services/index";
 import Borrower                                       from "./Borrower";
+import jwt                                            from 'jsonwebtoken';
 
 class BorrowerManagement extends Component {
 
     static route = {
         path     : '/borrower-management',
-        component: localStorage.getItem('role') === 'admin' ? BorrowerManagement : Borrower,
+        component: localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BorrowerManagement : Borrower,
         icon     : <Icon name='user'/>,
-        linkLabel: localStorage.getItem('role') === 'admin' ? 'Borrower Management' : null,
+        linkLabel:localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && 'Borrower Management' : null,
         className: 'borrower_management'
     };
 

@@ -5,13 +5,15 @@ import '../Borrower/BorrowerEditor.css';
 import { ButtonLoading }                                                  from '../../lib';
 import { bookService }                                                    from '../../services';
 import Borrower                                                           from "../Borrower/Borrower";
+import jwt                                                                from 'jsonwebtoken';
 
 
 class BorrowerEditor extends Component {
 
     static route = {
         path     : '/book-editor/:id',
-        component: localStorage.getItem('role') === 'admin' ? BorrowerEditor : Borrower,
+        component: localStorage.getItem('token') ?
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BorrowerEditor : Borrower,
         icon     : <Icon name='book'/>,
         className: 'user_management'
     };

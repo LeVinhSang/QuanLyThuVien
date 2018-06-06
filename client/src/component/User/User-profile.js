@@ -5,6 +5,8 @@ import './User.css';
 import { ButtonLoading }                                                  from '../../lib';
 import Borrower                                                           from "../Borrower/Borrower";
 import { loginService }                                                   from "../../services";
+import jwt                                                                from 'jsonwebtoken';
+
 
 class EditUser extends Component {
 
@@ -26,14 +28,16 @@ class EditUser extends Component {
     };
 
     static route = {
-        path     : '/edit-user/' + localStorage.getItem('user_name'),
-        component: localStorage.getItem('user_name') ? EditUser : Borrower,
+        path     : localStorage.getItem('token')
+            ? '/edit-user/' + jwt.verify(localStorage.getItem('token'), 'sang').user_name
+            : '/edit-user',
+        component: localStorage.getItem('token') ? EditUser : Borrower,
         icon     : <Icon name='users'/>,
         className: 'user_management'
     };
 
     componentDidMount() {
-        loginService.getUser(localStorage.getItem('user_name'))
+        loginService.getUser(jwt.verify(localStorage.getItem('token'), 'sang').user_name)
             .then(res => {
                 this.setState({
                     user_name: res.data.user_name,

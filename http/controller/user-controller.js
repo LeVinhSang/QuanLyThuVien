@@ -1,3 +1,5 @@
+let jwt = require('jsonwebtoken');
+
 class UserController {
 
     create(req, res, next) {
@@ -10,13 +12,14 @@ class UserController {
     update(req, res, next) {
         let repo = req.app.get('user.repo');
         repo.edit(req.user).then(() => {
-            res.send({message: 'success'});
+            let token = jwt.sign(req.user, 'sang');
+            res.send(token);
         }).catch(next);
     }
 
     search(req, res, next) {
         let repo = req.app.get('user.provide');
-        repo.provideDetail(req.params.user_name).then( user => {
+        repo.provideDetail(req.params.user_name).then(user => {
             res.send(user);
         })
     }
@@ -45,14 +48,30 @@ class UserController {
     login(req, res, next) {
         let repo = req.app.get('user.provide');
         repo.provide(req.body.user_name).then((user) => {
-            res.send(user);
+            let data  = {
+                user_name: user.user_name,
+                email    : user.email,
+                password : user.password,
+                avatar   : user.avatar,
+                role     : user.role
+            };
+            let token = jwt.sign(data, 'sang');
+            res.send(token);
         }).catch(next);
     }
 
     signUp(req, res, next) {
         let repo = req.app.get('user.provide');
         repo.provideSignUp(req.body.user_name).then((user) => {
-            res.send(user);
+            let data  = {
+                user_name: user.user_name,
+                email    : user.email,
+                password : user.password,
+                avatar   : user.avatar,
+                role     : user.role
+            };
+            let token = jwt.sign(data, 'sang');
+            res.send(token);
         }).catch(next);
     }
 
