@@ -37,9 +37,9 @@ class BorrowerFactory {
         let book = bookFactory.makeFromDB(borrowerRaw);
         let borrower = new Borrower(user, book);
         borrower.setId(borrowerRaw.id);
-        borrower.setDate_borrow(borrowerRaw.date_borrow.toISOString().substr(0, 10));
+        borrower.setDate_borrow(borrowerRaw.date_borrow);
         borrower.setStatus(borrowerRaw.status);
-        borrower.setDate_return(borrowerRaw.date_return.toISOString().substr(0, 10));
+        borrower.setDate_return(borrowerRaw.date_return);
         return borrower;
 
     }

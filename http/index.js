@@ -11,6 +11,11 @@ module.exports = function (app) {
         res.header('Access-Control-Allow-Headers', 'Content-Type');
         next();
     });
+
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Headers","*")
+    });
+
     app.use(express.static('public'));
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());

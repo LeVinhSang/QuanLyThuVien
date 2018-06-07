@@ -69,11 +69,10 @@ class EditUser extends Component {
     }
 
     checkValidation() {
-        let {user_name, password, re_enter_password, email} = this.state;
+        let {user_name, password, email} = this.state;
         this.setState({
             error_user             : !user_name.length,
             error_password         : !password.length,
-            error_re_enter_password: !(re_enter_password === password),
             error_line_id          : !email
         });
     }
@@ -82,7 +81,7 @@ class EditUser extends Component {
         e.preventDefault();
         this.checkValidation();
         this.setState({isLoading: true});
-        loginService.postImage({files: this.state.file});
+        this.inputElement.files[0] && loginService.postImage(this.inputElement.files[0], this.inputElement.files[0].name);
         console.log(this.state.file);
     }
 
@@ -91,15 +90,16 @@ class EditUser extends Component {
     }
 
     handleSelectFile = (e) => {
-        const data = new FormData();
-        data.append('image', e.target.files[0], e.target.files[0].name);
-        let reader       = new FileReader();
-        let file         = e.target.files[0];
-        reader.onloadend = () => {
-            this.setState({avatar: reader.result});
-        };
+        if(e.target.files[0]) {
+            let reader       = new FileReader();
+            let file         = e.target.files[0];
+            reader.onloadend = () => {
+                this.setState({avatar: reader.result});
+            };
 
-        reader.readAsDataURL(file);
+            reader.readAsDataURL(file);
+        }
+
     };
 
     render() {
@@ -132,14 +132,14 @@ class EditUser extends Component {
                                             }}>User name must not null.</p>
                                         </Form.Field>
                                         <Form.Field>
-                                            <Form.Input error={error_line_id} fluid label='LineID Synchronization'
+                                            <Form.Input error={error_line_id} fluid label='Email'
                                                         name='email'
                                                         value={email}
                                                         placeholder='Rikky90' onChange={this.logChange.bind(this)}/>
                                             <p hidden={!error_line_id} style={{
                                                 color   : 'red',
                                                 fontSize: 12
-                                            }}>LineID Synchronization must not null.</p>
+                                            }}>Email must not null.</p>
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group widths='equal'>

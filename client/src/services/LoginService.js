@@ -24,8 +24,12 @@ class LoginService {
         return this.axios.get(`${this.config.domain}/search-advance/${user_name}`);
     }
 
-    postImage(data) {
-        return this.axios.post(`${this.config.domain}/upload`, data);
+    postImage(file, name) {
+        return this.axios.post(`${this.config.domain}/upload`, {file: file, name: name}, {
+            headers: {
+                'encType': "multipart/form-data"
+            }
+        });
     }
 }
 

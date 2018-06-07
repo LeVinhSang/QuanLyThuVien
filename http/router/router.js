@@ -18,6 +18,23 @@ let topicController      = new controller.TopicController();
 let feedbackController   = new controller.FeedbackController();
 
 
+router.post('/upload', function(req, res) {
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.');
+
+    let sampleFile = req.body.file;
+
+    console.log(sampleFile);
+
+    sampleFile.mv('./public/' + req.body.name, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+});
+
+
 router.get('/', (req, res) => {
     res.send({message: 'success'});
 });
@@ -174,21 +191,6 @@ router.get('/search-advance', (req, res, next) => {
 router.post('/feedback', request.feedback, feedbackController.create);
 router.put('/feedback/:id', request.feedback, feedbackController.update);
 router.delete('/feedback/:id', feedbackController.remove);
-
-
-router.post('/upload', function(req, res) {
-        if (!req.body.files)
-            return res.status(400).send('No files were uploaded.');
-
-        let file = req.body.files;
-
-        file.mv('./upload/' + file.name, function (err) {
-            if (err)
-                return res.status(500).send(err);
-            res.send('File uploaded!');
-        });
-    }
-);
 
 
 module.exports = router;
