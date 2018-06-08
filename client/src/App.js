@@ -26,7 +26,7 @@ class App extends Component {
         });
     };
 
-    handleActiveItem = (e, {name}) => {
+    handleActiveItem = (e, { name }) => {
         this.setState({
             activeItem: name
         });
@@ -50,15 +50,21 @@ class App extends Component {
         window.location.href = '/edit-user/' + jwt.verify(localStorage.getItem('token'), 'sang').user_name;
     };
 
-    render() {
-        let {pages}                  = this.props;
-        let {activeItem, menuActive} = this.state;
-        let app                      = menuActive ? 'app menu-inactive' : 'app menu-active';
+    render () {
+        let { pages }                  = this.props;
+        let { activeItem, menuActive } = this.state;
+        let app                        = menuActive ? 'app menu-inactive' : 'app menu-active';
 
         const userEditor = (
             <Menu vertical>
                 <Menu.Item onClick={this.editProfile.bind(this)}><Icon name='edit'/>Edit Profile</Menu.Item>
                 <Menu.Item onClick={this.handleLogout.bind(this)}><Icon name='log out'/>Log Out</Menu.Item>
+            </Menu>
+        );
+
+        const setting = (
+            <Menu vertical>
+                <Menu.Item><Icon name='mail'/>Send Mail</Menu.Item>
             </Menu>
         );
 
@@ -75,14 +81,20 @@ class App extends Component {
                             </Menu.Item>
                             <Menu.Item>
                                 <Popup
-                                    trigger={<Image avatar src={jwt.verify(localStorage.getItem('token'), 'sang').avatar}/>}
+                                    trigger={<Image avatar
+                                                    src={jwt.verify(localStorage.getItem('token'), 'sang').avatar}/>}
                                     content={userEditor}
                                     on='click'
                                     position='bottom center'
                                 />
                             </Menu.Item>
                             <Menu.Item>
-                                <Icon name='setting'/>
+                                <Popup
+                                    trigger={<Icon name='setting'/>}
+                                    content={setting}
+                                    on='click'
+                                    position='bottom center'
+                                />
                             </Menu.Item>
                         </Menu.Menu>
                         :
@@ -109,7 +121,7 @@ class App extends Component {
                     }
                 </Menu>
                 <Menu id='sideBar' fixed='left' animation='push' vertical inverted className='side-bar'>
-                    {pages.map((page, i) => (page.route.linkLabel) &&
+                    {pages.map((page, i) => ( page.route.linkLabel ) &&
                         <Menu.Item as={Link} key={i} to={page.route.path} name={page.route.linkLabel}
                                    active={activeItem === page.route.linkLabel}
                                    onClick={this.handleActiveItem}

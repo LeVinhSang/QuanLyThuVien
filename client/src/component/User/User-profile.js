@@ -36,7 +36,7 @@ class EditUser extends Component {
         className: 'user_management'
     };
 
-    componentDidMount() {
+    componentDidMount () {
         loginService.getUser(jwt.verify(localStorage.getItem('token'), 'sang').user_name)
             .then(res => {
                 this.setState({
@@ -48,12 +48,12 @@ class EditUser extends Component {
             })
     }
 
-    logChange(e) {
-        this.setState({[e.target.name]: e.currentTarget.value});
+    logChange (e) {
+        this.setState({ [ e.target.name ]: e.currentTarget.value });
     }
 
-    handleChangeReEnterPassword(e) {
-        if (e.currentTarget.value === this.state.password) {
+    handleChangeReEnterPassword (e) {
+        if ( e.currentTarget.value === this.state.password ) {
             this.setState({
                 checkReEnterPassword: true,
                 re_enter_password   : e.currentTarget.value
@@ -68,33 +68,40 @@ class EditUser extends Component {
         }
     }
 
-    checkValidation() {
-        let {user_name, password, email} = this.state;
+    checkValidation () {
+        let { user_name, password, email } = this.state;
         this.setState({
-            error_user             : !user_name.length,
-            error_password         : !password.length,
-            error_line_id          : !email
+            error_user    : !user_name.length,
+            error_password: !password.length,
+            error_line_id : !email
         });
     }
 
-    handleSaveUser(e) {
+    handleSaveUser (e) {
         e.preventDefault();
+        let formData = new FormData();
+
+        formData.append('files', this.state.file);
+        formData.append('name', this.state.file.name);
+
         this.checkValidation();
-        this.setState({isLoading: true});
-        this.inputElement.files[0] && loginService.postImage(this.inputElement.files[0], this.inputElement.files[0].name);
-        console.log(this.state.file);
+        this.setState({ isLoading: true });
+        loginService.postImage(formData);
     }
 
-    handleUploadImage() {
+    handleUploadImage () {
         this.inputElement.click();
     }
 
     handleSelectFile = (e) => {
-        if(e.target.files[0]) {
+        if ( e.target.files[ 0 ] ) {
             let reader       = new FileReader();
-            let file         = e.target.files[0];
+            let file         = e.target.files[ 0 ];
             reader.onloadend = () => {
-                this.setState({avatar: reader.result});
+                this.setState({
+                    avatar: reader.result,
+                    file  : file
+                });
             };
 
             reader.readAsDataURL(file);
@@ -102,7 +109,7 @@ class EditUser extends Component {
 
     };
 
-    render() {
+    render () {
 
         const {
                   user_name, password, re_enter_password,
@@ -177,7 +184,7 @@ class EditUser extends Component {
                                 <Grid.Column width={5}>
                                     <Card>
                                         <Image src={avatar.length ? avatar : default_avatar}/>
-                                        <input type='file' style={{display: 'none'}}
+                                        <input type='file' style={{ display: 'none' }}
                                                onChange={this.handleSelectFile.bind(this)}
                                                ref={input => this.inputElement = input} name="fileChoice"/>
                                         <Card.Content>

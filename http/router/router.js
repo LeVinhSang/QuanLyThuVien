@@ -19,21 +19,21 @@ let feedbackController   = new controller.FeedbackController();
 
 
 router.post('/upload', function(req, res) {
+    console.log(req);
     if (!req.files)
         return res.status(400).send('No files were uploaded.');
 
-    let sampleFile = req.body.file;
+    let sampleFile = req.files.sampleFile;
 
-    console.log(sampleFile);
+    console.log(req.files.sampleFile);
 
-    sampleFile.mv('./public/' + req.body.name, function(err) {
+    sampleFile.mv('./upload/' + filename, function(err) {
         if (err)
             return res.status(500).send(err);
 
         res.send('File uploaded!');
     });
 });
-
 
 router.get('/', (req, res) => {
     res.send({message: 'success'});
