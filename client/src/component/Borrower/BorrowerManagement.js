@@ -162,7 +162,7 @@ class BorrowerManagement extends Component {
                         <Table.Row>
                             <Table.Cell colSpan={6}><u><i>More</i></u></Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Link to='/borrower-create'>
+                                <Link to='/borrower-creator'>
                                     <Icon name={'plus circle'} size={'large'}/>
                                 </Link>
                             </Table.Cell>

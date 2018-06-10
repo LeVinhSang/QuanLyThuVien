@@ -106,7 +106,7 @@ class BookManagement extends Component {
                         <Table.Row>
                             <Table.Cell colSpan={5}><u><i>More</i></u></Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Link to='/borrower-create'>
+                                <Link to='/book-creator'>
                                     <Icon name={'plus circle'} size={'large'}/>
                                 </Link>
                             </Table.Cell>

@@ -8,7 +8,7 @@ import Borrower                                                           from "
 import jwt                                                                   from 'jsonwebtoken';
 
 
-class BorrowerEditor extends Component {
+class BorrowerCreator extends Component {
 
     state = {
         checkReEnterPassword: true,
@@ -23,24 +23,14 @@ class BorrowerEditor extends Component {
     };
 
     static route = {
-        path     : '/borrower-editor/:id',
+        path     : '/borrower-creator',
         component: localStorage.getItem('token') ?
-            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BorrowerEditor : Borrower,
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BorrowerCreator : Borrower,
         icon     : <Icon name='user'/>,
         className: 'user_management'
     };
 
     componentDidMount() {
-        borrowerService.getBorrower(this.props.match.params.id).then(res => {
-            this.setState({
-                valueDropdown: res.data[0].book.id_book,
-                name_user    : res.data[0].user.user_name,
-                imageBorrower: res.data[0].user.avatar,
-                date_return  : res.data[0].date_return,
-                date_borrow  : res.data[0].date_borrow,
-                id           : res.data[0].id
-            });
-        });
         bookService.getBooks().then(res => {
             res.data.map(data => {
                 data.text  = data.title;
@@ -59,14 +49,20 @@ class BorrowerEditor extends Component {
 
     handleSave() {
         this.setState({isLoading: true});
-        let {id, valueDropdown, name_user, date_return} = this.state;
-        borrowerService.updateBorrower({
-            id         : id,
+        let { valueDropdown, name_user, date_return} = this.state;
+        borrowerService.createBorrower({
             name_user  : name_user,
             book_id    : valueDropdown,
             date_return: date_return
         })
             .then(() => window.location.href = '/borrower-management')
+    }
+
+    handleDropdown(items) {
+        this.setState({
+            valueDropdown: items.value,
+            imageBorrower: items.options[items.value - 1].images
+        });
     }
 
     render() {
@@ -77,7 +73,7 @@ class BorrowerEditor extends Component {
                 <Segment className={'content-profile'}>
                     <Message
                         attached
-                        header={<Label size={'large'} color="green">Borrower Setting</Label>}
+                        header={<Label size={'large'} color="green">Borrower Create</Label>}
                     />
                     <Form className={'attached fluid segment'}>
                         <Grid stackable>
@@ -87,10 +83,11 @@ class BorrowerEditor extends Component {
                                         <Form.Input fluid label='User Name' placeholder='Rikky'
                                                     value={name_user}
                                                     name='name_user'
+                                                    onChange={this.logChange.bind(this)}
                                         />
                                         <Form.Dropdown placeholder='Select Friend' fluid selection label='Book'
                                                        value={valueDropdown}
-                                                       onChange={(e, items) => this.setState({valueDropdown: items.value})}
+                                                       onChange={(e, items) => this.handleDropdown(items)}
                                                        options={bookOptions}
                                         />
                                     </Form.Group>
@@ -138,4 +135,4 @@ class BorrowerEditor extends Component {
     }
 }
 
-export default BorrowerEditor;
+export default BorrowerCreator;

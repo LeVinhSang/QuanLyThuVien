@@ -8,6 +8,8 @@ import EditorBorrower     from '../component/Borrower/BorrowerEditor';
 import EditorBook         from '../component/Book/BookEditor';
 import InputCode          from '../component/Authen/InputCode';
 import EditUser           from '../component/User/User-profile';
+import BorrowerCreator    from "../component/Borrower/BorrowerCreator";
+import BookCreator        from "../component/Book/BookCreator";
 
 export default [
     Borrower,
@@ -19,5 +21,7 @@ export default [
     EditorBorrower,
     EditorBook,
     InputCode,
-    EditUser
+    EditUser,
+    BorrowerCreator,
+    BookCreator
 ];

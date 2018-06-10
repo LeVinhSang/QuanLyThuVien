@@ -1,19 +1,19 @@
 import React, { Component }                                               from 'react';
 import { Icon, Grid, Form, Card, Image, Button, Label, Message, Segment } from 'semantic-ui-react';
-import default_avatar                                                     from './default_avatar.jpeg';
+import default_avatar    from './default_avatar.jpeg';
 import '../Borrower/BorrowerEditor.css';
-import { ButtonLoading }                                                  from '../../lib';
-import { bookService }                                                    from '../../services';
-import Borrower                                                           from "../Borrower/Borrower";
-import jwt                                                                from 'jsonwebtoken';
+import { ButtonLoading } from '../../lib';
+import { bookService }   from '../../services';
+import Borrower          from "../Borrower/Borrower";
+import jwt               from 'jsonwebtoken';
 
 
-class BookEditor extends Component {
+class BookCreator extends Component {
 
     static route = {
-        path     : '/book-editor/:id',
+        path     : '/book-creator',
         component: localStorage.getItem('token') ?
-            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BookEditor : Borrower,
+            jwt.verify(localStorage.getItem('token'), 'sang').role === 'admin' && BookCreator : Borrower,
         icon     : <Icon name='book'/>,
         className: 'user_management'
     };
@@ -32,18 +32,6 @@ class BookEditor extends Component {
     };
 
     componentDidMount() {
-        bookService.getBook(this.props.match.params.id).then(res => {
-            this.setState({
-                title        : res.data[0].title,
-                imageBook    : res.data[0].images,
-                amount       : res.data[0].amount,
-                genre        : res.data[0].genre,
-                id           : res.data[0].id_book,
-                author       : res.data[0].author,
-                dropdownValue: res.data[0].publisher.id
-            });
-        });
-
         bookService.getPublisher().then(res => {
             res.data.map(data => {
                 data.text  = data.name;
@@ -74,6 +62,27 @@ class BookEditor extends Component {
         }).then(() => window.location.href = '/book-management')
     }
 
+    handleUploadImage () {
+        this.inputElement.click();
+    }
+
+    handleSelectFile = (e) => {
+        if ( e.target.files[ 0 ] ) {
+            let reader       = new FileReader();
+            let file         = e.target.files[ 0 ];
+            reader.onloadend = () => {
+                this.setState({
+                    imageBook: reader.result,
+                    file  : file
+                });
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+    };
+
+
     render() {
         const {imageBook, title, isLoading, amount, genre, author, dropdownValue, publisherOptions} = this.state;
 
@@ -82,7 +91,7 @@ class BookEditor extends Component {
                 <Segment className={'content-profile'}>
                     <Message
                         attached
-                        header={<Label size={'large'} color="green">Book Setting</Label>}
+                        header={<Label size={'large'} color="green">Book Create</Label>}
                     />
                     <Form className={'attached fluid segment'}>
                         <Grid stackable>
@@ -126,6 +135,13 @@ class BookEditor extends Component {
                                     <Card>
                                         <Image
                                             src={imageBook.length ? imageBook : default_avatar}/>
+                                        <input type='file' style={{ display: 'none' }}
+                                               onChange={this.handleSelectFile.bind(this)}
+                                               ref={input => this.inputElement = input} name="fileChoice"/>
+                                        <Card.Content>
+                                            <Button primary onClick={this.handleUploadImage.bind(this)}>Upload
+                                                image</Button>
+                                        </Card.Content>
                                     </Card>
                                 </Grid.Column>
                             </Grid.Row>
@@ -149,4 +165,4 @@ class BookEditor extends Component {
     }
 }
 
-export default BookEditor;
+export default BookCreator;
