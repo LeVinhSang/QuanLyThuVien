@@ -22,7 +22,7 @@ class Searcher {
         let factory  = this.factory;
         let sqlQuery = this.connection('borrowers')
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow', 'borrowers.status',
-                'borrowers.date_return',
+                'borrowers.date_return', 'borrowers.receiving_status',
                 'users.user_name', 'users.email', 'users.avatar',
                 'books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',

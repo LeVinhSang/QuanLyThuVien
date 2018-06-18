@@ -24,7 +24,8 @@ class BorrowerRepository {
         return await this.connection('borrowers').insert({
             name_user: borrower.getUser().getUser_name(),
             book_id: borrower.getBook().getId(),
-            date_borrow: new Date().toISOString().substr(0, 10),
+            date_borrow: borrower.getDate_borrow(),
+            receiving_status: borrower.getRecevingStatus(),
             status: status.PENDING,
             date_return: borrower.getDate_return()
         }).then( () => {
@@ -43,6 +44,7 @@ class BorrowerRepository {
             book_id: borrower.getBook().getId(),
             date_borrow: borrower.getDate_borrow(),
             date_return: borrower.getDate_return(),
+            receiving_status: borrower.getRecevingStatus()
         }).where({id: borrower.getId()});
     }
 
@@ -65,9 +67,24 @@ class BorrowerRepository {
         });
     }
 
-    async updateStatus(id, status) {
+    async updateStatus(id) {
+        let date = new Date();
+        let date_return = new Date();
+        date.setMonth(date.getMonth() + 1);
+        date_return.setMonth(date_return.getMonth() + 2);
         return await this.connection('borrowers').update({
-            status: status
+            status: status.CONFIRM,
+            date_borrow: date.getFullYear() + '/' + date.getMonth() + '/'+ date.getDate(),
+            date_return: date_return.getFullYear() + '/' + date_return.getMonth() + '/'+ date_return.getDate(),
+        }).where({id : id});
+    }
+
+
+    async updateReceivingStatus(id) {
+        let date = new Date();
+        date.setMonth(date.getMonth() + 1);
+        return await this.connection('borrowers').update({
+            receiving_status: date.getFullYear() + '/' + date.getMonth() + '/'+ date.getDate()
         }).where({id : id});
     }
 }

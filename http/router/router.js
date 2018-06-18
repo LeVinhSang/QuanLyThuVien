@@ -128,6 +128,7 @@ router.get('/borrower/send-mail', check.dataBorrower, borrowerController.sendMai
 router.post('/borrower', request.borrower, borrowerController.create);
 router.put('/borrower', request.borrower, borrowerController.update);
 router.put('/borrower/status/:id', borrowerController.updateStatus);
+router.put('/borrower/receiving-status/:id', borrowerController.updateReceivingStatus);
 router.delete('/borrower/:id', borrowerController.remove);
 
 /*--------------------------------------------------Curriculums---------------------------------------------*/

@@ -69,6 +69,22 @@ class Borrower {
 
     /**
      *
+     * @param {string} receiving_status
+     */
+    setReceivingStatus(receiving_status) {
+        this.receiving_status = receiving_status;
+    }
+
+    /**
+     *
+     * @returns {string|*}
+     */
+    getRecevingStatus() {
+        return this.receiving_status;
+    }
+
+    /**
+     *
      * @returns {string|*}
      */
     getDate_return() {

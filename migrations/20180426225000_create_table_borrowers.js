@@ -4,9 +4,10 @@ exports.up = function(knex, Promise) {
         table.increments('id');
         table.string('name_user').notNull();
         table.integer('book_id').notNull();
-        table.date('date_borrow');
-        table.date('date_return');
+        table.string('date_borrow');
+        table.string('date_return');
         table.string('status');
+        table.string('receiving_status');
         table.date('deleted_at');
     });
 };

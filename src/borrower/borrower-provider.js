@@ -9,7 +9,7 @@ class BorrowerProvider {
         let factory = this.factory;
         return this.connection('borrowers')
             .select('borrowers.id', 'borrowers.name_user', 'borrowers.book_id', 'borrowers.date_borrow',
-                'borrowers.date_return',
+                'borrowers.date_return', 'borrowers.receiving_status',
                 'users.user_name', 'users.email',
                 'books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
                 'books.genre',

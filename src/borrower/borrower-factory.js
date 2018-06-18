@@ -20,6 +20,7 @@ class BorrowerFactory {
         borrower.setDate_return(borrowerRaw.date_return);
         borrower.setDate_borrow(borrowerRaw.date_borrow);
         borrower.setStatus(borrowerRaw.status);
+        borrower.setReceivingStatus(borrowerRaw.receiving_status);
         borrower.setId(borrowerRaw.id);
         return borrower;
     }
@@ -40,6 +41,7 @@ class BorrowerFactory {
         borrower.setDate_borrow(borrowerRaw.date_borrow);
         borrower.setStatus(borrowerRaw.status);
         borrower.setDate_return(borrowerRaw.date_return);
+        borrower.setReceivingStatus(borrowerRaw.receiving_status);
         return borrower;
 
     }

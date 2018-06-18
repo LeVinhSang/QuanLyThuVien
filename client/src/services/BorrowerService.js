@@ -27,6 +27,10 @@ class BorrowerService {
     createBorrower(data) {
         return this.axios.post(`${this.config.domain}/borrower`, data);
     }
+
+    updateReceive(id) {
+        return this.axios.put(`${this.config.domain}/borrower/receiving-status/${id}`);
+    }
 }
 
 export default BorrowerService;

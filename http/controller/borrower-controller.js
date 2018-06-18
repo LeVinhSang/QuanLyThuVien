@@ -25,9 +25,17 @@ class BorrowerController {
 
     updateStatus(req, res, next) {
         let repo = req.app.get('borrower.repo');
-        repo.updateStatus(req.params.id, req.body.status).then( () => {
+        let email = req.app.get('confirm.service');
+        repo.updateStatus(req.params.id).then( () => {
             res.send({message: 'success'});
-        }).catch(next);
+        }).then(() => email.sendMailConfirm(req.body.email)).catch(next);
+    }
+
+    updateReceivingStatus(req, res, next) {
+        let repo = req.app.get('borrower.repo');
+        repo.updateReceivingStatus(req.params.id).then( () => {
+            res.send({message: 'success'});
+        }).catch(next)
     }
 
     search(req, res, next) {
