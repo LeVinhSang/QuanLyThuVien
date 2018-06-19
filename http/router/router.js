@@ -57,6 +57,7 @@ router.delete('/book/:id', bookController.remove);
 
 /*----------------------------------------------------User---------------------------------------------------*/
 
+router.get('/users', userController.provideAll);
 router.get('/user/:user_name', userController.checkSignUp);
 router.get('/search-advance/:user_name', userController.search);
 router.post('/user', request.user, userController.create);

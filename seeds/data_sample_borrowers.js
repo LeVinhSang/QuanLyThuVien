@@ -9,7 +9,7 @@ exports.seed = function (knex, Promise) {
                     book_id         : 1,
                     date_borrow     : '2018/01/10',
                     status          : 'confirm',
-                    date_return     : '2018-06-10',
+                    date_return     : '2018-06-20',
                     receiving_status: '2018/01/10'
                 },
                 {
@@ -80,7 +80,14 @@ exports.seed = function (knex, Promise) {
                 {
                     name_user  : 'levinhsang1',
                     book_id    : 2,
-                    date_borrow: '2018/6/18',
+                    date_borrow: '2017/09/10',
+                    status     : 'confirm',
+                    date_return: '2018-06-30'
+                },
+                {
+                    name_user  : 'levinhsang1',
+                    book_id    : 2,
+                    date_borrow: '2018/6/10',
                     status     : 'pending',
                     date_return: '2018-06-30'
                 },

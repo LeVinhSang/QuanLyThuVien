@@ -88,16 +88,29 @@ class BorrowerRepository {
         }).where({ id: id });
     }
 
-    async delete__out_borrowed (id, id_book) {
-        let amount = await this.connection('books').select('amount').where({ id_book: id_book });
-        let book   = this.connection('books').update({
-            amount: amount[ 0 ].amount + 1
-        }).where({ id_book: id_book });
-        return this.connection('borrowers').update({
-            deleted_at: new Date()
-        }).where({ id: id }).then(() => {
-            return book;
-        })
+    async delete_out_borrowed () {
+        let date = new Date();
+        date.setDate(date.getDate() - 2);
+        return this.connection('borrowers').select().where(function () {
+            this.where('borrowers.date_borrow', '<', date)
+        }).where({
+            'borrowers.deleted_at'      : null,
+            'borrowers.receiving_status': null,
+            'borrowers.status'          : 'confirm'
+        }).then(data =>  {
+            return data.map(data => {
+                return this.connection('borrowers').update({
+                    deleted_at: new Date()
+                }).where({ id: data.id }).then( () => {
+                    return this.connection('books').select('amount').where({ id_book: data.book_id })
+                        .then(amount => {
+                            return this.connection('books').update({
+                                amount: amount[ 0 ].amount + 1
+                            }).where({ id_book: data.book_id });
+                        });
+                })
+            })
+        });
     }
 
     updateSent (id) {

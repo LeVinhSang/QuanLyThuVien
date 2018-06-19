@@ -3,9 +3,9 @@ import { Icon, Grid, Form, Card, Image, Button, Label, Message, Segment } from '
 import default_avatar                                                     from '../Book/default_avatar.jpeg';
 import './BorrowerEditor.css';
 import { ButtonLoading }                                                  from '../../lib';
-import { bookService, borrowerService }                                   from '../../services';
+import { bookService, borrowerService, loginService }                     from '../../services';
 import Borrower                                                           from "./Borrower";
-import jwt                                                                   from 'jsonwebtoken';
+import jwt                                                                from 'jsonwebtoken';
 
 
 class BorrowerCreator extends Component {
@@ -15,11 +15,12 @@ class BorrowerCreator extends Component {
         isLoading           : false,
         bookOptions         : [],
         valueDropdown       : '',
-        name_user           : '',
         imageBorrower       : '',
         date_return         : '',
         date_borrow         : '',
-        id                  : ''
+        id                  : '',
+        users               : [],
+        valueUser           : ''
     };
 
     static route = {
@@ -30,7 +31,16 @@ class BorrowerCreator extends Component {
         className: 'user_management'
     };
 
-    componentDidMount() {
+    componentDidMount () {
+        loginService.getUsers().then(res => {
+            res.data.map((data, index) => {
+                data.key   = index;
+                data.value = data.user_name;
+                data.text  = data.user_name;
+                return data;
+            });
+            this.setState({ users: res.data })
+        });
         bookService.getBooks().then(res => {
             res.data.map(data => {
                 data.text  = data.title;
@@ -39,34 +49,34 @@ class BorrowerCreator extends Component {
                 return data;
             });
 
-            this.setState({bookOptions: res.data});
+            this.setState({ bookOptions: res.data });
         })
     }
 
-    logChange(e) {
-        this.setState({[e.target.name]: e.currentTarget.value});
+    logChange (e) {
+        this.setState({ [ e.target.name ]: e.currentTarget.value });
     }
 
-    handleSave() {
-        this.setState({isLoading: true});
-        let { valueDropdown, name_user, date_return} = this.state;
+    handleSave () {
+        this.setState({ isLoading: true });
+        let { valueDropdown, valueUser, date_return } = this.state;
         borrowerService.createBorrower({
-            name_user  : name_user,
+            name_user  : valueUser,
             book_id    : valueDropdown,
             date_return: date_return
         })
             .then(() => window.location.href = '/borrower-management')
     }
 
-    handleDropdown(items) {
+    handleDropdown (items) {
         this.setState({
             valueDropdown: items.value,
-            imageBorrower: items.options[items.value - 1].images
+            imageBorrower: items.options[ items.value - 1 ].images
         });
     }
 
-    render() {
-        const {imageBorrower, valueDropdown, name_user, bookOptions, isLoading, date_return, date_borrow} = this.state;
+    render () {
+        const { imageBorrower, users, valueDropdown, bookOptions, isLoading, date_return, date_borrow } = this.state;
 
         return (
             <div>
@@ -80,10 +90,10 @@ class BorrowerCreator extends Component {
                             <Grid.Row>
                                 <Grid.Column width={11}>
                                     <Form.Group widths='equal'>
-                                        <Form.Input fluid label='User Name' placeholder='Rikky'
-                                                    value={name_user}
-                                                    name='name_user'
-                                                    onChange={this.logChange.bind(this)}
+                                        <Form.Dropdown label='User Name'
+                                                       placeholder='Select Country' fluid search selection
+                                                       options={users}
+                                                       onChange={(e, items) => this.setState({valueUser: items.value})}
                                         />
                                         <Form.Dropdown placeholder='Select Friend' fluid selection label='Book'
                                                        value={valueDropdown}

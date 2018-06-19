@@ -71,6 +71,11 @@ class UserProvider {
             .where({user_name: user_name})
             .then( results => results.map(result => factory.makeFromDB(result)));
     }
+
+    provideAll() {
+        let factory = this.factory;
+        return this.connection('users').select().then(results => results.map(result => factory.makeFromDB(result)));
+    }
 }
 
 module.exports = UserProvider;

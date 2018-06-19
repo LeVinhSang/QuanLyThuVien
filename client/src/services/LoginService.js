@@ -24,6 +24,10 @@ class LoginService {
         return this.axios.get(`${this.config.domain}/search-advance/${user_name}`);
     }
 
+    getUsers() {
+        return this.axios.get(`${this.config.domain}/users`);
+    }
+
     updateUser(data) {
         return this.axios.put(`${this.config.domain}/user`, data);
     }

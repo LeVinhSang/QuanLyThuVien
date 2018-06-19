@@ -54,12 +54,8 @@ class BorrowerController {
 
     provideOutBorrowed (req, res, next) {
         let repo    = req.app.get('borrower.repo');
-        let provide = req.app.get('borrower.provide');
-        provide.provideOutBorrowed().then(data => {
-            data.map(data => {
-                repo.delete__out_borrowed(data.id, data.book_id).then();
-            });
-            res.send({message: 'success'});
+        repo.delete_out_borrowed().then( () => {
+            res.send('success');
         }).catch(next)
     }
 }

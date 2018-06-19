@@ -111,6 +111,11 @@ class UserController {
         let repo = req.app.get('user.repo');
         repo.checkPassword(req.body.password, req.body.hash).then(data => res.send(data)).catch(next);
     };
+
+    provideAll(req, res, next) {
+        let repo = req.app.get('user.provide');
+        repo.provideAll().then(data => res.send(data)).catch(next);
+    }
 }
 
 module.exports = UserController;
