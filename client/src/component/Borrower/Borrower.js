@@ -18,12 +18,15 @@ class Borrower extends Component {
     };
 
     componentDidMount() {
-        borrowerService.getBorrowers().then(res => {
-            this.setState({
-                borrowers     : res.data,
-                borrowerSearch: res.data
-            })
+        borrowerService.deleteOutBorrowed().then( () => {
+            borrowerService.getBorrowers().then(res => {
+                this.setState({
+                    borrowers     : res.data,
+                    borrowerSearch: res.data
+                })
+            });
         });
+
     }
 
     onChangeInputSearch(e) {

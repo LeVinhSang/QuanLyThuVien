@@ -8,7 +8,8 @@ exports.up = function(knex, Promise) {
         table.string('date_return');
         table.string('status');
         table.string('receiving_status');
-        table.date('deleted_at');
+        table.string('sent_mail');
+        table.string('deleted_at');
     });
 };
 

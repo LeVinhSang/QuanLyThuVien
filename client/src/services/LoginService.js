@@ -24,13 +24,16 @@ class LoginService {
         return this.axios.get(`${this.config.domain}/search-advance/${user_name}`);
     }
 
-    postImage(data) {
-        return this.axios.post(`${this.config.domain}/upload`, data, {
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+    updateUser(data) {
+        return this.axios.put(`${this.config.domain}/user`, data);
+    }
+
+    checkPass(password, hash) {
+        return this.axios.post(`${this.config.domain}/check-pass`, {password: password, hash: hash});
+    }
+
+    updateNotPass(data) {
+        return this.axios.put(`${this.config.domain}/not-pass/user`, data);
     }
 }
 

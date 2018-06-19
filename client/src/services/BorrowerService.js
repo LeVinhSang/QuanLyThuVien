@@ -8,6 +8,10 @@ class BorrowerService {
         return this.axios.get(`${this.config.domain}/borrowers`);
     }
 
+    getBorrowersManagement() {
+        return this.axios.get(`${this.config.domain}/management/borrowers`);
+    }
+
     updateStatus(id, data) {
         return this.axios.put(`${this.config.domain}/borrower/status/${id}`, data);
     }
@@ -17,7 +21,7 @@ class BorrowerService {
     }
 
     deleteBorrower(id, id_book) {
-        return this.axios.delete(`${this.config.domain}/borrower/${id}`, {id_book: id_book});
+        return this.axios.post(`${this.config.domain}/borrower/${id}`, {id_book: id_book});
     }
 
     updateBorrower(data) {
@@ -30,6 +34,14 @@ class BorrowerService {
 
     updateReceive(id) {
         return this.axios.put(`${this.config.domain}/borrower/receiving-status/${id}`);
+    }
+
+    deleteOutBorrowed() {
+        return this.axios.get(`${this.config.domain}/out-borrowed/borrower`);
+    }
+
+    sendMailOutDate() {
+        return this.axios.get(`${this.config.domain}/send-mail-out-date/borrower`);
     }
 }
 

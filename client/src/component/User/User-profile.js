@@ -20,11 +20,12 @@ class EditUser extends Component {
         isLoading              : false,
         selectFile             : null,
         avatar                 : '',
-        error_user             : false,
         error_password         : false,
         error_re_enter_password: false,
-        error_line_id          : false,
-        file                   : ''
+        error_email            : false,
+        file                   : '',
+        oldPassword            : '',
+        images                 : ''
     };
 
     static route = {
@@ -40,53 +41,79 @@ class EditUser extends Component {
         loginService.getUser(jwt.verify(localStorage.getItem('token'), 'sang').user_name)
             .then(res => {
                 this.setState({
-                    user_name: res.data.user_name,
-                    password : res.data.password,
-                    email    : res.data.email,
-                    avatar   : res.data.avatar
+                    user_name  : res.data.user_name,
+                    password   : res.data.password,
+                    email      : res.data.email,
+                    avatar     : res.data.avatar,
+                    images     : res.data.images,
+                    oldPassword: res.data.password
                 })
             })
     }
 
     logChange (e) {
-        this.setState({ [ e.target.name ]: e.currentTarget.value });
+        this.setState({
+            [ e.target.name ]: e.currentTarget.value,
+            isLoading        : false
+        });
     }
 
     handleChangeReEnterPassword (e) {
-        if ( e.currentTarget.value === this.state.password ) {
+        if ( this.state.oldPassword !== this.state.password ) {
             this.setState({
-                checkReEnterPassword: true,
-                re_enter_password   : e.currentTarget.value
+                re_enter_password      : e.currentTarget.value,
+                error_re_enter_password: e.currentTarget.value !== this.state.password,
+                isLoading              : false
+            });
+        }
+
+    }
+
+    checkValidation () {
+        let { password, email, oldPassword, re_enter_password } = this.state;
+        if ( oldPassword !== password ) {
+            this.setState({
+                error_password         : !password.length,
+                error_email            : !email,
+                error_re_enter_password: password !== re_enter_password,
             });
         }
 
         else {
             this.setState({
-                checkReEnterPassword: false,
-                re_enter_password   : e.currentTarget.value
+                error_password: !password.length,
+                error_email   : !email,
             });
         }
     }
 
-    checkValidation () {
-        let { user_name, password, email } = this.state;
-        this.setState({
-            error_user    : !user_name.length,
-            error_password: !password.length,
-            error_line_id : !email
-        });
-    }
-
-    handleSaveUser (e) {
-        e.preventDefault();
-        let formData = new FormData();
-
-        formData.append('files', this.state.file);
-        formData.append('name', this.state.file.name);
-
+    handleSaveUser () {
+        let {
+                error_email, error_password, error_re_enter_password, oldPassword,
+                user_name, password, email, images
+            } = this.state;
         this.checkValidation();
         this.setState({ isLoading: true });
-        loginService.postImage(formData);
+
+        if ( ( error_re_enter_password && error_email && error_password ) === false ) {
+            if ( oldPassword !== password ) {
+                loginService.updateUser({
+                    user_name: user_name,
+                    password : password,
+                    email    : email,
+                    avatar   : images
+                }).then(() => window.location.href = '/');
+            }
+
+            else {
+                loginService.updateNotPass({
+                    user_name: user_name,
+                    email    : email,
+                    avatar   : images
+                })
+                    .then(() => window.location.href = '/');
+            }
+        }
     }
 
     handleUploadImage () {
@@ -114,7 +141,7 @@ class EditUser extends Component {
         const {
                   user_name, password, re_enter_password,
                   email, isLoading,
-                  checkReEnterPassword, avatar, error_line_id, error_password, error_user, error_re_enter_password
+                  checkReEnterPassword, avatar, error_email, error_password, error_re_enter_password
               } = this.state;
 
         return (
@@ -130,20 +157,15 @@ class EditUser extends Component {
                                 <Grid.Column width={11}>
                                     <Form.Group widths='equal'>
                                         <Form.Field>
-                                            <Form.Input error={error_user} fluid label='User Name' placeholder='Rikky'
-                                                        value={user_name} name='user_name'
-                                                        onChange={this.logChange.bind(this)}/>
-                                            <p hidden={!error_user} style={{
-                                                color   : 'red',
-                                                fontSize: 12
-                                            }}>User name must not null.</p>
+                                            <Form.Input fluid label='User Name' placeholder='Rikky'
+                                                        value={user_name} name='user_name'/>
                                         </Form.Field>
                                         <Form.Field>
-                                            <Form.Input error={error_line_id} fluid label='Email'
+                                            <Form.Input error={error_email} fluid label='Email'
                                                         name='email'
                                                         value={email}
                                                         placeholder='Rikky90' onChange={this.logChange.bind(this)}/>
-                                            <p hidden={!error_line_id} style={{
+                                            <p hidden={!error_email} style={{
                                                 color   : 'red',
                                                 fontSize: 12
                                             }}>Email must not null.</p>

@@ -28,7 +28,8 @@ class BorrowerManagement extends Component {
     };
 
     componentDidMount () {
-        borrowerService.getBorrowers().then(res => {
+        borrowerService.sendMailOutDate();
+        borrowerService.getBorrowersManagement().then(res => {
             res.data.map(data => {
                 data.checked = false;
                 return data;

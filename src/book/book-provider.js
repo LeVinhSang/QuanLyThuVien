@@ -19,7 +19,7 @@ class BookProvider {
      */
     provide(id) {
         let factory = this.factory;
-        let book = this.connection('books')
+        return this.connection('books')
             .select('books.id_book', 'books.title', 'books.author', 'books.images', 'books.amount', 'books.publisher_id',
             'books.genre',
             'publishers.name', 'publishers.phone', 'publishers.address')
@@ -33,7 +33,6 @@ class BookProvider {
                 }
                 return factory.makeFromDB(results[0])
             });
-        return book;
     }
 
 }

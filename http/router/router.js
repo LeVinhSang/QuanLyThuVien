@@ -17,24 +17,6 @@ let curriculumController = new controller.CurriculumController();
 let topicController      = new controller.TopicController();
 let feedbackController   = new controller.FeedbackController();
 
-
-router.post('/upload', function(req, res) {
-    console.log(req);
-    if (!req.files)
-        return res.status(400).send('No files were uploaded.');
-
-    let sampleFile = req.files.sampleFile;
-
-    console.log(req.files.sampleFile);
-
-    sampleFile.mv('./upload/' + filename, function(err) {
-        if (err)
-            return res.status(500).send(err);
-
-        res.send('File uploaded!');
-    });
-});
-
 router.get('/', (req, res) => {
     res.send({message: 'success'});
 });
@@ -81,8 +63,9 @@ router.post('/user', request.user, userController.create);
 router.post('/send-code', userController.sendCode);
 router.post('/user/check-email', userController.checkEmail);
 router.put('/user', request.user, userController.update);
+router.put('/not-pass/user', userController.updateNotPass);
 router.delete('/user/:user_name', userController.remove);
-
+router.post('/check-pass', userController.checkPass);
 router.post('/login', request.checkLogin, userController.login);
 router.post('/sign-up', userController.signUp);
 
@@ -101,6 +84,11 @@ router.get('/search-advance', (req, res, next) => {
 
 router.get('/borrowers', (req, res, next) => {
     req.condition = new borrowerSearch.borrowerUndeleted();
+    next();
+}, borrowerController.search);
+
+router.get('/management/borrowers', (req, res, next) => {
+    req.condition = new borrowerSearch.borrowerUndeletedManagement();
     next();
 }, borrowerController.search);
 
@@ -124,12 +112,14 @@ router.get('/search-advance', (req, res, next) => {
     next();
 }, borrowerController.search);
 
+router.get('/out-borrowed/borrower', borrowerController.provideOutBorrowed);
+router.get('/send-mail-out-date/borrower', borrowerController.sendMail);
 router.get('/borrower/send-mail', check.dataBorrower, borrowerController.sendMail);
-router.post('/borrower', request.borrower, borrowerController.create);
+router.post('/borrower', check.checkBorrower, request.borrower, borrowerController.create);
 router.put('/borrower', request.borrower, borrowerController.update);
 router.put('/borrower/status/:id', borrowerController.updateStatus);
 router.put('/borrower/receiving-status/:id', borrowerController.updateReceivingStatus);
-router.delete('/borrower/:id', borrowerController.remove);
+router.post('/borrower/:id', borrowerController.remove);
 
 /*--------------------------------------------------Curriculums---------------------------------------------*/
 

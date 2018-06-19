@@ -48,7 +48,15 @@ class Book extends Component {
             name_user  : name_user,
             book_id    : id,
             date_return: date
-        }).then(() => alert('success'));
+        }).then(res => {
+            if(res.data.message === 'You registered borrow') {
+                alert('You registered borrow');
+            }
+
+            else {
+                window.location.href = '/books';
+            }
+        });
     }
 
     render() {

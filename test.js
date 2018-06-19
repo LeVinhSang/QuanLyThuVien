@@ -1,3 +1,3 @@
 let date = new Date();
-date.setMonth(date.getMonth() + 1);
-console.log(date.getFullYear() + '/' + date.getMonth() + '/'+ date.getDate());
+date.setDate(date.getDate() -2);
+console.log(date > Date.parse('2018/06/19'));
