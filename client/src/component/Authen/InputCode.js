@@ -37,8 +37,7 @@ class InputCode extends Component {
                 password: password,
                 email: email,
             }).then( res => {
-                localStorage.setItem('user_name', res.data.user_name);
-                localStorage.setItem('email', res.data.email);
+                localStorage.setItem('token', res.data);
                 window.location.href = '/'
             })
         }

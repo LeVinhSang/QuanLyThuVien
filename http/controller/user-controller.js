@@ -5,7 +5,13 @@ class UserController {
     create (req, res, next) {
         let repo = req.app.get('user.repo');
         repo.add(req.user).then(() => {
-            res.send(req.user);
+            let token = jwt.sign({
+                user_name: req.user.user_name,
+                email    : req.user.email,
+                avatar   : req.user.avatar,
+                password : req.user.password
+            }, 'sang');
+            res.send(token);
         }).catch(next);
     }
 

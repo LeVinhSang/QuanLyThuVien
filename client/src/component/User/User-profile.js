@@ -1,6 +1,6 @@
 import React, { Component }                                               from 'react';
 import { Icon, Grid, Form, Card, Image, Button, Label, Message, Segment } from 'semantic-ui-react';
-import default_avatar                                                     from './default_avatar.jpeg';
+import default_avatar                                                     from '../../default_avatar.jpeg';
 import './User.css';
 import { ButtonLoading }                                                  from '../../lib';
 import Borrower                                                           from "../Borrower/Borrower";
@@ -89,20 +89,21 @@ class EditUser extends Component {
 
     handleSaveUser () {
         let {
-                error_email, error_password, error_re_enter_password, oldPassword,
+                error_email, error_password, oldPassword, re_enter_password,
                 user_name, password, email, images
             } = this.state;
         this.checkValidation();
         this.setState({ isLoading: true });
-
-        if ( ( error_re_enter_password && error_email && error_password ) === false ) {
+        if ( ( error_email && error_password ) === false ) {
             if ( oldPassword !== password ) {
-                loginService.updateUser({
-                    user_name: user_name,
-                    password : password,
-                    email    : email,
-                    avatar   : images
-                }).then(() => window.location.href = '/');
+                if ( password === re_enter_password ) {
+                    loginService.updateUser({
+                        user_name: user_name,
+                        password : password,
+                        email    : email,
+                        avatar   : images
+                    }).then(() => window.location.href = '/');
+                }
             }
 
             else {
@@ -113,7 +114,7 @@ class EditUser extends Component {
                 })
                     .then(() => window.location.href = '/');
             }
-        }
+            }
     }
 
     handleUploadImage () {
@@ -205,7 +206,7 @@ class EditUser extends Component {
                                 </Grid.Column>
                                 <Grid.Column width={5}>
                                     <Card>
-                                        <Image src={avatar.length ? avatar : default_avatar}/>
+                                        <Image src={avatar && avatar.length ? avatar : default_avatar}/>
                                         <input type='file' style={{ display: 'none' }}
                                                onChange={this.handleSelectFile.bind(this)}
                                                ref={input => this.inputElement = input} name="fileChoice"/>

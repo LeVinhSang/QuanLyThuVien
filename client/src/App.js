@@ -3,6 +3,7 @@ import { Link, Route }                       from 'react-router-dom';
 import { Icon, Menu, Segment, Image, Popup } from 'semantic-ui-react';
 import './App.css';
 import jwt                                   from 'jsonwebtoken';
+import default_avatar                        from './default_avatar.jpeg';
 
 const RouteWithSubRoutes = route => (
     <Route
@@ -82,7 +83,8 @@ class App extends Component {
                             <Menu.Item>
                                 <Popup
                                     trigger={<Image avatar
-                                                    src={jwt.verify(localStorage.getItem('token'), 'sang').avatar}/>}
+                                                    src={jwt.verify(localStorage.getItem('token'), 'sang').avatar
+                                                    ? jwt.verify(localStorage.getItem('token'), 'sang').avatar : default_avatar}/>}
                                     content={userEditor}
                                     on='click'
                                     position='bottom center'
