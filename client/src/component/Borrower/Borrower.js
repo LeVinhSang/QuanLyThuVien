@@ -1,6 +1,7 @@
-import React, { Component }                                 from 'react';
-import { Button, Card, Divider, Icon, Image, Input, Popup } from "semantic-ui-react";
-import { borrowerService }                                  from '../../services/index';
+import React, { Component }                                                from 'react';
+import { Button, Card, Divider, Icon, Image, Input, Modal, Popup } from "semantic-ui-react";
+import { borrowerService }                                                 from '../../services/index';
+import Notification                                                        from "../Notification/Notification";
 
 class Borrower extends Component {
 
@@ -14,8 +15,11 @@ class Borrower extends Component {
 
     state = {
         borrowers     : [],
-        borrowerSearch: []
+        borrowerSearch: [],
+        open: true
     };
+
+    close = () => this.setState({ open: false });
 
     componentDidMount() {
         borrowerService.deleteOutBorrowed().then( () => {
@@ -40,6 +44,16 @@ class Borrower extends Component {
 
         return (
             <div>
+                <Modal open={this.state.open} onClose={this.close}>
+                    <Modal.Header>Notification from Library</Modal.Header>
+                    <Modal.Content image>
+                        <Image wrapped size='medium' src='/assets/images/avatar/large/rachel.png' />
+                        <Modal.Description>
+                            <Notification/>
+                        </Modal.Description>
+                    </Modal.Content>
+                </Modal>
+
                 <h4>Total: {this.state.borrowers.length}</h4>
                 <div>
                     <Input style={{width: '300px'}} icon='search' placeholder='Search....' size='mini'

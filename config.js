@@ -11,7 +11,8 @@ module.exports = {
         require('./src/curriculum'),
         require('./src/topic'),
         require('./src/feedback'),
-        require('./src/service')
+        require('./src/service'),
+        require('./src/notification')
     ],
 
     database : {

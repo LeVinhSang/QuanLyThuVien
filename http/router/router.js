@@ -10,18 +10,23 @@ const topicSearch      = require('../../src/topic/searching-service');
 const feedbackSearch   = require('../../src/feedback/searching-service');
 
 
-let bookController       = new controller.BookController();
-let userController       = new controller.UserController();
-let borrowerController   = new controller.BorrowerController();
-let curriculumController = new controller.CurriculumController();
-let topicController      = new controller.TopicController();
-let feedbackController   = new controller.FeedbackController();
+let bookController          = new controller.BookController();
+let userController          = new controller.UserController();
+let borrowerController      = new controller.BorrowerController();
+let curriculumController    = new controller.CurriculumController();
+let topicController         = new controller.TopicController();
+let feedbackController      = new controller.FeedbackController();
+let notificationsController = new controller.NotificationController();
+
 
 router.get('/', (req, res) => {
-    res.send({message: 'success'});
+    res.send({ message: 'success' });
 });
 
 /*-------------------------------------------------book--------------------------------------------------------*/
+router.get('/notifications', notificationsController.search);
+router.post('/notification', notificationsController.create);
+
 
 router.get('/books', (req, res, next) => {
     req.condition = new bookSearch.bookUndeleted();
